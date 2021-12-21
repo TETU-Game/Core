@@ -1,0 +1,17 @@
+name: core
+version: 0.1.0
+
+authors:
+  - Arthur Poulet <arthur.poulet@sceptique.eu>
+
+targets:
+  core:
+    main: src/core.cr
+
+crystal: 1.2.1
+
+license: MIT
+
+dependencies:
+  entitas:
+    github: spoved/entitas.cr

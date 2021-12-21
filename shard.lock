@@ -1,0 +1,10 @@
+version: 2.0
+shards:
+  entitas:
+    git: https://github.com/spoved/entitas.cr.git
+    version: 1.4.4
+
+  spoved:
+    git: https://github.com/spoved/spoved.cr.git
+    version: 0.6.4
+
