@@ -1,6 +1,7 @@
 require "entitas"
 
 require "./components"
+require "./systems/*"
 
 class GalaxyInitializerSystem
   include Entitas::Systems::InitializeSystem
@@ -8,27 +9,23 @@ class GalaxyInitializerSystem
   def initialize(@context : GameContext); end
 
   def init
-    10.times do |i|
-      planet = @context
-        .create_entity
-      Named.generate_planet planet
-      Population.generate planet
+    stars = 3.times.map do |i|
+      star = @context.create_entity
+      star.add_celestial_body type: :star
+      Position.generate star
+      Named.generate_star star
+    end.to_a
+    group = @context.get_group Entitas::Matcher.all_of Position
+    STDERR.puts "init #{group.entities.size} stars"
+    group.entities.each { |entity| puts "new Star [#{entity.named.to_s}] at [#{entity.position.to_s.to_s}]" }
+
+    stars.each do |star|
+      Planet.generate @context, star
     end
-    group = @context.get_group Entitas::Matcher.all_of Named, Population
-    STDERR.puts "init #{group.entities.size} planets"
-  end
-end
 
-class EconomicProductionSystem
-  include Entitas::Systems::ExecuteSystem
-
-  def initialize(@context : GameContext); end
-
-  def execute
-    group = @context.get_group Entitas::Matcher.all_of Named, Population
-    group.entities.each do |e|
-      STDERR.puts "this entity is #{e.named.name} has #{e.population.amount} pop"
-    end
+    group = @context.get_group Entitas::Matcher.all_of Named, Position, StellarPosition
+    STDERR.puts "init #{group.entities.size} bodies"
+    group.entities.each { |entity| puts "new Body [#{entity.named.to_s}] in [#{entity.stellar_position.body_index}]" }
   end
 end
 
@@ -68,7 +65,7 @@ hw = HelloWorld.new
 hw.start
 
 10.times do |i|
-  puts "Tick #{i}"
+  puts "Tic #{i}"
   Fiber.yield
   hw.update
 end
