@@ -106,7 +106,7 @@ class Resources < Entitas::Component
   alias Stores = Hash(Symbol, Store)
   prop :storages, Stores
 
-  alias InOut = { input: Symbol?, output: Symbol }
+  alias InOut = { input: Symbol, output: Symbol }
   alias ProdSpeed = { rate: Float64, max_speed: Float64 }
   alias Prods = Hash(InOut, ProdSpeed)
   prop :productions, Prods
@@ -131,6 +131,12 @@ class Resources < Entitas::Component
       amount: storages[resource][:amount],
       max: storages[resource][:max] + upgrade[:storages][:max],
     }
+  end
+
+  def to_s
+    stores_to_s = storages.map{ |k, v| "#{k}=#{v[:amount]}/#{v[:max]}" }.join(" ")
+    productions_to_s = productions? ? productions.map { |io, speed| "#{io[:input]}=>#{io[:output]}x#{speed[:rate]}" }.join(" ") : "?"
+    "Resources: store{#{stores_to_s}} production={#{productions_to_s}}}"
   end
 end
 

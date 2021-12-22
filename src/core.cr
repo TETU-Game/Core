@@ -58,10 +58,12 @@ end
 hw = HelloWorld.new
 hw.start
 
-i = 0u64
+i = 0i64
+stop_at = ARGV.size > 0 ? ARGV[0].to_u64 : -1i64
 loop do
   i += 1
   puts "Tic #{i}"
   Fiber.yield
   hw.update
+  exit if i == stop_at
 end

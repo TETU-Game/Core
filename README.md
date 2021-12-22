@@ -4,7 +4,7 @@ A 4X game in space, inspired by Stellaris PDX
 
 ## Installation
 
-Install `git`, `sfml`, `crystal`, `make`, `imgui`.
+Install `git`, `sfml`, `crystal`, `make`, `imgui` (`imgui-sfml` with archlinux).
 
     make deps
     export LD_LIBRARY_PATH="$(pwd)/cimgui"

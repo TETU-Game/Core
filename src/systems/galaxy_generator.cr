@@ -83,8 +83,11 @@ class GalaxyInitializerSystem
   end
 
   def populate(body)
+    puts "populate: #{body.named.name}..."
     pop_amount = ((10_000.0)..(10_000_000_000.0)).sample
+
     body.add_population amount: pop_amount
+
     body.add_resources(
       storages: {
         :food => { amount: 0.0, max: 1000.0 },
@@ -92,11 +95,12 @@ class GalaxyInitializerSystem
         :alloy => { amount: 0.0, max: 1000.0 },
       },
       productions: {
-        { input: nil, output: :food } => { rate: 1.0, max_speed: 20.0 },
-        { input: nil, output: :mineral } => { rate: 1.0, max_speed: 10.0 },
+        { input: :nil, output: :food } => { rate: 1.0, max_speed: 20.0 },
+        { input: :nil, output: :mineral } => { rate: 1.0, max_speed: 10.0 },
         { input: :mineral, output: :alloy } => { rate: 0.2, max_speed: 1.0 },
       },
     )
+    puts "populated: #{body.named.name}, now #{body.resources.to_s}"
     body
   end
 end

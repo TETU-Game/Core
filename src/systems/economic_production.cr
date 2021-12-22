@@ -11,10 +11,10 @@ class EconomicProductionSystem
     #   STDERR.puts "this named populated entity is #{e.named.to_s} and has #{e.population.to_s} pop"
     # end
 
-    producer = @context.get_group Entitas::Matcher.all_of Resources
+    producer = @context.get_group Entitas::Matcher.all_of(Resources)
     producer.entities.each do |e|
       e.resources.productions.each do |inout, prod_speed|
-        input_storage = inout[:input].nil? ? nil : e.resources.storages[inout[:input]]
+        input_storage = inout[:input] == :nil ? nil : e.resources.storages[inout[:input]]
         output_storage = e.resources.storages[inout[:output]]
         deleted_input = Resources.required_input(prod_speed)
         added_output = prod_speed[:max_speed]
@@ -25,6 +25,14 @@ class EconomicProductionSystem
         else
           unsafe_resource_increase!(e, inout, added_output, deleted_input, input_storage, output_storage)
         end
+      end
+    end
+
+    producer.entities.each do |e|
+      puts "==="
+      puts "#{e.named.to_s} resources stats:"
+      e.resources.storages.each do |res, store|
+        puts "#{res}: #{store[:amount]} / #{store[:max]}"
       end
     end
   end
