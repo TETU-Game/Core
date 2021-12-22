@@ -85,19 +85,35 @@ class Population < Entitas::Component
   end
 end
 
-@[Context(Game)]
-class ResourceStorage < Entitas::Component
-  prop :resource, UInt64, default: 0
-  prop :amount, Float64, default: 0.0
-  prop :max, Float64, default: 0.0
-end
+# @[Context(Game)]
+# class ResourceStorage < Entitas::Component
+#   prop :resource, Symbol
+#   prop :amount, Float64, default: 0.0
+#   prop :max, Float64, default: 0.0
+# end
+
+# @[Context(Game)]
+# class ResourceTransformation < Entitas::Component
+#   prop :input, Symbol?, default: nil
+#   prop :output, Symbol
+#   prop :rate, Float64, default: 1.0
+#   prop :max, Float64, default: 0.0
+# end
 
 @[Context(Game)]
-class ResourceTransformation < Entitas::Component
-  prop :input, UInt64, default: 0
-  prop :output, UInt64, default: 0
-  prop :rate, Float64, default: 0.0
-  prop :max, Float64, default: 0.0
+class Resources < Entitas::Component
+  alias Store = { amount: Float64, max: Float64 }
+  alias Stores = Hash(Symbol, Store)
+  prop :storages, Stores
+
+  alias InOut = { input: Symbol?, output: Symbol }
+  alias ProdSpeed = { rate: Float64, max_speed: Float64 }
+  alias Prods = Hash(InOut, ProdSpeed)
+  prop :productions, Prods
+
+  def self.required_input(prod_speed : ProdSpeed)
+    prod_speed[:max_speed] / prod_speed[:rate]
+  end
 end
 
 require "./components/*"
