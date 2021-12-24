@@ -4,9 +4,10 @@ A 4X game in space, inspired by Stellaris PDX
 
 ## Installation
 
-    shards install
-    crystal build src/core.cr --release
-    crystal docs
+Install `git`, `sfml`, `crystal`, `make`.
+
+    make deps
+    make release
 
 ## Usage
 

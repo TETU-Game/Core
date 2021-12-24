@@ -35,11 +35,9 @@ class HelloWorld
   end
 end
 
-hw = HelloWorld.new
-hw.start
 
-3.times do |i|
-  puts "Tic #{i}"
-  Fiber.yield
-  hw.update
-end
+require "./gui/*"
+
+hw = HelloWorld.new
+
+Gui::Main.new hw
