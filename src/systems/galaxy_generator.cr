@@ -10,7 +10,7 @@ class GalaxyInitializerSystem
       generate_star
     end.to_a
     stars = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody).none_of(StellarPosition)
-    stars.entities.each { |entity| puts "new Star [#{entity.named.to_s}] at [#{entity.position.to_s.to_s}]" }
+    stars.entities.each { |entity| puts "new Star [#{entity.named.to_s}] at [#{entity.position.to_s}]" }
 
     bodies = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody, StellarPosition)
     bodies.entities.each { |entity| puts "new Body [#{entity.named.to_s}] in [#{entity.stellar_position.body_index}, #{entity.stellar_position.moon_index}]" }

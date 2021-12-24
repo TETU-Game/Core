@@ -9,6 +9,7 @@ class EconomicSystems < Entitas::Feature
     ctx = contexts.game
     add ::EconomicProductionSystem.new(ctx)
     add ::GalaxyInitializerSystem.new(ctx)
+    add ::MainUiSystem.new(ctx)
   end
 end
 
@@ -39,5 +40,12 @@ end
 require "./gui/*"
 
 hw = HelloWorld.new
+hw.start
 
-Gui::Main.new.start hw
+i = 0u64
+loop do
+  i += 1
+  puts "Tic #{i}"
+  Fiber.yield
+  hw.update
+end

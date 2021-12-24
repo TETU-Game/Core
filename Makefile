@@ -1,9 +1,10 @@
 NAME=core
+include .env
 
 all: deps_opt build
 
-run:
-	crystal run src/$(NAME).cr --error-trace
+run: build
+	./$(NAME)
 build:
 	crystal build src/$(NAME).cr --stats --error-trace
 release:

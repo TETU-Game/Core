@@ -11,7 +11,7 @@ Install `git`, `sfml`, `crystal`, `make`.
 
 ## Usage
 
-    ./core
+    make run
 
 ## Development
 
