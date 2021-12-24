@@ -40,4 +40,4 @@ require "./gui/*"
 
 hw = HelloWorld.new
 
-Gui::Main.new hw
+Gui::Main.new.start hw
