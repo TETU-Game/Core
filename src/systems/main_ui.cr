@@ -94,14 +94,13 @@ class MainUiSystem
     if ImGui.begin("star list")
       ImGui.set_window_pos("star list", ImGui::ImVec2.new(GALAXY_WIDTH, 0))
       ImGui.set_window_size("star list", ImGui::ImVec2.new(400, GALAXY_HEIGHT))
-      if ImGui.begin_child("scrolling")
-        stars = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody).none_of(StellarPosition)
-        stars.entities.each do |entity|
-          ImGui.text("#{entity.named.name} | #{entity.position.to_s}")
-        end
-        ImGui.end_child
+      ImGui.begin_child("scrolling")
+      stars = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody).none_of(StellarPosition)
+      stars.entities.each do |entity|
+        ImGui.text("#{entity.named.name} | #{entity.position.to_s}")
       end
-      ImGui.end
+      ImGui.end_child
     end
+    ImGui.end
   end
 end
