@@ -98,21 +98,6 @@ class Population < Entitas::Component
   end
 end
 
-# @[Context(Game)]
-# class ResourceStorage < Entitas::Component
-#   prop :resource, Symbol
-#   prop :amount, Float64, default: 0.0
-#   prop :max, Float64, default: 0.0
-# end
-
-# @[Context(Game)]
-# class ResourceTransformation < Entitas::Component
-#   prop :input, Symbol?, default: nil
-#   prop :output, Symbol
-#   prop :rate, Float64, default: 1.0
-#   prop :max, Float64, default: 0.0
-# end
-
 @[Context(Game)]
 class Resources < Entitas::Component
   alias Store = { amount: Float64, max: Float64 }
@@ -126,6 +111,16 @@ class Resources < Entitas::Component
 
   def self.required_input(prod_speed : ProdSpeed)
     prod_speed[:max_speed] / prod_speed[:rate]
+  end
+end
+
+@[Context(Game)]
+class ShowState < Entitas::Component
+  prop :gui, Bool, default: false
+  prop :resources, Bool, default: false
+
+  def to_s
+    "ShowState: gui(#{@gui}) resources(#{resources})"
   end
 end
 

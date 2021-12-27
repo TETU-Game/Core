@@ -22,7 +22,7 @@ class HelloWorld
 
     # create the systems by creating individual features
     @systems = Entitas::Feature.new("systems")
-               .add(EconomicSystems.new(contexts))
+      .add(EconomicSystems.new(contexts))
     @systems.init
   end
 

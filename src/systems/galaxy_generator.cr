@@ -25,6 +25,7 @@ class GalaxyInitializerSystem
     
     star = @context.create_entity
     star.add_celestial_body type: :star
+    star.add_show_state gui: true, resources: false
     Position.generate star
     Named.generate_star star
     
@@ -45,6 +46,7 @@ class GalaxyInitializerSystem
     star_position = star.position
 
     body = @context.create_entity
+    body.add_show_state gui: true, resources: false
     star_position.as(Position).copy_to body
     body.add_stellar_position body_index: index, moon_index: ids_trash[:moon]
 

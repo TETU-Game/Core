@@ -10,6 +10,7 @@ class MainUiSystem
   GALAXY_WIDTH = 800
   GALAXY_HEIGHT = 600
   SQUARE_SIZE = 100
+  FRAMERATE = 2
 
   UI_WIDTH = GALAXY_WIDTH + 400
   UI_HEIGHT = GALAXY_HEIGHT
@@ -27,7 +28,7 @@ class MainUiSystem
 
   def init
     ImGui::SFML.init(@window)
-    @window.framerate_limit = 60
+    @window.framerate_limit = FRAMERATE
   end
   
   def execute
@@ -54,7 +55,9 @@ class MainUiSystem
       when SF::Event::Closed
         @window.close
       when SF::Event::KeyPressed
-        puts "pressed #{event}"
+        puts "KeyPressed #{event}"
+      when SF::Event::MouseButtonEvent
+        puts "MouseButtonEvent #{event}"
       end
     end
   end
@@ -94,10 +97,7 @@ class MainUiSystem
   end
 
   private def draw_galay_menu
-    if ImGui.begin(
-      name: "right side",
-      flags: ImGui::ImGuiWindowFlags.new(0),
-    )
+    if ImGui.begin(name: "right side", flags: ImGui::ImGuiWindowFlags.new(0))
       ImGui.set_window_pos("right side", ImGui::ImVec2.new(GALAXY_WIDTH, 0))
       ImGui.set_window_size("right side", ImGui::ImVec2.new(400, GALAXY_HEIGHT))
       if ImGui.tree_node_ex("galaxy infos", ImGui::ImGuiTreeNodeFlags.new(ImGui::ImGuiTreeNodeFlags::DefaultOpen))
@@ -107,8 +107,8 @@ class MainUiSystem
         end
         ImGui.tree_pop
       end
-      ImGui.end
     end
+    ImGui.end
   end
 
   private def draw_stars_menu
@@ -126,10 +126,27 @@ class MainUiSystem
   end
 
   private def draw_planets_menu(star)
-    planets = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody, StellarPosition)
-    planets.entities.each do |entity|
-      next if star.position != entity.position
-      ImGui.text "#{entity.named.name} | #{entity.stellar_position.to_s}"
+    planets = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody, StellarPosition, ShowState)
+    planets.entities.each do |planet|
+      next if star.position != planet.position
+      text = "#{planet.named.name} | #{planet.stellar_position.to_s}"
+      text += " | pop #{planet.population.to_s}" if planet.has_component?(Population.index_val)
+      ImGui.text text
+
+      if ImGui.is_item_clicked
+        show_state = ShowState.new gui: true, resources: false
+        if planet.has_component? Resources.index_val
+          show_state.resources = true
+        end
+        planet.replace_show_state show_state
+      end
+
+      if planet.show_state.resources == true
+        resources = planet.get_component(Resources.index_val).as(Resources)
+        resources.storages.each do |res, store|
+          ImGui.text "\t#{res}: #{store[:amount]} / #{store[:max]}"
+        end
+      end
     end
   end
 end
