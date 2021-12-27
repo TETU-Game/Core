@@ -18,7 +18,10 @@ class MainUiSystem
   @window : SF::RenderWindow
   
   def initialize(@context : GameContext)
-    @window = SF::RenderWindow.new(SF::VideoMode.new(UI_WIDTH, UI_HEIGHT), "To the End of The Universe")
+    @window = SF::RenderWindow.new(
+      SF::VideoMode.new(UI_WIDTH, UI_HEIGHT),
+      "To the End of The Universe",
+    )
     @delta_clock = SF::Clock.new
   end
 
@@ -37,7 +40,7 @@ class MainUiSystem
     @window.clear(SF::Color::Black)
     
     draw_background
-    draw_star_menu
+    draw_galay_menu
 
     ImGui::SFML.render(@window)
     @window.display
@@ -90,17 +93,43 @@ class MainUiSystem
     end
   end
 
-  private def draw_star_menu
-    if ImGui.begin("star list")
-      ImGui.set_window_pos("star list", ImGui::ImVec2.new(GALAXY_WIDTH, 0))
-      ImGui.set_window_size("star list", ImGui::ImVec2.new(400, GALAXY_HEIGHT))
-      ImGui.begin_child("scrolling")
-      stars = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody).none_of(StellarPosition)
-      stars.entities.each do |entity|
-        ImGui.text("#{entity.named.name} | #{entity.position.to_s}")
+  private def draw_galay_menu
+    if ImGui.begin(
+      name: "right side",
+      flags: ImGui::ImGuiWindowFlags.new(0),
+    )
+      ImGui.set_window_pos("right side", ImGui::ImVec2.new(GALAXY_WIDTH, 0))
+      ImGui.set_window_size("right side", ImGui::ImVec2.new(400, GALAXY_HEIGHT))
+      if ImGui.tree_node_ex("galaxy infos", ImGui::ImGuiTreeNodeFlags.new(ImGui::ImGuiTreeNodeFlags::DefaultOpen))
+        if ImGui.tree_node_ex "Stars", ImGui::ImGuiTreeNodeFlags.new(ImGui::ImGuiTreeNodeFlags::DefaultOpen)
+          draw_stars_menu
+          ImGui.tree_pop
+        end
+        ImGui.tree_pop
       end
-      ImGui.end_child
+      ImGui.end
     end
-    ImGui.end
+  end
+
+  private def draw_stars_menu
+    stars = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody).none_of(StellarPosition)
+    stars.entities.each do |entity|
+      draw_star_menu_one_star(entity)
+    end
+  end
+
+  private def draw_star_menu_one_star(star)
+    if ImGui.tree_node_ex "#{star.named.name} | #{star.position.to_s}", ImGui::ImGuiTreeNodeFlags.new(ImGui::ImGuiTreeNodeFlags::DefaultOpen)
+      draw_planets_menu star
+      ImGui.tree_pop
+    end
+  end
+
+  private def draw_planets_menu(star)
+    planets = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody, StellarPosition)
+    planets.entities.each do |entity|
+      next if star.position != entity.position
+      ImGui.text "#{entity.named.name} | #{entity.stellar_position.to_s}"
+    end
   end
 end
