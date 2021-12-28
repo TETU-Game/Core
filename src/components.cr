@@ -112,6 +112,24 @@ class Resources < Entitas::Component
   def self.required_input(prod_speed : ProdSpeed)
     prod_speed[:max_speed] / prod_speed[:rate]
   end
+  
+  def add(resource : Symbol, amount : Number)
+    storages[resource] = {
+      amount: storages[resource][:amount] + amount,
+      max: storages[resource][:max],
+    }
+  end
+
+  def upgrade(upgrade : ResourcesUpgrades::ResourceUpgrade)
+    resource = upgrade[:resource]
+    upgrade[:costs].each do |cost_resource, cost_amount|
+      add cost_resource, -cost_amount
+    end
+    storages[resource] = {
+      amount: storages[resource][:amount],
+      max: storages[resource][:max] + upgrade[:storages][:max],
+    }
+  end
 end
 
 @[Context(Game)]
@@ -122,6 +140,16 @@ class ShowState < Entitas::Component
   def to_s
     "ShowState: gui(#{@gui}) resources(#{resources})"
   end
+end
+
+@[Context(Game)]
+class ResourcesUpgrades < Entitas::Component
+  alias ResourceUpgrade = {
+    resource: Symbol,
+    storages: { max: Float64 },
+    costs: Hash(Symbol, Float64),
+  }
+  prop :upgrades, Array(ResourceUpgrade), default: Array(ResourceUpgrade).new
 end
 
 require "./components/*"

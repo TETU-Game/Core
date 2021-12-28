@@ -5,7 +5,7 @@ module TETU
   MAX_Y = 600
 
   GENERATED_SYSTEMS_AMOUNT = 2
-  GENERATED_PLANET_POPULATED_PROBA = 0.5
+  GENERATED_PLANET_POPULATED_PROBA = 0.9
   MAX_GENERATED_BODIES_BY_SYSTEM_AMOUNT = 5
   MAX_GENERATED_MOON_BY_BODY_AMOUNT = 1
 end
@@ -20,6 +20,7 @@ class EconomicSystems < Entitas::Feature
     add ::EconomicProductionSystem.new(ctx)
     add ::GalaxyInitializerSystem.new(ctx)
     add ::MainUiSystem.new(ctx)
+    add ::EconomicUpgradesSystem.new(ctx)
   end
 end
 
