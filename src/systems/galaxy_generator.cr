@@ -3,7 +3,7 @@ class GalaxyInitializerSystem
 
   def initialize(@context : GameContext); end
 
-  SYSTEMS_AMOUNT = 2
+  SYSTEMS_AMOUNT = TETU::GENERATED_SYSTEMS_AMOUNT
 
   def init
     stars = SYSTEMS_AMOUNT.times.map do |i|

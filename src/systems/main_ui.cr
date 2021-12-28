@@ -7,13 +7,17 @@ class MainUiSystem
   include Entitas::Systems::ExecuteSystem
   include Entitas::Systems::InitializeSystem
 
-  GALAXY_WIDTH = 800
-  GALAXY_HEIGHT = 600
+  GALAXY_WIDTH = TETU::MAX_X
+  GALAXY_HEIGHT = TETU::MAX_Y
   SQUARE_SIZE = 100
-  FRAMERATE = 2
+  # X_MAX = GALAXY_WIDTH / SQUARE_SIZE
+  # Y_MAX = GALAXY_HEIGHT / SQUARE_SIZE
+
+  FRAMERATE = 4
 
   UI_WIDTH = GALAXY_WIDTH + 400
   UI_HEIGHT = GALAXY_HEIGHT
+
   GALAXY = SF::Texture.from_file("assets/#{GALAXY_WIDTH}x#{GALAXY_HEIGHT}/galaxy.jpg")
 
   @window : SF::RenderWindow
@@ -70,6 +74,7 @@ class MainUiSystem
     # draw_cadran 220
     # draw_cadran 350
     draw_grid
+    draw_stars_on_grid
   end
 
   private def draw_cadran(size)
@@ -93,6 +98,19 @@ class MainUiSystem
         square.position = { x * SQUARE_SIZE, y * SQUARE_SIZE }
         @window.draw square
       end
+    end
+  end
+
+  private def draw_stars_on_grid
+    stars = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody).none_of(StellarPosition)
+    stars.entities.each do |entity|
+      position = entity.position
+      square = SF::RectangleShape.new(SF.vector2(1, 1))
+      square.position = { position.x, position.y }
+      square.outline_color = SF::Color::Red
+      square.fill_color = SF::Color::Red
+      square.outline_thickness = 1
+      @window.draw square
     end
   end
 
@@ -129,24 +147,28 @@ class MainUiSystem
     planets = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody, StellarPosition, ShowState)
     planets.entities.each do |planet|
       next if star.position != planet.position
+
       text = "#{planet.named.name} | #{planet.stellar_position.to_s}"
       text += " | pop #{planet.population.to_s}" if planet.has_component?(Population.index_val)
       ImGui.text text
+      toggle_planet_show_state_resources planet if ImGui.is_item_clicked
 
-      if ImGui.is_item_clicked
-        show_state = ShowState.new gui: true, resources: false
-        if planet.has_component? Resources.index_val
-          show_state.resources = true
-        end
-        planet.replace_show_state show_state
-      end
+      draw_planet_resource_menu planet if planet.show_state.resources == true
+    end
+  end
 
-      if planet.show_state.resources == true
-        resources = planet.get_component(Resources.index_val).as(Resources)
-        resources.storages.each do |res, store|
-          ImGui.text "\t#{res}: #{store[:amount]} / #{store[:max]}"
-        end
-      end
+  private def toggle_planet_show_state_resources(planet)
+    show_state = planet.show_state
+    if planet.has_component? Resources.index_val
+      show_state.resources = !show_state.resources
+    end
+  end
+
+  private def draw_planet_resource_menu(planet)
+    resources = planet.get_component(Resources.index_val).as(Resources)
+    resources.storages.each do |res, store|
+      ImGui.text "\t#{res}: #{store[:amount]} / #{store[:max]}"
+      toggle_planet_show_state_resources planet if ImGui.is_item_clicked
     end
   end
 end

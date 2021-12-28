@@ -1,5 +1,14 @@
 require "entitas"
 
+module TETU
+  MAX_X = 800
+  MAX_Y = 600
+
+  GENERATED_SYSTEMS_AMOUNT = 20
+  MAX_GENERATED_BODIES_BY_SYSTEM_AMOUNT = 4
+  MAX_GENERATED_MOON_BY_BODY_AMOUNT = 1
+end
+
 require "./components"
 require "./systems/*"
 

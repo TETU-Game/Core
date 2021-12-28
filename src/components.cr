@@ -42,8 +42,8 @@ class Position < Entitas::Component
   prop :x, Int32, default: 0
   prop :y, Int32, default: 0
 
-  MAX_X = 100
-  MAX_Y = 100
+  MAX_X = TETU::MAX_X
+  MAX_Y = TETU::MAX_Y
 
   def self.generate(entity)
     entity.add_position x: (0..MAX_X).sample, y: (0..MAX_Y).sample
