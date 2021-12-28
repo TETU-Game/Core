@@ -72,7 +72,7 @@ class GalaxyInitializerSystem
       end.to_a
     end
 
-    populate(body) if rand < 0.3
+    populate(body) if rand < TETU::GENERATED_PLANET_POPULATED_PROBA
     body
   end
 
@@ -94,7 +94,7 @@ class GalaxyInitializerSystem
       productions: {
         { input: nil, output: :food } => { rate: 1.0, max_speed: 20.0 },
         { input: nil, output: :mineral } => { rate: 1.0, max_speed: 10.0 },
-        { input: :mineral, output: :alloy } => { rate: 0.2, max_speed: 2.0 },
+        { input: :mineral, output: :alloy } => { rate: 0.2, max_speed: 1.0 },
       },
     )
     body

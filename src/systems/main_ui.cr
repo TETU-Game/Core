@@ -165,7 +165,7 @@ class MainUiSystem
   end
 
   private def draw_planet_resource_menu(planet)
-    resources = planet.get_component(Resources.index_val).as(Resources)
+    resources = planet.resources
     resources.storages.each do |res, store|
       ImGui.text "\t#{res}: #{store[:amount]} / #{store[:max]}"
       toggle_planet_show_state_resources planet if ImGui.is_item_clicked
