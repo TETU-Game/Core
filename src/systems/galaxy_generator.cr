@@ -3,7 +3,7 @@ class GalaxyInitializerSystem
 
   def initialize(@context : GameContext); end
 
-  SYSTEMS_AMOUNT = TETU::GENERATED_SYSTEMS_AMOUNT
+  SYSTEMS_AMOUNT = TETU::GALAXY_CONF["systems_amount"].as_i64
 
   def init
     stars = SYSTEMS_AMOUNT.times.map do |i|
@@ -72,7 +72,7 @@ class GalaxyInitializerSystem
       end.to_a
     end
 
-    populate(body) if rand < TETU::GENERATED_PLANET_POPULATED_PROBA
+    populate(body) if rand < TETU::GALAXY_CONF["populated_planets_proba"].as_f
     body
   end
 

@@ -1,0 +1,13 @@
+max_y: 600
+max_x: 800
+
+ui:
+  framerate: 5
+  square_size: 100
+  right_sidebar: 400
+
+galaxy:
+  systems_amount: 2
+  populated_planets_proba: 0.9
+  max_bodies_by_system_amount: 5
+  max_moon_by_planet_amount: 1

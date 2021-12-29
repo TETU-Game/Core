@@ -1,13 +1,18 @@
 require "entitas"
 
 module TETU
-  MAX_X = 800
-  MAX_Y = 600
+end
 
-  GENERATED_SYSTEMS_AMOUNT = 2
-  GENERATED_PLANET_POPULATED_PROBA = 0.9
-  MAX_GENERATED_BODIES_BY_SYSTEM_AMOUNT = 5
-  MAX_GENERATED_MOON_BY_BODY_AMOUNT = 1
+require "./core/*"
+
+module TETU
+  CONF = TETU::Configuration.instance
+  
+  MAX_X = CONF["max_x"].as_i
+  MAX_Y = CONF["max_y"].as_i
+
+  GALAXY_CONF = TETU::CONF["galaxy"]
+  UI_CONF = TETU::CONF["ui"]
 end
 
 require "./components"

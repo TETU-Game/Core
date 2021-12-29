@@ -9,14 +9,9 @@ class MainUiSystem
 
   GALAXY_WIDTH = TETU::MAX_X
   GALAXY_HEIGHT = TETU::MAX_Y
-  SQUARE_SIZE = 100
-  # X_MAX = GALAXY_WIDTH / SQUARE_SIZE
-  # Y_MAX = GALAXY_HEIGHT / SQUARE_SIZE
-
-  FRAMERATE = 4
-
-  UI_WIDTH = GALAXY_WIDTH + 400
+  UI_WIDTH = GALAXY_WIDTH + TETU::UI_CONF["right_sidebar"].as_i64
   UI_HEIGHT = GALAXY_HEIGHT
+  SQUARE_SIZE = TETU::UI_CONF["square_size"].as_i64
 
   GALAXY = SF::Texture.from_file("assets/#{GALAXY_WIDTH}x#{GALAXY_HEIGHT}/galaxy.jpg")
 
@@ -32,7 +27,7 @@ class MainUiSystem
 
   def init
     ImGui::SFML.init(@window)
-    @window.framerate_limit = FRAMERATE
+    @window.framerate_limit = TETU::UI_CONF["framerate"].as_i64
   end
   
   def execute
