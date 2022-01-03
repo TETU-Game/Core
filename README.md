@@ -4,9 +4,10 @@ A 4X game in space, inspired by Stellaris PDX
 
 ## Installation
 
-Install `git`, `sfml`, `crystal`, `make`.
+Install `git`, `sfml`, `crystal`, `make`, `imgui`.
 
     make deps
+    export LD_LIBRARY_PATH="$(pwd)/cimgui"
     make release
 
 ## Usage
