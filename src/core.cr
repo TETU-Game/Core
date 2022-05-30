@@ -7,7 +7,7 @@ require "./core/*"
 
 module TETU
   CONF = TETU::Configuration.instance
-  
+
   MAX_X = CONF["max_x"].as_i
   MAX_Y = CONF["max_y"].as_i
 
@@ -52,8 +52,7 @@ class HelloWorld
   end
 end
 
-
-require "./gui/*"
+# require "./gui/*"
 
 hw = HelloWorld.new
 hw.start

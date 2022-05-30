@@ -16,7 +16,7 @@ class MainUiSystem
   GALAXY = SF::Texture.from_file("assets/#{GALAXY_WIDTH}x#{GALAXY_HEIGHT}/galaxy.jpg")
 
   @window : SF::RenderWindow
-  
+
   def initialize(@context : GameContext)
     @window = SF::RenderWindow.new(
       SF::VideoMode.new(UI_WIDTH, UI_HEIGHT),
@@ -29,7 +29,7 @@ class MainUiSystem
     ImGui::SFML.init(@window)
     @window.framerate_limit = TETU::UI_CONF["framerate"].as_i64
   end
-  
+
   def execute
     if !@window.open?
       exit(0)
@@ -38,7 +38,7 @@ class MainUiSystem
     handle_events
     ImGui::SFML.update(@window, @delta_clock.restart)
     @window.clear(SF::Color::Black)
-    
+
     draw_background
     draw_galay_menu
 
@@ -49,7 +49,7 @@ class MainUiSystem
   private def handle_events
     while event = @window.poll_event
       ImGui::SFML.process_event(@window, event)
-      
+
       case event
       when SF::Event::Closed
         @window.close

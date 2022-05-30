@@ -22,13 +22,13 @@ class GalaxyInitializerSystem
       :planet        => 0,
       :moon          => 0,
     }
-    
+
     star = @context.create_entity
     star.add_celestial_body type: :star
     star.add_show_state gui: true, resources: false
     Position.generate star
     Named.generate_star star
-    
+
     bodies_amount = Planet::BODIES_STATISTICS.sample
     bodies_amount.times.map do |index|
       body_type = Planet::TYPES_STATISTICS.sample

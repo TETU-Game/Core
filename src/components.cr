@@ -58,11 +58,11 @@ class Position < Entitas::Component
   end
 
   def ==(right : Position)
-    @x == right.x && @y == right.y  
+    @x == right.x && @y == right.y
   end
 
   def !=(right : Position)
-    @x != right.x || @y != right.y  
+    @x != right.x || @y != right.y
   end
 end
 
@@ -112,7 +112,7 @@ class Resources < Entitas::Component
   def self.required_input(prod_speed : ProdSpeed)
     prod_speed[:max_speed] / prod_speed[:rate]
   end
-  
+
   def add(resource : Symbol, amount : Number)
     storages[resource] = {
       amount: storages[resource][:amount] + amount,

@@ -23,20 +23,31 @@ class EconomicProductionSystem
         elsif output_storage[:amount] >= output_storage[:max]
           # error output full
         else
-          e.resources.storages[inout[:output]] = Resources::Store.new(
-            amount: output_storage[:amount] + added_output,
-            max: output_storage[:max],
-          )
-          e.resources.storages[inout[:input].as(Symbol)] = Resources::Store.new(
-            amount: input_storage[:amount] - deleted_input,
-            max: input_storage[:max],
-          ) if input_storage
-
-          # input_storage[:amount] -= deleted_input if input_storage
-          # output_storage[:amount] += added_output
-          # add error checking
+          unsafe_resource_increase(e, inout, added_output, deleted_input, input_storage, output_storage)
         end
       end
     end
+  end
+
+  private def unsafe_resource_increase(
+               planet : GameEntity,
+               inout : Resources::InOut,
+               added_output : Float64,
+               deleted_input : Float64,
+               input_storage : Resources::Store?,
+               output_storage : Resources::Store,
+             )
+    planet.resources.storages[inout[:output]] = Resources::Store.new(
+      amount: output_storage[:amount] + added_output,
+      max: output_storage[:max],
+    )
+    planet.resources.storages[inout[:input].as(Symbol)] = Resources::Store.new(
+      amount: input_storage[:amount] - deleted_input,
+      max: input_storage[:max],
+    ) if input_storage
+
+    # input_storage[:amount] -= deleted_input if input_storage
+    # output_storage[:amount] += added_output
+    # add error checking
   end
 end
