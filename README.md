@@ -9,6 +9,8 @@ Install `git`, `sfml`, `crystal`, `make`, `imgui`.
     make deps
     export LD_LIBRARY_PATH="$(pwd)/cimgui"
     make release
+    export LD_LIBRARY_PATH="$(pwd)/lib/imgui-sfml"
+    ./core
 
 ## Usage
 
