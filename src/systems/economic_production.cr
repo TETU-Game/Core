@@ -23,13 +23,13 @@ class EconomicProductionSystem
         elsif output_storage[:amount] >= output_storage[:max]
           # error output full
         else
-          unsafe_resource_increase(e, inout, added_output, deleted_input, input_storage, output_storage)
+          unsafe_resource_increase!(e, inout, added_output, deleted_input, input_storage, output_storage)
         end
       end
     end
   end
 
-  private def unsafe_resource_increase(
+  private def unsafe_resource_increase!(
                planet : GameEntity,
                inout : Resources::InOut,
                added_output : Float64,

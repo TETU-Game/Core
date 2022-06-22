@@ -26,6 +26,7 @@ class EconomicSystems < Entitas::Feature
     add ::GalaxyInitializerSystem.new(ctx)
     add ::MainUiSystem.new(ctx)
     add ::EconomicUpgradesSystem.new(ctx)
+    add ::PopulationGrowthSystem.new(ctx)
   end
 end
 
