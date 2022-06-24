@@ -24,3 +24,6 @@ weapon:
   name: Weaponery
   description: Bombs, guns, bullets, armors, utilitary, tanks, fighters
   require: alloy
+logistic:
+  name: Logistic
+  description: Civilan ships for fret and travellers

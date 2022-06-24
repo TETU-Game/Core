@@ -102,7 +102,7 @@ end
 @[Context(Game)]
 class Resources < Entitas::Component
   DESCRIPTIONS = Blueprint.load_yaml("resources", "descriptions.yaml").as_h
-  LIST = %i[food food2 mineral mineral2 alloy alloy2 chemical weapon]
+  LIST = %i[food food2 mineral mineral2 alloy alloy2 chemical weapon logistic]
 
   alias Store = { amount: Float64, max: Float64 }
   # TODO: this should probably be a NamedTuple instead
@@ -127,14 +127,16 @@ class Resources < Entitas::Component
 
   def self.default_populated
     r = default()
-    r.storages[:food] =    Store.new(amount: 0.0, max: 1000.0)
-    r.storages[:mineral] = Store.new(amount: 0.0, max: 10000.0)
-    r.storages[:alloy] =   Store.new(amount: 0.0, max: 10000.0)
+    r.storages[:food]     = Store.new(amount: 0.0, max: 1000.0)
+    r.storages[:mineral]  = Store.new(amount: 0.0, max: 10000.0)
+    r.storages[:alloy]    = Store.new(amount: 0.0, max: 10000.0)
+    r.storages[:logistic] = Store.new(amount: 0.0, max: 10.0)
 
     r.productions[InOut.new(input: :nil, output: :food)] = ProdSpeed.new(rate: 1.0, max_speed: 20.0)
     r.productions[InOut.new(input: :nil, output: :mineral)] = ProdSpeed.new(rate: 1.0, max_speed: 10.0)
-    r.productions[InOut.new(input: :mineral, output: :alloy)] = ProdSpeed.new(rate: 1.0, max_speed: 0.1)
-
+    r.productions[InOut.new(input: :mineral, output: :alloy)] = ProdSpeed.new(rate: 1.0, max_speed: 1.0)
+    r.productions[InOut.new(input: :alloy, output: :weapon)] = ProdSpeed.new(rate: 0.1, max_speed: 0.1)
+    r.productions[InOut.new(input: :alloy, output: :logistic)] = ProdSpeed.new(rate: 0.1, max_speed: 0.1)
     r
   end
 
