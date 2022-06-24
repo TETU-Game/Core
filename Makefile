@@ -7,6 +7,8 @@ run: build
 	./$(NAME)
 build:
 	crystal build src/$(NAME).cr --stats --error-trace
+debug:
+	crystal build src/$(NAME).cr --stats --error-trace --debug
 release:
 	crystal build src/$(NAME).cr --stats --release
 test:

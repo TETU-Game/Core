@@ -144,7 +144,7 @@ class MainUiSystem
       next if star.position != planet.position
 
       text = "#{planet.named.name} | #{planet.stellar_position.to_s}"
-      text += " | pop #{planet.population.to_s}" if planet.has_component?(Population.index_val)
+      text += " | pop #{planet.population.to_s}" if planet.has_population?
       ImGui.text text
       toggle_planet_show_state_resources planet if ImGui.is_item_clicked
 
@@ -154,15 +154,17 @@ class MainUiSystem
 
   private def toggle_planet_show_state_resources(planet)
     show_state = planet.show_state
-    if planet.has_component? Resources.index_val
+    if planet.has_resources?
       show_state.resources = !show_state.resources
     end
   end
 
+  # TODO: wtf i wrotte upgrade cost here?
   UPGRADE_MINERAL_COST = 100.0
   private def draw_planet_resource_menu(planet)
     resources = planet.resources
     resources.storages.each do |res, store|
+      next if store[:amount] == 0.0
       ImGui.text "\t#{res}: #{store[:amount]} / #{store[:max]}"
       toggle_planet_show_state_resources planet if ImGui.is_item_clicked
       ImGui.same_line
@@ -170,7 +172,9 @@ class MainUiSystem
       can_upgrade = resources.storages[:mineral][:amount] >= UPGRADE_MINERAL_COST
       ImGui.begin_disabled if !can_upgrade
       if ImGui.button("upgrade####{res}")
-        planet.add_resources_upgrades if !planet.has_component? ResourcesUpgrades.index_val
+        # can be written
+        # # planet.add_resources_upgrades if !planet.has_component? ResourcesUpgrades.index_val
+        planet.add_resources_upgrades if !planet.has_resources_upgrades?
         planet.resources_upgrades.upgrades << {
           resource: res,
           storages: { max: 1000.0 },

@@ -101,6 +101,9 @@ end
 
 @[Context(Game)]
 class Resources < Entitas::Component
+  DESCRIPTIONS = Blueprint.load_yaml("resources", "descriptions.yaml").as_h
+  LIST = %i[food food2 mineral mineral2 alloy alloy2 chemical weapon]
+
   alias Store = { amount: Float64, max: Float64 }
   # TODO: this should probably be a NamedTuple instead
   alias Stores = Hash(Symbol, Store)
@@ -110,6 +113,30 @@ class Resources < Entitas::Component
   alias ProdSpeed = { rate: Float64, max_speed: Float64 }
   alias Prods = Hash(InOut, ProdSpeed)
   prop :productions, Prods
+
+  def self.default
+    stores = Stores.new
+    LIST.each do |res_name|
+      stores[res_name] = Store.new(amount: 0.0, max: 1.0)
+    end
+
+    prods = Prods.new
+
+    Resources.new(storages: stores, productions: prods)
+  end
+
+  def self.default_populated
+    r = default()
+    r.storages[:food] =    Store.new(amount: 0.0, max: 1000.0)
+    r.storages[:mineral] = Store.new(amount: 0.0, max: 10000.0)
+    r.storages[:alloy] =   Store.new(amount: 0.0, max: 10000.0)
+
+    r.productions[InOut.new(input: :nil, output: :food)] = ProdSpeed.new(rate: 1.0, max_speed: 20.0)
+    r.productions[InOut.new(input: :nil, output: :mineral)] = ProdSpeed.new(rate: 1.0, max_speed: 10.0)
+    r.productions[InOut.new(input: :mineral, output: :alloy)] = ProdSpeed.new(rate: 1.0, max_speed: 0.1)
+
+    r
+  end
 
   def self.required_input(prod_speed : ProdSpeed)
     prod_speed[:max_speed] / prod_speed[:rate]

@@ -1,0 +1,26 @@
+food:
+  name: Food
+  description: Standard food with low technological ehancements
+food2:
+  name: Synthetic Food
+  description: Artificialy engineered very efficient food
+mineral:
+  name: Simple Minerals
+minerals2:
+  name: Rare Minerals
+chemical:
+  name: Chemicals
+  description: Usually extracted from minerals with chemistery
+  require: mineral
+alloy:
+  name: Alloys
+  description: Standard alloys
+  require: mineral
+alloy2:
+  name: Super Materials
+  description: Super alloys with near-magical properties
+  require: mineral
+weapon:
+  name: Weaponery
+  description: Bombs, guns, bullets, armors, utilitary, tanks, fighters
+  require: alloy
