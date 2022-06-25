@@ -92,15 +92,32 @@ class Resources < Entitas::Component
   DESCRIPTIONS = Blueprint.load_yaml("resources", "descriptions.yaml").as_h
   LIST = %i[food food2 mineral mineral2 alloy alloy2 chemical weapon logistic]
 
-  alias Store = { amount: Float64, max: Float64 }
-  # TODO: this should probably be a NamedTuple instead
-  alias Stores = Hash(Symbol, Store)
-  prop :storages, Stores
+  struct Store
+    getter amount, max
+    def initialize(@amount : Float64, @max : Float64)
+    end
+  end
 
-  alias InOut = { input: Symbol, output: Symbol }
-  alias ProdSpeed = { rate: Float64, max_speed: Float64 }
-  alias Prods = Hash(InOut, ProdSpeed)
+  class Stores < Hash(Symbol, Store)
+  end
+
+  struct InOut
+    getter input, output
+    def initialize(@input : Symbol, @output : Symbol)
+    end
+  end
+
+  struct ProdSpeed
+    getter rate, max_speed
+    def initialize(@rate : Float64, @max_speed : Float64)
+    end
+  end
+
+  class Prods < Hash(InOut, ProdSpeed)
+  end
+
   prop :productions, Prods
+  prop :storages, Stores
 
   def self.default
     stores = Stores.new
@@ -129,14 +146,14 @@ class Resources < Entitas::Component
   end
 
   def self.required_input(prod_speed : ProdSpeed)
-    prod_speed[:max_speed] / prod_speed[:rate]
+    prod_speed.max_speed. / prod_speed.rate
   end
 
   def add(resource : Symbol, amount : Number)
-    storages[resource] = {
-      amount: storages[resource][:amount] + amount,
-      max: storages[resource][:max],
-    }
+    storages[resource] = Store.new(
+      amount: storages[resource].amount + amount,
+      max: storages[resource].max,
+    )
   end
 
   def upgrade(upgrade : InfrastructureUpgrades::InfrastructureUpgrade)
@@ -151,8 +168,8 @@ class Resources < Entitas::Component
   end
 
   def to_s
-    stores_to_s = storages.map{ |k, v| "#{k}=#{v[:amount]}/#{v[:max]}" }.join(" ")
-    productions_to_s = productions? ? productions.map { |io, speed| "#{io[:input]}=>#{io[:output]}x#{speed[:rate]}" }.join(" ") : "?"
+    stores_to_s = storages.map{ |k, v| "#{k}=#{v.amount}/#{v.max}" }.join(" ")
+    productions_to_s = productions? ? productions.map { |io, speed| "#{io.input}=>#{io.output}x#{speed.rate}" }.join(" ") : "?"
     "Resources: store{#{stores_to_s}} production={#{productions_to_s}}}"
   end
 end

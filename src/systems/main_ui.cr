@@ -164,8 +164,8 @@ class MainUiSystem
   private def draw_planet_resource_menu(planet)
     resources = planet.resources
     resources.storages.each do |res, store|
-      next if store[:amount] == 0.0
-      ImGui.text "\t#{res}: #{Helpers::Numbers.humanize(number: store[:amount], round: 2)} / #{Helpers::Numbers.humanize(number: store[:max], round: 0)}"
+      next if store.amount == 0.0
+      ImGui.text "\t#{res}: #{Helpers::Numbers.humanize(number: store.amount, round: 2)} / #{Helpers::Numbers.humanize(number: store.max, round: 0)}"
       toggle_planet_show_state_resources planet if ImGui.is_item_clicked
 
       # ImGui.same_line
