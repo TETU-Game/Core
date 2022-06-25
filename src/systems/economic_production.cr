@@ -28,13 +28,13 @@ class EconomicProductionSystem
       end
     end
 
-    producer.entities.each do |e|
-      puts "==="
-      puts "#{e.named.to_s} resources stats:"
-      e.resources.storages.each do |res, store|
-        puts "#{res}: #{store.amount} / #{store.max}"
-      end
-    end
+    # producer.entities.each do |e|
+    #   puts "==="
+    #   puts "#{e.named.to_s} resources stats:"
+    #   e.resources.storages.each do |res, store|
+    #     puts "#{res}: #{store.amount} / #{store.max}"
+    #   end
+    # end
   end
 
   private def unsafe_resource_increase!(

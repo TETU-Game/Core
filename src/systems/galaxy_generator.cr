@@ -85,11 +85,11 @@ class GalaxyInitializerSystem
   end
 
   def populate(body)
-    puts "populate: #{body.named.name}..."
+    # puts "populate: #{body.named.name}..."
     pop_amount = ((10_000.0)..(10_000_000_000.0)).sample
     body.add_population amount: pop_amount
     body.replace_component(Resources.default_populated)
-    puts "populated: #{body.named.name}, now #{body.resources.to_s}"
+    # puts "populated: #{body.named.name}, now #{body.resources.to_s}"
     body
   end
 end

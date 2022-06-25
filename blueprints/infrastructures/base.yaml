@@ -1,0 +1,49 @@
+templates:
+  default: &template_default
+    max: -1
+    min: -1
+    title: "?"
+    description: "?"
+    costs: {}
+    prods: {}
+
+items:
+  mine:
+    <<: *template_default
+    title: Mines
+    description: Mines are polluting industry to generate tons of basic ressources required for most of the industry.
+    costs:
+      mineral:
+        function: linear
+        coefs:
+          a: 30
+          b: 0
+          c: 40
+    prods:
+      mineral:
+        function: linear # a*(x+b) + c
+        coefs:
+          a: 5
+          b: 0
+          c: 1
+
+  mine2:
+    <<: *template_default
+    title: Specialized deep mines
+    description: These mines are deeper and is using robots to extract new materials
+  # a_plant:
+  #   <<: *template_default
+  #   title: Industrial blast furnaces
+  # a2_plant:
+  #   <<: *template_default
+  #   title: Meta-material furnaces
+  # c_plant:
+  #   <<: *template_default
+  #   title: Chemical plant
+  # w_plant:
+  #   <<: *template_default
+  #   title: Weapon assembly
+  # l_plant:
+  #   <<: *template_default
+  #   title: Logistic assembly
+  #   description: An assembly site that make trunks, trains, planes, and civilan space transports
