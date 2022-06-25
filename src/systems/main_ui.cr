@@ -159,8 +159,6 @@ class MainUiSystem
     end
   end
 
-  # TODO: wtf i wrotte upgrade cost here?
-  UPGRADE_MINERAL_COST = 100.0
   private def draw_planet_resource_menu(planet)
     resources = planet.resources
     resources.storages.each do |res, store|

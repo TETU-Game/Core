@@ -49,7 +49,7 @@ class EconomicProductionSystem
       amount: output_storage.amount + added_output,
       max: output_storage.max,
     )
-    planet.resources.storages[inout.input.as(Symbol)] = Resources::Store.new(
+    planet.resources.storages[inout.input.as(Resources::Name)] = Resources::Store.new(
       amount: input_storage.amount - deleted_input,
       max: input_storage.max,
     ) if input_storage

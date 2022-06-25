@@ -1,16 +1,20 @@
 templates:
   default: &template_default
-    max: -1
-    min: -1
-    title: "?"
-    description: "?"
+    build:
+      start: 0.2
+      duration:
+        function: linear
+        coefs:
+          a: 10
+          b: 0
+          c: 40
     costs:
       mineral:
         function: linear
         coefs:
-          a: 30
+          a: 25
           b: 0
-          c: 40
+          c: 50
     consumes: {}
     prods: {}
 
@@ -72,52 +76,6 @@ items:
           a: 10
           b: 0.9
           c: 5
-      pollution:
-        function: linear
-        coefs:
-          a: 0.1
-
-  a_plant:
-    <<: *template_default
-    title: Industrial blast furnaces
-    description: Heavy industry that eat minerals to mainly produce metalic alloys usable for almost any modern buildings, goods, and tools.
-    consumes:
-      mineral:
-        function: linear
-        coefs:
-          a: 1
-      energy:
-        function: linear
-        coefs:
-          a: 2
-    prods:
-      alloy:
-        function: linear
-        coefs:
-          a: 1
-      pollution:
-        function: linear
-        coefs:
-          a: 1
-
-  l_plant:
-    <<: *template_default
-    title: Logistic assembly
-    description: An assembly center site that make trunks, trains, planes, and civilan space transports.
-    consumes:
-      alloy:
-        function: linear
-        coefs:
-          a: 1
-      energy:
-        function: linear
-        coefs:
-          a: 1
-    prods:
-      logistic:
-        function: linear
-        coefs:
-          a: 1
       pollution:
         function: linear
         coefs:

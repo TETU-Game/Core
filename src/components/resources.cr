@@ -1,8 +1,11 @@
 @[Context(Game)]
 class Resources < Entitas::Component
-  DESCRIPTIONS = Blueprint.load_yaml("resources", "descriptions.yaml").as_h
-  LIST = %i[food food2 mineral mineral2 alloy alloy2 chemical weapon logistic pollution research]
-  LIST_S_TO_SYM = LIST.to_h { |k| Tuple.new(k.to_s, k) }
+  BLUEPRINTS = Blueprint.map("resources", filter: /\.yaml$/) { |file| File.open(file) }
+  DESCRIPTIONS = BLUEPRINTS.map { |b| YAML.parse(b).as_h }.reduce { |l, r| l.merge(r) }
+  LIST = DESCRIPTIONS.keys.map(&.as_s)
+  # LIST = %i[food food2 mineral mineral2 alloy alloy2 chemical weapon logistic pollution research]
+  # LIST_S_TO_SYM = LIST.to_h { |k| Tuple.new(k.to_s, k) }
+  alias Name = String
 
   struct Store
     getter amount, max
@@ -10,12 +13,12 @@ class Resources < Entitas::Component
     end
   end
 
-  class Stores < Hash(Symbol, Store)
+  class Stores < Hash(Name, Store)
   end
 
   struct InOut
     getter input, output
-    def initialize(@input : Symbol, @output : Symbol)
+    def initialize(@input : Name, @output : Name)
     end
   end
 
@@ -28,10 +31,15 @@ class Resources < Entitas::Component
   class Prods < Hash(InOut, ProdSpeed)
   end
 
-  class Infra
+  struct Infra
+    property id : String
+    property tier : Int32
+
+    def initialize(@id, @tier = 0)
+    end
   end
 
-  class Infras < Hash(Symbol, Infra)
+  class Infras < Hash(Name, Infra)
   end
 
   prop :productions, Prods
@@ -46,19 +54,22 @@ class Resources < Entitas::Component
     LIST.each do |res_name|
       stores[res_name] = Store.new(amount: 0.0, max: 1.0)
     end
-    stores[:pollution] = Store.new(amount: 0.0, max: 1.0)
+    stores["pollution"] = Store.new(amount: 0.0, max: 1_000_000.0)
 
     Resources.new(storages: stores, productions: prods, infrastructures: infras)
   end
 
   def self.default_populated
     r = default()
-    r.storages[:food]     = Store.new(amount: 0.0, max: 1000.0)
-    r.storages[:mineral]  = Store.new(amount: 0.0, max: 10000.0)
-    r.storages[:alloy]    = Store.new(amount: 0.0, max: 10000.0)
-    r.storages[:logistic] = Store.new(amount: 0.0, max: 10.0)
+    # r.storages[:food]      = Store.new(amount: 0.0, max: 1000.0)
+    # r.storages[:mineral]   = Store.new(amount: 0.0, max: 10000.0)
+    # r.storages[:alloy]     = Store.new(amount: 0.0, max: 10000.0)
+    # r.storages[:logistic]  = Store.new(amount: 0.0, max: 10.0)
+    r.storages["pollution"] = Store.new(amount: 100.0, max: 1_000_000.0) # habitable planet are already polluted a little
 
-    # TODO: use InfrastructuresFileLoader.all to load basic infra
+    # TODO
+    # r.upgrade(InfrastructureUpgrade.new(id: "e_plan", costs_by_tick: ))
+
     # r.productions[InOut.new(input: :nil, output: :food)] = ProdSpeed.new(rate: 1.0, max_speed: 20.0)
     # r.productions[InOut.new(input: :nil, output: :mineral)] = ProdSpeed.new(rate: 1.0, max_speed: 10.0)
     # r.productions[InOut.new(input: :mineral, output: :alloy)] = ProdSpeed.new(rate: 1.0, max_speed: 1.0)
@@ -78,7 +89,7 @@ class Resources < Entitas::Component
     )
   end
 
-  def upgrade(upgrade : InfrastructureUpgrades::InfrastructureUpgrade)
+  def upgrade(upgrade : InfrastructureUpgrade)
     # resource = upgrade[:resource]
     # upgrade[:costs].each do |cost_resource, cost_amount|
     #   add cost_resource, -cost_amount

@@ -97,16 +97,17 @@ class ShowState < Entitas::Component
   end
 end
 
+alias InfrastructureUpgrade = {
+  id: String,
+  costs_by_tick: Hash(String, Float64),
+  costs_end: Hash(String, Float64),
+  costs_start: Hash(String, Float64),
+  start_tick: TETU::Tick,
+  end_tick: TETU::Tick,
+}
+
 @[Context(Game)]
 class InfrastructureUpgrades < Entitas::Component
-  alias InfrastructureUpgrade = {
-    infrastructure_id: Symbol,
-    costs_by_tick: Hash(Symbol, Float64),
-    costs_end: Hash(Symbol, Float64),
-    costs_start: Hash(Symbol, Float64),
-    start_tick: TETU::Tick,
-    end_tick: TETU::Tick,
-  }
   prop :upgrades, Array(InfrastructureUpgrade), default: Array(InfrastructureUpgrade).new
 end
 
