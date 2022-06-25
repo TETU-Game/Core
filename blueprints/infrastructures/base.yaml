@@ -4,14 +4,6 @@ templates:
     min: -1
     title: "?"
     description: "?"
-    costs: {}
-    prods: {}
-
-items:
-  mine:
-    <<: *template_default
-    title: Mines
-    description: Mines are polluting industry to generate tons of basic ressources required for most of the industry.
     costs:
       mineral:
         function: linear
@@ -19,21 +11,122 @@ items:
           a: 30
           b: 0
           c: 40
+    consumes: {}
+    prods: {}
+
+items:
+
+  e_plan:
+    <<: *template_default
+    title: Energy plant
+    description: Energy grid that produce energy using nuclear isotops, sun, wind, and fossil fuel.
+    prods:
+      energy:
+        function: linear
+        coefs:
+          a: 10
+          c: 1
+      pollution:
+        function: linear
+        coefs:
+          a: 0.5
+
+  mine:
+    <<: *template_default
+    title: Mines
+    description: Mines are polluting industry to generate tons of basic ressources required for most of the industry.
+    consumes:
+      energy:
+        function: linear
+        coefs:
+          a: 1
     prods:
       mineral:
-        function: linear # a*(x+b) + c
+        function: squared
         coefs:
-          a: 5
-          b: 0
-          c: 1
+          a: 10
+          b: 0.9
+          c: 5
+      pollution:
+        function: linear
+        coefs:
+          a: 1
 
-  mine2:
+  farm:
     <<: *template_default
-    title: Specialized deep mines
-    description: These mines are deeper and is using robots to extract new materials
-  # a_plant:
+    title: Farmed lands
+    description: Large portions of the land space is used to produce nutrient. It growth crops, animal farms, etc. using standard mechanized tools and vehicules.
+    consumes:
+      mineral:
+        function: linear
+        coefs:
+          a: 0.2
+      energy:
+        function: linear
+        coefs:
+          a: 0.2
+    prods:
+      food:
+        function: suared
+        coefs:
+          a: 10
+          b: 0.9
+          c: 5
+      pollution:
+        function: linear
+        coefs:
+          a: 0.1
+
+  a_plant:
+    <<: *template_default
+    title: Industrial blast furnaces
+    description: Heavy industry that eat minerals to mainly produce metalic alloys usable for almost any modern buildings, goods, and tools.
+    consumes:
+      mineral:
+        function: linear
+        coefs:
+          a: 1
+      energy:
+        function: linear
+        coefs:
+          a: 2
+    prods:
+      alloy:
+        function: linear
+        coefs:
+          a: 1
+      pollution:
+        function: linear
+        coefs:
+          a: 1
+
+  l_plant:
+    <<: *template_default
+    title: Logistic assembly
+    description: An assembly center site that make trunks, trains, planes, and civilan space transports.
+    consumes:
+      alloy:
+        function: linear
+        coefs:
+          a: 1
+      energy:
+        function: linear
+        coefs:
+          a: 1
+    prods:
+      logistic:
+        function: linear
+        coefs:
+          a: 1
+      pollution:
+        function: linear
+        coefs:
+          a: 0.1
+
+  # mine2:
   #   <<: *template_default
-  #   title: Industrial blast furnaces
+  #   title: Specialized deep mines
+  #   description: These mines are deeper and is using robots to extract new materials
   # a2_plant:
   #   <<: *template_default
   #   title: Meta-material furnaces
