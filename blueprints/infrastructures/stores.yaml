@@ -28,8 +28,18 @@ items:
     stores:
       energy:
         function: linear
-        coef:
+        coefs:
           a: 20
+
+  m_store:
+    <<: *template_default
+    title: Mineral storage
+    description: Infrastructure to transport and store all kind of raw materials.
+    stores:
+      mineral:
+        function: linear
+        coefs:
+          a: 1000
 
   f_store:
     <<: *template_default
@@ -43,17 +53,7 @@ items:
     stores:
       mineral:
         function: linear
-        coef:
-          a: 1000
-
-  m_store:
-    <<: *template_default
-    title: Mineral storage
-    description: Infrastructure to transport and store all kind of raw materials.
-    stores:
-      mineral:
-        function: linear
-        coef:
+        coefs:
           a: 1000
 
   a_store:
@@ -63,7 +63,7 @@ items:
     stores:
       mineral:
         function: linear
-        coef:
+        coefs:
           a: 100
 
   l_store:
@@ -78,5 +78,5 @@ items:
     stores:
       mineral:
         function: linear
-        coef:
+        coefs:
           a: 10

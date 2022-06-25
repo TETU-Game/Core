@@ -85,11 +85,15 @@ class GalaxyInitializerSystem
   end
 
   def populate(body)
-    # puts "populate: #{body.named.name}..."
+    puts "populate: #{body.named.name}..."
     pop_amount = ((10_000.0)..(10_000_000_000.0)).sample
     body.add_population amount: pop_amount
     body.replace_component(Resources.default_populated)
-    # puts "populated: #{body.named.name}, now #{body.resources.to_s}"
+    body.add_infrastructure_upgrades
+    InfrastructureUpgrades
+      .default_upgrades_for_populated_body
+      .each { |upgrade| body.infrastructure_upgrades.upgrades << upgrade }
+    puts "populated: #{body.named.name}, now #{body.resources.to_s}, with #{body.infrastructure_upgrades.upgrades.size} upgrade to do..."
     body
   end
 end

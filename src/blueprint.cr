@@ -5,12 +5,16 @@ module Blueprint
     File.join(BASE_DIR, "blueprints", *parts)
   end
 
-  def self.map(*parts, filter : Regex, &block)
+  def self.all(*parts, filter : Regex) : Array(String)
     path = path(*parts)
     Dir.new(path)
       .children
       .select!{ |f| f.match(filter) }
-      .map { |f| yield File.join(path, f) }
+      .map { |f| File.join(path, f) }
+  end
+
+  def self.map(*parts, filter : Regex, &block)
+    all(*parts, filter: filter).map { |f| yield f }
   end
 
   def self.load_list(*parts)

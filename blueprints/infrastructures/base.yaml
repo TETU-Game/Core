@@ -17,16 +17,17 @@ templates:
           c: 50
     consumes: {}
     prods: {}
+    stores: {}
 
 items:
 
-  e_plan:
+  e_plant:
     <<: *template_default
     title: Energy plant
     description: Energy grid that produce energy using nuclear isotops, sun, wind, and fossil fuel.
     prods:
       energy:
-        function: constant
+        function: linear
         coefs:
           a: 0
           c: 10
@@ -71,7 +72,7 @@ items:
           a: 0.2
     prods:
       food:
-        function: suared
+        function: squared
         coefs:
           a: 10
           b: 0.9

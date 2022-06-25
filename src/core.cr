@@ -30,7 +30,7 @@ class EconomicSystems < Entitas::Feature
     add ::EconomicProductionSystem.new(ctx)
     add ::GalaxyInitializerSystem.new(ctx)
     add ::MainUiSystem.new(ctx)
-    # add ::InfrastructureUpgradesSystem.new(ctx)
+    add ::InfrastructureUpgradesSystem.new(ctx)
     add ::PopulationGrowthSystem.new(ctx)
   end
 end

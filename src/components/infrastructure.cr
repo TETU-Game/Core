@@ -1,7 +1,8 @@
 require "./curve"
 
 class Infrastructure
-  BLUEPRINTS = Blueprint.map("infrastructures", filter: /\.yaml$/) { |file| File.open(file) }
+  BLUEPRINTS = Blueprint.all("infrastructures", filter: /\.yaml$/)
+  pp "infra bp", BLUEPRINTS
 
   # alias Costs = Hash(String, Curve)
   # alias Productions = Hash(String, Curve)
@@ -14,10 +15,11 @@ class Infrastructure
   property min : Int32 = -1
   property title : String = "?"
   property description : String = "?"
+  property build : { start: Float64, duration: Curve }
   property costs : ResourceCurves
   property prods : ResourceCurves
+  property consumes : ResourceCurves
   property stores : ResourceCurves
-  property build : { start: Float64, duration: Curve }
   property id : String = ""
 end
 
@@ -27,16 +29,17 @@ class InfrastructuresFileLoader
   property items : Hash(String, Infrastructure)
   property templates : YAML::Any
 
-  @@all = [] of Infrastructure
+  @@all = Hash(String, Infrastructure).new
   def self.all
     @@all
   end
 end
 
 Infrastructure::BLUEPRINTS.each do |blueprint|
-  InfrastructuresFileLoader.from_yaml(blueprint).items.each do |item_id, item|
+  puts "Parsing infrastructure blueprint #{blueprint}"
+  InfrastructuresFileLoader.from_yaml(File.open(blueprint)).items.each do |item_id, item|
     item.id = item_id
-    InfrastructuresFileLoader.all << item
+    InfrastructuresFileLoader.all[item_id] = item
   end
 end
 

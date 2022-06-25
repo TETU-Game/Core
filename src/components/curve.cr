@@ -13,24 +13,31 @@ class Curve
   # (x) : the tier of the upgrade
   FUNCTIONS = {
     # a(x + b) + c (constants are a, b, c)
-    "linear" => ->(x, t) { (coef("b", 0.0) + x) * coef("b", 1.0) + coef("c", 0.0) },
+    "linear" => ->(f : Curve, x : Float64, t : TETU::Tick) {
+      (f.coef("b", 0.0) + x) * f.coef("b", 1.0) + f.coef("c", 0.0)
+    },
     # 1 + 2x + 3x² + 4x³ + ... (constants to define are 1, 2, 3, 4, ...)
-    "polynome" => ->(x, t) {
-      coef_ordered = coefs.keys.sort
+    "polynome" => ->(f : Curve, x : Float64, t : TETU::Tick) {
+      coef_ordered = f.coefs.keys.sort
       return 0.0 if coef_ordered.empty?
       index = 0
-      coef_ordered[1..-1].reduce(coefs(coef_ordered.first)) do |base, coef|
+      coef_ordered[1..-1].reduce(f.coef(coef_ordered.first)) do |base, coef|
         index += 1
         base + x ** index
       end
     },
     # log[a](x + b)*c + d (constants are a, b, c, d)
-    "log" => ->(x, t) { Math.log(coef("b", 10.0) + x, coef("a", 2.0)) * coef("c", 1.0) + coef("d", 0.0) },
+    "log" => ->(f : Curve, x : Float64, t : TETU::Tick) {
+      Math.log(f.coef("b", 10.0) + x, f.coef("a", 2.0)) * f.coef("c", 1.0) + f.coef("d", 0.0)
+    },
     # (a^x)b + c (constants are a, b, c)
-    "squared" => ->(x, t) { (x ** coef("a", 1.0)) * coef("b", 1.0) + coef("c", 0.0) },
+    "squared" => ->(f : Curve, x : Float64, t : TETU::Tick) {
+      (x ** f.coef("a", 1.0)) * f.coef("b", 1.0) + f.coef("c", 0.0)
+    },
   }
 
   def execute(x : Float64, t : TETU::Tick = 0) : Float64
-    FUNCTIONS[@function].call(x, t)
+    f = FUNCTIONS.fetch(@function) { raise "Invalid \"#{@function}\" name for function type. Valids are #{FUNCTIONS.keys.join(", ")}" }
+    f.call(self, x, t)
   end
 end
