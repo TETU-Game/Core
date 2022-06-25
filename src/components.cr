@@ -82,20 +82,8 @@ class Population < Entitas::Component
     entity.add_population amount: (MIN_RANDOM_POP..MAX_RANDOM_POP).sample.round
   end
 
-  BILLION = 1_000_000_000
-  MILLION = 1_000_000
-  THOUSAND = 1_000
-  ROUNDING = 2
   def to_s
-    if @amount > BILLION
-      "#{(@amount / BILLION).round(ROUNDING)}B"
-    elsif @amount > MILLION
-      "#{(@amount / MILLION).round(ROUNDING)}M"
-    elsif @amount > THOUSAND
-      "#{(@amount / THOUSAND).round(ROUNDING)}K"
-    else
-      @amount.to_s
-    end
+    Helpers::Numbers.humanize(number: @amount, round: 2)
   end
 end
 
@@ -151,15 +139,15 @@ class Resources < Entitas::Component
     }
   end
 
-  def upgrade(upgrade : ResourcesUpgrades::ResourceUpgrade)
-    resource = upgrade[:resource]
-    upgrade[:costs].each do |cost_resource, cost_amount|
-      add cost_resource, -cost_amount
-    end
-    storages[resource] = {
-      amount: storages[resource][:amount],
-      max: storages[resource][:max] + upgrade[:storages][:max],
-    }
+  def upgrade(upgrade : InfrastructureUpgrades::InfrastructureUpgrade)
+    # resource = upgrade[:resource]
+    # upgrade[:costs].each do |cost_resource, cost_amount|
+    #   add cost_resource, -cost_amount
+    # end
+    # storages[resource] = {
+    #   amount: storages[resource][:amount],
+    #   max: storages[resource][:max] + upgrade[:storages][:max],
+    # }
   end
 
   def to_s
@@ -180,13 +168,16 @@ class ShowState < Entitas::Component
 end
 
 @[Context(Game)]
-class ResourcesUpgrades < Entitas::Component
-  alias ResourceUpgrade = {
-    resource: Symbol,
-    storages: { max: Float64 },
-    costs: Hash(Symbol, Float64),
+class InfrastructureUpgrades < Entitas::Component
+  alias InfrastructureUpgrade = {
+    infrastructure_id: Symbol,
+    costs_by_tick: Hash(Symbol, Float64),
+    costs_end: Hash(Symbol, Float64),
+    costs_start: Hash(Symbol, Float64),
+    start_tick: TETU::Tick,
+    end_tick: TETU::Tick,
   }
-  prop :upgrades, Array(ResourceUpgrade), default: Array(ResourceUpgrade).new
+  prop :upgrades, Array(InfrastructureUpgrade), default: Array(InfrastructureUpgrade).new
 end
 
 require "./components/*"

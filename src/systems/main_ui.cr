@@ -165,23 +165,23 @@ class MainUiSystem
     resources = planet.resources
     resources.storages.each do |res, store|
       next if store[:amount] == 0.0
-      ImGui.text "\t#{res}: #{store[:amount]} / #{store[:max]}"
+      ImGui.text "\t#{res}: #{Helpers::Numbers.humanize(number: store[:amount], round: 2)} / #{Helpers::Numbers.humanize(number: store[:max], round: 0)}"
       toggle_planet_show_state_resources planet if ImGui.is_item_clicked
-      ImGui.same_line
 
-      can_upgrade = resources.storages[:mineral][:amount] >= UPGRADE_MINERAL_COST
-      ImGui.begin_disabled if !can_upgrade
-      if ImGui.button("upgrade####{res}")
-        # can be written
-        # # planet.add_resources_upgrades if !planet.has_component? ResourcesUpgrades.index_val
-        planet.add_resources_upgrades if !planet.has_resources_upgrades?
-        planet.resources_upgrades.upgrades << {
-          resource: res,
-          storages: { max: 1000.0 },
-          costs: { :mineral => UPGRADE_MINERAL_COST },
-        }
-      end
-      ImGui.end_disabled if !can_upgrade
+      # ImGui.same_line
+      # can_upgrade = resources.storages[:mineral][:amount] >= UPGRADE_MINERAL_COST
+      # ImGui.begin_disabled if !can_upgrade
+      # if ImGui.button("upgrade####{res}")
+      #   # can be written
+      #   # # planet.add_resources_upgrades if !planet.has_component? ResourcesUpgrades.index_val
+      #   planet.add_resources_upgrades if !planet.has_resources_upgrades?
+      #   planet.resources_upgrades.upgrades << {
+      #     resource: res,
+      #     storages: { max: 1000.0 },
+      #     costs: { :mineral => UPGRADE_MINERAL_COST },
+      #   }
+      # end
+      # ImGui.end_disabled if !can_upgrade
     end
   end
 end

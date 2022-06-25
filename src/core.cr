@@ -3,6 +3,7 @@ require "entitas"
 module TETU
 end
 
+require "./helpers/*"
 require "./core/*"
 
 module TETU
@@ -13,6 +14,10 @@ module TETU
 
   GALAXY_CONF = TETU::CONF["galaxy"]
   UI_CONF = TETU::CONF["ui"]
+
+  alias Tick = Int64
+  # struct Tick
+  # end
 end
 
 require "./components"
@@ -25,7 +30,7 @@ class EconomicSystems < Entitas::Feature
     add ::EconomicProductionSystem.new(ctx)
     add ::GalaxyInitializerSystem.new(ctx)
     add ::MainUiSystem.new(ctx)
-    add ::EconomicUpgradesSystem.new(ctx)
+    # add ::InfrastructureUpgradesSystem.new(ctx)
     add ::PopulationGrowthSystem.new(ctx)
   end
 end
