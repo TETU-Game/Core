@@ -97,14 +97,43 @@ class ShowState < Entitas::Component
   end
 end
 
-alias InfrastructureUpgrade = {
-  id: String,
-  costs_by_tick: Hash(String, Float64),
-  costs_end: Hash(String, Float64),
-  costs_start: Hash(String, Float64),
-  start_tick: TETU::Tick,
-  end_tick: TETU::Tick,
-}
+require "./components/resources"
+
+class InfrastructureUpgrade
+  alias Cost = Hash(Resources::Name, Float64)
+  property id : String
+  property costs_by_tick : Cost
+  property costs_start : Cost
+  property end_tick : TETU::Tick
+  property current_tick : TETU::Tick
+  @finished = false
+
+  def finished?
+    @finished
+  end
+
+  def finish!
+    @finished = true
+  end
+
+  def initialize(@id, @costs_by_tick, @costs_start, @end_tick, @current_tick = 0)
+  end
+
+  def self.from_infrastructure(id : String, tier : Int32)
+    # TODO: must read the properties of the blueprints to define the costs
+    free_instant(id)
+  end
+
+  def self.free_instant(id : String)
+    new(
+      id: id,
+      costs_by_tick: Cost.new,
+      costs_start: Cost.new,
+      end_tick: 0,
+      current_tick: 0,
+    )
+  end
+end
 
 @[Context(Game)]
 class InfrastructureUpgrades < Entitas::Component

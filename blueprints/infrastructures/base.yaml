@@ -26,10 +26,10 @@ items:
     description: Energy grid that produce energy using nuclear isotops, sun, wind, and fossil fuel.
     prods:
       energy:
-        function: linear
+        function: constant
         coefs:
-          a: 10
-          c: 1
+          a: 0
+          c: 10
       pollution:
         function: linear
         coefs:

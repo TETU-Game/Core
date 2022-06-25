@@ -3,8 +3,10 @@ require "./curve"
 class Infrastructure
   BLUEPRINTS = Blueprint.map("infrastructures", filter: /\.yaml$/) { |file| File.open(file) }
 
-  alias Costs = Hash(String, Curve)
-  alias Productions = Hash(String, Curve)
+  # alias Costs = Hash(String, Curve)
+  # alias Productions = Hash(String, Curve)
+  # alias Stores = Hash(String, Curve)
+  alias ResourceCurves = Hash(String, Curve)
 
   include YAML::Serializable
   include YAML::Serializable::Unmapped
@@ -12,8 +14,9 @@ class Infrastructure
   property min : Int32 = -1
   property title : String = "?"
   property description : String = "?"
-  property costs : Costs
-  property prods : Productions
+  property costs : ResourceCurves
+  property prods : ResourceCurves
+  property stores : ResourceCurves
   property build : { start: Float64, duration: Curve }
   property id : String = ""
 end

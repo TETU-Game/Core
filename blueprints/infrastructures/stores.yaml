@@ -1,0 +1,82 @@
+templates:
+  default: &template_default
+    build:
+      start: 0.2
+      duration:
+        function: linear
+        coefs:
+          a: 20
+          b: 0
+          c: 10
+    costs:
+      mineral:
+        function: linear
+        coefs:
+          a: 25
+          b: 0
+          c: 25
+    consumes: {}
+    prods: {}
+    stores: {}
+
+items:
+
+  e_store:
+    <<: *template_default
+    title: Energy storage
+    description: Improve energy network and add micros and macro-batteries to improve resilience.
+    stores:
+      energy:
+        function: linear
+        coef:
+          a: 20
+
+  f_store:
+    <<: *template_default
+    title: Food storage
+    description: Protective centers for nutrients and food supplies
+    consumes:
+      energy:
+        function: linear
+        coefs:
+          a: 0.2
+    stores:
+      mineral:
+        function: linear
+        coef:
+          a: 1000
+
+  m_store:
+    <<: *template_default
+    title: Mineral storage
+    description: Infrastructure to transport and store all kind of raw materials.
+    stores:
+      mineral:
+        function: linear
+        coef:
+          a: 1000
+
+  a_store:
+    <<: *template_default
+    title: Alloy storage
+    description: Infrastructure to transport and store all kind of industrial materials.
+    stores:
+      mineral:
+        function: linear
+        coef:
+          a: 100
+
+  l_store:
+    <<: *template_default
+    title: Logistic support
+    description: Infrastructure to park, maintain, and protect logistic.
+    consumes:
+      energy:
+        function: linear
+        coefs:
+          a: 0.2
+    stores:
+      mineral:
+        function: linear
+        coef:
+          a: 10

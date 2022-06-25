@@ -16,19 +16,11 @@ class Resources < Entitas::Component
   class Stores < Hash(Name, Store)
   end
 
-  struct InOut
-    getter input, output
-    def initialize(@input : Name, @output : Name)
-    end
+  alias Moving = Hash(Name, Store)
+  class Prods < Moving
   end
 
-  struct ProdSpeed
-    getter rate, max_speed
-    def initialize(@rate : Float64, @max_speed : Float64)
-    end
-  end
-
-  class Prods < Hash(InOut, ProdSpeed)
+  class Stores < Moving
   end
 
   struct Infra
@@ -42,9 +34,16 @@ class Resources < Entitas::Component
   class Infras < Hash(Name, Infra)
   end
 
-  prop :productions, Prods
-  prop :storages, Stores
-  prop :infrastructures, Infras
+  prop :prods, Prods
+  prop :consumes, Prods
+  prop :stores, Stores
+  prop :infras, Infras
+
+  def prod_rate
+    consumes
+      .map { |res, value| stores[res] >= res ? 1.0 : res / stores[res] }
+      .min
+  end
 
   def self.default
     stores = Stores.new
@@ -56,30 +55,25 @@ class Resources < Entitas::Component
     end
     stores["pollution"] = Store.new(amount: 0.0, max: 1_000_000.0)
 
-    Resources.new(storages: stores, productions: prods, infrastructures: infras)
+    Resources.new(stores: stores, prods: prods, infras: infras)
   end
 
   def self.default_populated
     r = default()
-    # r.storages[:food]      = Store.new(amount: 0.0, max: 1000.0)
-    # r.storages[:mineral]   = Store.new(amount: 0.0, max: 10000.0)
-    # r.storages[:alloy]     = Store.new(amount: 0.0, max: 10000.0)
-    # r.storages[:logistic]  = Store.new(amount: 0.0, max: 10.0)
-    r.storages["pollution"] = Store.new(amount: 100.0, max: 1_000_000.0) # habitable planet are already polluted a little
+    r.stores["pollution"] = Store.new(amount: 100.0, max: 1_000_000.0) # habitable planet are already polluted a little
 
-    # TODO
-    # r.upgrade(InfrastructureUpgrade.new(id: "e_plan", costs_by_tick: ))
+    r.upgrade(InfrastructureUpgrade.free_instant(id: "e_store"))
+    r.upgrade(InfrastructureUpgrade.free_instant(id: "m_store"))
+    r.upgrade(InfrastructureUpgrade.free_instant(id: "f_store"))
+    r.upgrade(InfrastructureUpgrade.free_instant(id: "a_store"))
+    r.upgrade(InfrastructureUpgrade.free_instant(id: "l_store"))
+    r.upgrade(InfrastructureUpgrade.free_instant(id: "e_plant"))
+    r.upgrade(InfrastructureUpgrade.free_instant(id: "mine"))
+    r.upgrade(InfrastructureUpgrade.free_instant(id: "farm"))
+    r.upgrade(InfrastructureUpgrade.free_instant(id: "a_plant"))
+    r.upgrade(InfrastructureUpgrade.free_instant(id: "l_plant"))
 
-    # r.productions[InOut.new(input: :nil, output: :food)] = ProdSpeed.new(rate: 1.0, max_speed: 20.0)
-    # r.productions[InOut.new(input: :nil, output: :mineral)] = ProdSpeed.new(rate: 1.0, max_speed: 10.0)
-    # r.productions[InOut.new(input: :mineral, output: :alloy)] = ProdSpeed.new(rate: 1.0, max_speed: 1.0)
-    # r.productions[InOut.new(input: :alloy, output: :weapon)] = ProdSpeed.new(rate: 0.1, max_speed: 0.1)
-    # r.productions[InOut.new(input: :alloy, output: :logistic)] = ProdSpeed.new(rate: 0.1, max_speed: 0.1)
     r
-  end
-
-  def self.required_input(prod_speed : ProdSpeed)
-    prod_speed.max_speed. / prod_speed.rate
   end
 
   def add(resource : Symbol, amount : Number)
@@ -87,17 +81,6 @@ class Resources < Entitas::Component
       amount: storages[resource].amount + amount,
       max: storages[resource].max,
     )
-  end
-
-  def upgrade(upgrade : InfrastructureUpgrade)
-    # resource = upgrade[:resource]
-    # upgrade[:costs].each do |cost_resource, cost_amount|
-    #   add cost_resource, -cost_amount
-    # end
-    # storages[resource] = {
-    #   amount: storages[resource][:amount],
-    #   max: storages[resource][:max] + upgrade[:storages][:max],
-    # }
   end
 
   def to_s

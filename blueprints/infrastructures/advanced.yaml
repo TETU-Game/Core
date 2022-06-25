@@ -17,6 +17,7 @@ templates:
           c: 100
     consumes: {}
     prods: {}
+    stores: {}
 
 items:
 
