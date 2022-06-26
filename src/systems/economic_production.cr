@@ -13,12 +13,20 @@ class EconomicProductionSystem
 
     producer = @context.get_group Entitas::Matcher.all_of(Resources, Population)
     producer.entities.each do |e|
-      pp e.resources
+      puts ""
       puts "produces? => #{e.resources.can_produce?}"
       next if !e.resources.can_produce?
-      rate = e.resources.prod_rate
-      e.resources.prods.each { |res, prod| apply_prod(resources: e.resources, res: res, rate: rate, prod: prod) }
-      e.resources.consumes.each { |res, conso| apply_prod(resources: e.resources, res: res, rate: -rate, prod: conso) }
+
+      e.resources.infras.each do |infra_id, infra|
+        rate = infra.prod_rate
+        puts "#{infra_id} computed rate=#{rate} with"
+        puts infra.humanize
+
+        prod_rates = infra.prods.map { |res, prod| apply_prod(infra: infra, res: res, rate: rate, prod: prod) }
+        real_prod_rate = prod_rates.empty? ? rate : prod_rates.max
+        infra.consumes.each { |res, conso| apply_prod(infra: infra, res: res, rate: -real_prod_rate, prod: conso) }
+        infra.wastes.each { |res, waste| apply_prod(infra: infra, res: res, rate: real_prod_rate, prod: waste) }
+      end
     end
 
     # producer.entities.each do |e|
@@ -30,12 +38,29 @@ class EconomicProductionSystem
     # end
   end
 
-  def apply_prod(resources : Resources, rate : Float64, res : Resources::Name, prod : Float64)
-    store = resources.stores[res]
-    return if rate > 0 && store.amount == store.max
+  # returns the real production rate, limited by the storage
+  def apply_prod(infra : Resources::Infra, rate : Float64, res : Resources::Name, prod : Float64) : Float64
+    puts "apply_prod wants rate=#{rate} res=#{res} prod=#{prod}"
+    store = infra.stores[res]?
+    if store.nil? || rate > 0 && store.amount == store.max
+      puts "apply_prod applied rate=0.0 res=#{res} prod=#{prod}"
+      return 0.0
+    end
 
-    new_amount = store.amount + rate * prod
-    new_amount = store.max if store.amount > store.max
+    # computes the amount we wanted to produce
+    max_prod = prod * rate
+    new_amount = store.amount + max_prod
+    # if no space, reduce production rate to have full storage, not more
+    if new_amount > store.max
+      # recompute a lower rate of production that will be applied to consumption
+      rate = (store.max - store.amount) / prod
+      new_amount = store.max
+    end
+
     store.amount = new_amount
+
+    puts "apply_prod applied rate=#{rate} res=#{res} prod=#{prod}"
+
+    return rate
   end
 end

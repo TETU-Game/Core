@@ -19,6 +19,7 @@ class Infrastructure
   property costs : ResourceCurves
   property prods : ResourceCurves
   property consumes : ResourceCurves
+  property wastes : ResourceCurves
   property stores : ResourceCurves
   property id : String = ""
 end

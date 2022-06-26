@@ -30,7 +30,7 @@ class InfrastructureUpgradesSystem
 
   def pay_upgrade_tick(resources : Resources, upgrade : InfrastructureUpgrade, costs : InfrastructureUpgrade::Costs)
     if costs.all? { |res, amount| resources.stores[res].amount >= amount }
-      # pay the upgrade
+      # pay the upgrade with local store
       costs.all? { |res, amount| resources.stores[res].amount -= amount }
       upgrade.current_tick += 1
       puts "paid tick upgrade"
@@ -52,21 +52,24 @@ class InfrastructureUpgradesSystem
     infra_id = upgrade.id
     infra = InfrastructuresFileLoader.all[infra_id]
 
-    local_infra = (resources.infras[upgrade.id] ||= Resources::Infra.new(id: infra_id, tier: 0))
+    local_infra = (resources.infras[upgrade.id] ||= Resources::Infra.new(id: infra_id, tier: 0, stores: resources.stores))
 
     tier = (local_infra.tier += 1)
     infra.prods.each do |res, curve|
-      resources.prods[res] ||= 0.0
-      resources.prods[res] += curve.execute(tier)
+      local_infra.prods[res] ||= 0.0
+      local_infra.prods[res] += curve.execute(tier)
     end
     infra.consumes.each do |res, curve|
-      pp resources if !resources.consumes?
-      resources.consumes[res] ||= 0.0
-      resources.consumes[res] += curve.execute(tier)
+      local_infra.consumes[res] ||= 0.0
+      local_infra.consumes[res] += curve.execute(tier)
+    end
+    infra.wastes.each do |res, curve|
+      local_infra.wastes[res] ||= 0.0
+      local_infra.wastes[res] += curve.execute(tier)
     end
     infra.stores.each do |res, curve|
-      resources.stores[res] ||= Resources::Store.new(amount: 0.0, max: 0.0)
-      resources.stores[res].max += curve.execute(tier)
+      local_infra.stores[res] ||= Resources::Store.new(amount: 0.0, max: 0.0)
+      local_infra.stores[res].max += curve.execute(tier)
     end
   end
 

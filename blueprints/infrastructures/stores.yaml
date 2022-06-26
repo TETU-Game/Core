@@ -18,6 +18,7 @@ templates:
     consumes: {}
     prods: {}
     stores: {}
+    wastes: {}
 
 items:
 
@@ -29,7 +30,7 @@ items:
       energy:
         function: linear
         coefs:
-          a: 20
+          c: 20
 
   m_store:
     <<: *template_default
@@ -39,7 +40,7 @@ items:
       mineral:
         function: linear
         coefs:
-          a: 1000
+          c: 1000
 
   f_store:
     <<: *template_default
@@ -49,22 +50,26 @@ items:
       energy:
         function: linear
         coefs:
-          a: 0.2
+          c: 0.2
     stores:
-      mineral:
+      food:
         function: linear
         coefs:
-          a: 1000
+          c: 1000
 
   a_store:
     <<: *template_default
     title: Alloy storage
     description: Infrastructure to transport and store all kind of industrial materials.
     stores:
+      alloy:
+        function: linear
+        coefs:
+          c: 100
       mineral:
         function: linear
         coefs:
-          a: 100
+          c: 100
 
   l_store:
     <<: *template_default
@@ -74,9 +79,13 @@ items:
       energy:
         function: linear
         coefs:
-          a: 0.2
+          c: 0.2
     stores:
-      mineral:
+      logistic:
         function: linear
         coefs:
-          a: 10
+          c: 10
+      alloy:
+        function: linear
+        coefs:
+          c: 10

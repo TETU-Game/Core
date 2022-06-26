@@ -12,9 +12,20 @@ class Resources < Entitas::Component
     property amount, max
     def initialize(@amount : Float64, @max : Float64)
     end
+
+    def self.empty
+      new(amount: 0.0, max: 0.0)
+    end
+
+    def humanize
+      "#{@amount}/#{@max}"
+    end
   end
 
   class Stores < Hash(Name, Store)
+    def humanize(sep = "\n")
+      map { |k, store| "#{k}: #{store.humanize}" }.join(sep)
+    end
   end
 
   # alias Prod = Tuple(Name, Float64)
@@ -25,55 +36,74 @@ class Resources < Entitas::Component
   struct Infra
     property id : String
     property tier : Int32
+    property prods : Prods
+    property consumes : Prods
+    property wastes : Prods
+    # this allow to manipulate the planet (local) store
+    # or make a special infrastructure specific store not shared if we want
+    getter stores : Stores
 
-    def initialize(@id, @tier = 0)
+    def initialize(@id, @stores, @tier = 0)
+      @prods = Prods.new
+      @consumes = Prods.new
+      @wastes = Prods.new
+    end
+
+    def prod_rate : Float64
+      return 1.0 if consumes.empty?
+      return 0.0 if consumes.any? { |res, _value| stores[res]?.nil? }
+      (consumes.map { |res, value| stores[res].amount / value } + [1.0]).min
+    end
+
+    def humanize(sep = "\n")
+      all_res = (consumes.keys + stores.keys + prods.keys).uniq.sort
+      all_res.map do |res|
+        store = (stores[res]? || Store.empty)
+        consume = consumes[res]? || 0.0
+        prod = prods[res]? || 0.0
+        "#{res}: #{store.humanize} +#{prod} -#{consume}"
+      end.join(sep)
     end
   end
 
   class Infras < Hash(Name, Infra)
+    # getter @stores : Stores
+    # def initialize(@stores)
+    # end
+
+    def humanize(sep = ", ")
+      map { |id, infra| "#{id} (#{infra.tier})" }.join(sep)
+    end
   end
 
-  prop :prods, Prods
-  prop :consumes, Prods
   prop :stores, Stores
   prop :infras, Infras
 
   def can_produce?
-    consumes? && prods? && stores? && infras?
+    stores? && infras?
   end
 
-  def prod_rate : Float64
-    return 1.0 if consumes.empty?
-    consumes
-      .map { |res, value| stores[res].amount >= value ? 1.0 : value / stores[res].amount }
-      .min
+  def humanize(sep = "\n")
+    infras.humanize(sep)
   end
 
   def self.default
     stores = Stores.new
-    prods = Prods.new
-    infras = Infras.new
-    consumes = Prods.new
-
-    LIST.each do |res_name|
-      stores[res_name] = Store.new(amount: 0.0, max: 1.0)
-    end
     stores["pollution"] = Store.new(amount: 0.0, max: 1_000_000.0)
 
-    Resources.new(stores: stores, prods: prods, infras: infras, consumes: consumes)
+    infras = Infras.new()
+
+    Resources.new(stores: stores, infras: infras)
   end
 
   def self.default_populated
     r = default()
-    r.stores["pollution"] = Store.new(amount: 100.0, max: 1_000_000.0) # habitable planet are already polluted a little
+    r.stores["pollution"].amount = 100.0 # habitable planet are already polluted a little
 
     r
   end
 
-  def to_s
-    stores_to_s = stores.map{ |k, v| "#{k}=#{v.amount}/#{v.max}" }.join(" ")
-    productions_to_s = prods.map { |res, value| "#{res}=#{value}" }.join(" ")
-    consumes_to_s = prods.map { |res, value| "#{res}=#{value}" }.join(" ")
-    "Resources:\n\tstore{#{stores_to_s}}\n\tconsumes={#{consumes_to_s}}\n\tproduces={#{productions_to_s}}"
+  def humanize
+    "Resources:#{infras.humanize}"
   end
 end

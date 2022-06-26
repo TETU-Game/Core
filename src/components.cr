@@ -152,11 +152,14 @@ class InfrastructureUpgrades < Entitas::Component
       InfrastructureUpgrade.free_instant(id: "e_store"),
       InfrastructureUpgrade.free_instant(id: "m_store"),
       InfrastructureUpgrade.free_instant(id: "f_store"),
-      InfrastructureUpgrade.free_instant(id: "a_store"),
-      InfrastructureUpgrade.free_instant(id: "l_store"),
+
       InfrastructureUpgrade.free_instant(id: "e_plant"),
       InfrastructureUpgrade.free_instant(id: "mine"),
       InfrastructureUpgrade.free_instant(id: "farm"),
+
+      InfrastructureUpgrade.free_instant(id: "a_store"),
+      InfrastructureUpgrade.free_instant(id: "l_store"),
+
       InfrastructureUpgrade.free_instant(id: "a_plant"),
       InfrastructureUpgrade.free_instant(id: "l_plant"),
     ]
