@@ -6,15 +6,13 @@ templates:
         function: linear
         coefs:
           a: 20
-          b: 0
-          c: 10
+          b: 10
     costs:
       mineral:
         function: linear
         coefs:
           a: 25
-          b: 0
-          c: 25
+          b: 25
     consumes: {}
     prods: {}
     stores: {}
@@ -30,7 +28,7 @@ items:
       energy:
         function: linear
         coefs:
-          c: 20
+          b: 20
 
   m_store:
     <<: *template_default
@@ -40,7 +38,7 @@ items:
       mineral:
         function: linear
         coefs:
-          c: 1000
+          b: 1000
 
   f_store:
     <<: *template_default
@@ -50,12 +48,12 @@ items:
       energy:
         function: linear
         coefs:
-          c: 0.2
+          b: 0.2
     stores:
       food:
         function: linear
         coefs:
-          c: 1000
+          b: 1000
 
   a_store:
     <<: *template_default
@@ -65,11 +63,11 @@ items:
       alloy:
         function: linear
         coefs:
-          c: 100
+          b: 100
       mineral:
         function: linear
         coefs:
-          c: 100
+          b: 100
 
   l_store:
     <<: *template_default
@@ -79,13 +77,13 @@ items:
       energy:
         function: linear
         coefs:
-          c: 0.2
+          b: 0.2
     stores:
       logistic:
         function: linear
         coefs:
-          c: 10
+          b: 10
       alloy:
         function: linear
         coefs:
-          c: 10
+          b: 10

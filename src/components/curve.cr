@@ -12,11 +12,11 @@ class Curve
   # Proc(Float64, Tick, Float64).new { |x| x }
   # (x) : the tier of the upgrade
   FUNCTIONS = {
-    # a(x + b) + c (constants are a, b, c)
+    # a(x + b) + c (constants are a, b)
     "linear" => ->(f : Curve, x : Float64, t : TETU::Tick) {
-      (f.coef("b", 0.0) + x) * f.coef("b", 1.0) + f.coef("c", 0.0)
+      x * f.coef("a", 1.0) + f.coef("b", 0.0)
     },
-    # 1 + 2x + 3x² + 4x³ + ... (constants to define are 1, 2, 3, 4, ...)
+    # ax⁰ + bx¹ + cx² + dx³ + ... (constants to define are alpha order)
     "polynome" => ->(f : Curve, x : Float64, t : TETU::Tick) {
       coef_ordered = f.coefs.keys.sort
       return 0.0 if coef_ordered.empty?
@@ -26,13 +26,13 @@ class Curve
         base + x ** index
       end
     },
-    # log[a](x + b)*c + d (constants are a, b, c, d)
+    # log[base](x + b)*c + d (constants are a, base, b, c)
     "log" => ->(f : Curve, x : Float64, t : TETU::Tick) {
-      Math.log(f.coef("b", 10.0) + x, f.coef("a", 2.0)) * f.coef("c", 1.0) + f.coef("d", 0.0)
+      Math.log(f.coef("base", 2.0), x + f.coef("b", 2.0)) * f.coef("a", 1.0) + f.coef("c", 0.0)
     },
-    # (a^x)b + c (constants are a, b, c)
+    # (a^x)b + c (constants are a, base, b, c)
     "squared" => ->(f : Curve, x : Float64, t : TETU::Tick) {
-      (x ** f.coef("a", 1.0)) * f.coef("b", 1.0) + f.coef("c", 0.0)
+      (x + f.coef("b", 2.0)) ** f.coef("base", 2.0) * f.coef("a", 1.0) + f.coef("c", 0.0)
     },
   }
 
