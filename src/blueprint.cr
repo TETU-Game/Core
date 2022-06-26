@@ -1,4 +1,4 @@
-module Blueprint
+module TETU::Blueprint
   BASE_DIR = Path[String.new(ARGV_UNSAFE.value)].expand.parent
 
   def self.path(*parts)

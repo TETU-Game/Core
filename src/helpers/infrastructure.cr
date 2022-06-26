@@ -1,6 +1,6 @@
 require "./curve"
 
-class Infrastructure
+class TETU::Helpers::Infrastructure
   BLUEPRINTS = Blueprint.all("infrastructures", filter: /\.yaml$/)
   pp "infra bp", BLUEPRINTS
 
@@ -24,7 +24,7 @@ class Infrastructure
   property id : String = ""
 end
 
-class InfrastructuresFileLoader
+class TETU::Helpers::InfrastructuresFileLoader
   include YAML::Serializable
   include YAML::Serializable::Unmapped
   property items : Hash(String, Infrastructure)
@@ -36,11 +36,11 @@ class InfrastructuresFileLoader
   end
 end
 
-Infrastructure::BLUEPRINTS.each do |blueprint|
+TETU::Helpers::Infrastructure::BLUEPRINTS.each do |blueprint|
   puts "Parsing infrastructure blueprint #{blueprint}"
-  InfrastructuresFileLoader.from_yaml(File.open(blueprint)).items.each do |item_id, item|
+  TETU::Helpers::InfrastructuresFileLoader.from_yaml(File.open(blueprint)).items.each do |item_id, item|
     item.id = item_id
-    InfrastructuresFileLoader.all[item_id] = item
+    TETU::Helpers::InfrastructuresFileLoader.all[item_id] = item
   end
 end
 

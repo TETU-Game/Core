@@ -1,5 +1,5 @@
 @[Context(Game)]
-class Resources < Entitas::Component
+class TETU::Resources < Entitas::Component
   BLUEPRINTS = Blueprint.all("resources", filter: /\.yaml$/)
   pp "resources bp", BLUEPRINTS
   DESCRIPTIONS = BLUEPRINTS.map { |b| YAML.parse(File.open(b)).as_h }.reduce { |l, r| l.merge(r) }

@@ -20,7 +20,7 @@ deps_update:
 deps_opt:
 	@[ -d lib/ ] || make deps
 doc:
-	crystal docs
+	crystal docs ./lib/entitas/src/entitas.cr ./src/core.cr
 clean:
 	rm $(NAME)
 

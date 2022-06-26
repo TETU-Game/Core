@@ -1,6 +1,6 @@
 require "../components"
 
-class EconomicProductionSystem
+class TETU::EconomicProductionSystem
   include Entitas::Systems::ExecuteSystem
 
   def initialize(@context : GameContext); end

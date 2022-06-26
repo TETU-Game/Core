@@ -1,6 +1,6 @@
 require "../components"
 
-class InfrastructureUpgradesSystem
+class TETU::InfrastructureUpgradesSystem
   include Entitas::Systems::ExecuteSystem
 
   def initialize(@context : GameContext); end
@@ -50,7 +50,7 @@ class InfrastructureUpgradesSystem
   def apply_upgrade(resources : Resources, upgrade : InfrastructureUpgrade)
     puts "apply_upgrade: #{resources.to_s} #{upgrade.to_s}"
     infra_id = upgrade.id
-    infra = InfrastructuresFileLoader.all[infra_id]
+    infra = Helpers::InfrastructuresFileLoader.all[infra_id]
 
     local_infra = (resources.infras[upgrade.id] ||= Resources::Infra.new(id: infra_id, tier: 0, stores: resources.stores))
 

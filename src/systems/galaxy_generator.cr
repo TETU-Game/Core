@@ -1,4 +1,4 @@
-class GalaxyInitializerSystem
+class TETU::GalaxyInitializerSystem
   include Entitas::Systems::InitializeSystem
 
   def initialize(@context : GameContext); end
@@ -29,9 +29,9 @@ class GalaxyInitializerSystem
     Position.generate star
     Named.generate_star star
 
-    bodies_amount = Planet::BODIES_STATISTICS.sample
+    bodies_amount = Helpers::Planet::BODIES_STATISTICS.sample
     bodies_amount.times.map do |index|
-      body_type = Planet::TYPES_STATISTICS.sample
+      body_type = Helpers::Planet::TYPES_STATISTICS.sample
       ids_trash[body_type] += 1
       body = generate_body(star: star, index: index, body_type: body_type, ids_trash: ids_trash)
       if body_type == :asteroid_belt
@@ -61,7 +61,7 @@ class GalaxyInitializerSystem
     body.add_component Resources.default
 
     if moon_index.nil?
-      moon_amount = Planet::MOONS_STATISTICS.sample
+      moon_amount = Helpers::Planet::MOONS_STATISTICS.sample
       moon_amount.times.map do |moon_time_index|
         ids_trash_with_moon = {
           :asteroid_belt => 0,

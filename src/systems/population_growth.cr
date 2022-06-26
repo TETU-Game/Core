@@ -1,6 +1,6 @@
 require "../components"
 
-class PopulationGrowthSystem
+class TETU::PopulationGrowthSystem
   include Entitas::Systems::ExecuteSystem
 
   def initialize(@context : GameContext); end

@@ -1,4 +1,4 @@
-class Curve
+class TETU::Helpers::Curve
   include YAML::Serializable
   property function : String
   property coefs : Hash(String, Float64 | Int32)

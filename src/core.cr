@@ -1,41 +1,53 @@
 require "entitas"
+require "crsfml"
+require "imgui"
+require "imgui-sfml"
+require "yaml"
 
 module TETU
+  # TO BE USED
+  module Systems
+  end
+
+  # TO BE USED
+  module Components
+  end
+
+  module Helpers
+  end
 end
 
 require "./helpers/*"
 require "./core/*"
 
-module TETU
-  CONF = TETU::Configuration.instance
-
-  MAX_X = CONF["max_x"].as_i
-  MAX_Y = CONF["max_y"].as_i
-
-  GALAXY_CONF = TETU::CONF["galaxy"]
-  UI_CONF = TETU::CONF["ui"]
-
-  alias Tick = Int64
-  # struct Tick
-  # end
-end
-
 require "./components"
-require "./systems/*"
+require "./systems"
 
-class EconomicSystems < Entitas::Feature
+class TETU::EconomicSystems < Entitas::Feature
   def initialize(contexts : Contexts)
-    @name = "Economic System"
-    ctx = contexts.game
-    add ::EconomicProductionSystem.new(ctx)
-    add ::GalaxyInitializerSystem.new(ctx)
-    add ::MainUiSystem.new(ctx)
-    add ::InfrastructureUpgradesSystem.new(ctx)
-    add ::PopulationGrowthSystem.new(ctx)
+    @name = "Economic Systems"
+    ctx = contexts.game # I think this is the link with @[Context(Game)] :thinking:
+    add EconomicProductionSystem.new(ctx)
+    add GalaxyInitializerSystem.new(ctx)
+    add InfrastructureUpgradesSystem.new(ctx)
+    add PopulationGrowthSystem.new(ctx)
   end
 end
 
-class HelloWorld
+
+class TETU::UiSystems < Entitas::Feature
+  def initialize(contexts : Contexts)
+    @name = "UI Systems"
+    ctx = contexts.game
+
+    add UiInitSystem.new(ctx)
+    add UiBackgroundSystem.new(ctx)
+    add UiGalaxySystem.new(ctx)
+    add UiPlanetSystem.new(ctx)
+  end
+end
+
+class TETU::MainWorld
   getter systems : Entitas::Systems = Entitas::Systems.new
 
   def start
@@ -45,6 +57,7 @@ class HelloWorld
     # create the systems by creating individual features
     @systems = Entitas::Feature.new("systems")
       .add(EconomicSystems.new(contexts))
+      .add(UiSystems.new(contexts))
     @systems.init
   end
 
@@ -60,7 +73,7 @@ end
 
 # require "./gui/*"
 
-hw = HelloWorld.new
+hw = TETU::MainWorld.new
 hw.start
 
 i = 0i64

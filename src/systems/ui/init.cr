@@ -1,58 +1,45 @@
-require "../components"
-require "crsfml"
-require "imgui"
-require "imgui-sfml"
-
-class MainUiSystem
+class TETU::UiInitSystem
   include Entitas::Systems::ExecuteSystem
   include Entitas::Systems::InitializeSystem
 
-  GALAXY_WIDTH = TETU::MAX_X
-  GALAXY_HEIGHT = TETU::MAX_Y
-  UI_WIDTH = GALAXY_WIDTH + TETU::UI_CONF["right_sidebar"].as_i64
-  UI_HEIGHT = GALAXY_HEIGHT
-  SQUARE_SIZE = TETU::UI_CONF["square_size"].as_i64
+  def initialize(@context : GameContext); end
 
-  GALAXY = SF::Texture.from_file("assets/#{GALAXY_WIDTH}x#{GALAXY_HEIGHT}/galaxy.jpg")
+  def window
+    TETU::Window.instance.window
+  end
 
-  @window : SF::RenderWindow
-
-  def initialize(@context : GameContext)
-    @window = SF::RenderWindow.new(
-      SF::VideoMode.new(UI_WIDTH, UI_HEIGHT),
-      "To the End of The Universe",
-    )
-    @delta_clock = SF::Clock.new
+  def delta_clock
+    TETU::Window.instance.delta_clock
   end
 
   def init
-    ImGui::SFML.init(@window)
-    @window.framerate_limit = TETU::UI_CONF["framerate"].as_i64
+    ImGui::SFML.init(window)
+    window.framerate_limit = TETU::UI_CONF["framerate"].as_i64
   end
 
   def execute
-    if !@window.open?
+    if !window.open?
       exit(0)
     end
 
     handle_events
-    ImGui::SFML.update(@window, @delta_clock.restart)
-    @window.clear(SF::Color::Black)
+    ImGui::SFML.update(window, delta_clock.restart)
+    window.clear(SF::Color::Black)
 
     draw_background
     draw_galay_menu
 
-    ImGui::SFML.render(@window)
-    @window.display
+    ImGui::SFML.render(window)
+    window.display
   end
 
   private def handle_events
-    while event = @window.poll_event
-      ImGui::SFML.process_event(@window, event)
+    while event = window.poll_event
+      ImGui::SFML.process_event(window, event)
 
       case event
       when SF::Event::Closed
-        @window.close
+        window.close
       when SF::Event::KeyPressed
         puts "KeyPressed #{event}"
       when SF::Event::MouseButtonEvent
@@ -62,8 +49,8 @@ class MainUiSystem
   end
 
   private def draw_background
-    sprite = SF::Sprite.new(GALAXY)
-    @window.draw(sprite)
+    sprite = SF::Sprite.new(Window::GALAXY)
+    window.draw(sprite)
     # draw_cadran 50
     # draw_cadran 120
     # draw_cadran 220
@@ -80,18 +67,18 @@ class MainUiSystem
     circle.outline_thickness = 1
     circle.point_count = 500
     circle.position = { GALAXY_WIDTH / 2 - size, GALAXY_HEIGHT / 2 - size }
-    @window.draw circle
+    window.draw circle
   end
 
   private def draw_grid
-    (0...(GALAXY_WIDTH / SQUARE_SIZE)).each do |x|
-      (0...(GALAXY_HEIGHT / SQUARE_SIZE)).each do |y|
-        square = SF::RectangleShape.new(SF.vector2(SQUARE_SIZE, SQUARE_SIZE))
+    (0...(Window::GALAXY_WIDTH / Window::SQUARE_SIZE)).each do |x|
+      (0...(Window::GALAXY_HEIGHT / Window::SQUARE_SIZE)).each do |y|
+        square = SF::RectangleShape.new(SF.vector2(Window::SQUARE_SIZE, Window::SQUARE_SIZE))
         square.outline_color = SF::Color::White
         square.fill_color = SF::Color::Transparent
         square.outline_thickness = 1
-        square.position = { x * SQUARE_SIZE, y * SQUARE_SIZE }
-        @window.draw square
+        square.position = { x * Window::SQUARE_SIZE, y * Window::SQUARE_SIZE }
+        window.draw square
       end
     end
   end
@@ -105,14 +92,14 @@ class MainUiSystem
       square.outline_color = SF::Color::Red
       square.fill_color = SF::Color::Red
       square.outline_thickness = 1
-      @window.draw square
+      window.draw square
     end
   end
 
   private def draw_galay_menu
     if ImGui.begin(name: "right side", flags: ImGui::ImGuiWindowFlags.new(0))
-      ImGui.set_window_pos("right side", ImGui::ImVec2.new(GALAXY_WIDTH, 0))
-      ImGui.set_window_size("right side", ImGui::ImVec2.new(400, GALAXY_HEIGHT))
+      ImGui.set_window_pos("right side", ImGui::ImVec2.new(Window::GALAXY_WIDTH, 0))
+      ImGui.set_window_size("right side", ImGui::ImVec2.new(400, Window::GALAXY_HEIGHT))
       if ImGui.tree_node_ex("galaxy infos", ImGui::ImGuiTreeNodeFlags.new(ImGui::ImGuiTreeNodeFlags::DefaultOpen))
         if ImGui.tree_node_ex "Stars", ImGui::ImGuiTreeNodeFlags.new(ImGui::ImGuiTreeNodeFlags::DefaultOpen)
           draw_stars_menu
