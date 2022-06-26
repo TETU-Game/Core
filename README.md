@@ -1,6 +1,6 @@
 # TETU Core
 
-A 4X game in space, inspired by Stellaris PDX
+A strategy & simulation game in space, inspired by Stellaris PDX
 
 ## Installation
 
@@ -18,7 +18,9 @@ Install `git`, `sfml`, `crystal`, `make`, `imgui` (`imgui-sfml` with archlinux).
 
 ## Development
 
-TODO: Write development instructions here
+* See the wiki <https://git.sceptique.eu/TETU/Core/wiki>.
+* See the current kanban: <https://git.sceptique.eu/TETU/Core/projects/10>
+* Come talk on IRC **irc://irc.sceptique.eu#TETU**
 
 ## Contributing
 
