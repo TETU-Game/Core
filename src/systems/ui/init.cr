@@ -1,16 +1,9 @@
 class TETU::UiInitSystem
+  include Helpers::UiSystem
   include Entitas::Systems::ExecuteSystem
   include Entitas::Systems::InitializeSystem
 
   def initialize(@context : GameContext); end
-
-  def window
-    TETU::Window.instance.window
-  end
-
-  def delta_clock
-    TETU::Window.instance.delta_clock
-  end
 
   def init
     ImGui::SFML.init(window)
@@ -25,12 +18,6 @@ class TETU::UiInitSystem
     handle_events
     ImGui::SFML.update(window, delta_clock.restart)
     window.clear(SF::Color::Black)
-
-    draw_background
-    draw_galay_menu
-
-    ImGui::SFML.render(window)
-    window.display
   end
 
   private def handle_events
@@ -45,128 +32,6 @@ class TETU::UiInitSystem
       when SF::Event::MouseButtonEvent
         puts "MouseButtonEvent #{event}"
       end
-    end
-  end
-
-  private def draw_background
-    sprite = SF::Sprite.new(Window::GALAXY)
-    window.draw(sprite)
-    # draw_cadran 50
-    # draw_cadran 120
-    # draw_cadran 220
-    # draw_cadran 350
-    draw_grid
-    draw_stars_on_grid
-  end
-
-  private def draw_cadran(size)
-    circle = SF::CircleShape.new
-    circle.radius = size
-    circle.outline_color = SF::Color::White
-    circle.fill_color = SF::Color::Transparent
-    circle.outline_thickness = 1
-    circle.point_count = 500
-    circle.position = { GALAXY_WIDTH / 2 - size, GALAXY_HEIGHT / 2 - size }
-    window.draw circle
-  end
-
-  private def draw_grid
-    (0...(Window::GALAXY_WIDTH / Window::SQUARE_SIZE)).each do |x|
-      (0...(Window::GALAXY_HEIGHT / Window::SQUARE_SIZE)).each do |y|
-        square = SF::RectangleShape.new(SF.vector2(Window::SQUARE_SIZE, Window::SQUARE_SIZE))
-        square.outline_color = SF::Color::White
-        square.fill_color = SF::Color::Transparent
-        square.outline_thickness = 1
-        square.position = { x * Window::SQUARE_SIZE, y * Window::SQUARE_SIZE }
-        window.draw square
-      end
-    end
-  end
-
-  private def draw_stars_on_grid
-    stars = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody).none_of(StellarPosition)
-    stars.entities.each do |entity|
-      position = entity.position
-      square = SF::RectangleShape.new(SF.vector2(1, 1))
-      square.position = { position.x, position.y }
-      square.outline_color = SF::Color::Red
-      square.fill_color = SF::Color::Red
-      square.outline_thickness = 1
-      window.draw square
-    end
-  end
-
-  private def draw_galay_menu
-    if ImGui.begin(name: "right side", flags: ImGui::ImGuiWindowFlags.new(0))
-      ImGui.set_window_pos("right side", ImGui::ImVec2.new(Window::GALAXY_WIDTH, 0))
-      ImGui.set_window_size("right side", ImGui::ImVec2.new(400, Window::GALAXY_HEIGHT))
-      if ImGui.tree_node_ex("galaxy infos", ImGui::ImGuiTreeNodeFlags.new(ImGui::ImGuiTreeNodeFlags::DefaultOpen))
-        if ImGui.tree_node_ex "Stars", ImGui::ImGuiTreeNodeFlags.new(ImGui::ImGuiTreeNodeFlags::DefaultOpen)
-          draw_stars_menu
-          ImGui.tree_pop
-        end
-        ImGui.tree_pop
-      end
-    end
-    ImGui.end
-  end
-
-  private def draw_stars_menu
-    stars = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody).none_of(StellarPosition)
-    stars.entities.each do |entity|
-      draw_star_menu_one_star(entity)
-    end
-  end
-
-  private def draw_star_menu_one_star(star)
-    if ImGui.tree_node_ex "#{star.named.name} | #{star.position.to_s}", ImGui::ImGuiTreeNodeFlags.new(ImGui::ImGuiTreeNodeFlags::DefaultOpen)
-      draw_planets_menu star
-      ImGui.tree_pop
-    end
-  end
-
-  private def draw_planets_menu(star)
-    planets = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody, StellarPosition, ShowState)
-    planets.entities.each do |planet|
-      next if star.position != planet.position
-
-      text = "#{planet.named.name} | #{planet.stellar_position.to_s}"
-      text += " | pop #{planet.population.to_s}" if planet.has_population?
-      ImGui.text text
-      toggle_planet_show_state_resources planet if ImGui.is_item_clicked
-
-      draw_planet_resource_menu planet if planet.show_state.resources == true
-    end
-  end
-
-  private def toggle_planet_show_state_resources(planet)
-    show_state = planet.show_state
-    if planet.has_resources?
-      show_state.resources = !show_state.resources
-    end
-  end
-
-  private def draw_planet_resource_menu(planet)
-    resources = planet.resources
-    resources.stores.each do |res, store|
-      next if store.amount == 0.0
-      ImGui.text "\t#{res}: #{Helpers::Numbers.humanize(number: store.amount, round: 2)} / #{Helpers::Numbers.humanize(number: store.max, round: 0)}"
-      toggle_planet_show_state_resources planet if ImGui.is_item_clicked
-
-      # ImGui.same_line
-      # can_upgrade = resources.storages[:mineral][:amount] >= UPGRADE_MINERAL_COST
-      # ImGui.begin_disabled if !can_upgrade
-      # if ImGui.button("upgrade####{res}")
-      #   # can be written
-      #   # # planet.add_resources_upgrades if !planet.has_component? ResourcesUpgrades.index_val
-      #   planet.add_resources_upgrades if !planet.has_resources_upgrades?
-      #   planet.resources_upgrades.upgrades << {
-      #     resource: res,
-      #     storages: { max: 1000.0 },
-      #     costs: { :mineral => UPGRADE_MINERAL_COST },
-      #   }
-      # end
-      # ImGui.end_disabled if !can_upgrade
     end
   end
 end

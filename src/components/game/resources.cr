@@ -33,7 +33,7 @@ class TETU::Resources < Entitas::Component
   class Prods < Moving
   end
 
-  struct Infra
+  class Infra
     property id : String
     property tier : Int32
     property prods : Prods

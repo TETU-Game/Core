@@ -42,8 +42,9 @@ class TETU::UiSystems < Entitas::Feature
 
     add UiInitSystem.new(ctx)
     add UiBackgroundSystem.new(ctx)
-    add UiGalaxySystem.new(ctx)
+    add UiEmpireSystem.new(ctx)
     add UiPlanetSystem.new(ctx)
+    add UiDrawSystem.new(ctx) # keep at the end
   end
 end
 

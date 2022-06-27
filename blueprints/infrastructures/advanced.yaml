@@ -52,7 +52,7 @@ items:
       alloy:
         function: linear
         coefs:
-          b: 1
+          b: 0.5
       energy:
         function: linear
         coefs:
@@ -61,7 +61,7 @@ items:
       logistic:
         function: linear
         coefs:
-          b: 0.1
+          b: 0.05
     wastes:
       pollution:
         function: linear

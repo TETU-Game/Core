@@ -17,6 +17,7 @@ class TETU::Window
 
   getter window : SF::RenderWindow
   getter delta_clock : SF::Clock
+  property planet_menu_selected : GameEntity? = nil
 
   def initialize()
     @window = SF::RenderWindow.new(
