@@ -1,18 +1,18 @@
 templates:
   default: &template_default
     build:
-      start: 0.2
+      upfront: 0.1
       duration:
         function: linear
         coefs:
           a: 10
           b: 50
-    costs:
-      mineral:
-        function: linear
-        coefs:
-          a: 0
-          b: 100
+      costs:
+        mineral:
+          function: linear
+          coefs:
+            a: 0
+            b: 100
     consumes: {}
     prods: {}
     stores: {}

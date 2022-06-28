@@ -1,5 +1,11 @@
 require "./curve"
 
+# Allow to unserialize yaml mods.
+# This is supposed to be used for a given tier like:
+#
+# ```
+# costs.map { |res, cost_f| cost_f.execute(new_tier) }
+# ```
 class TETU::Helpers::Infrastructure
   BLUEPRINTS = Blueprint.all("infrastructures", filter: /\.yaml$/)
   pp "infra bp", BLUEPRINTS
@@ -8,6 +14,12 @@ class TETU::Helpers::Infrastructure
   # alias Productions = Hash(String, Curve)
   # alias Stores = Hash(String, Curve)
   alias ResourceCurves = Hash(String, Curve)
+  class Build
+    include YAML::Serializable
+    property upfront : Float64
+    property duration : Curve
+    property costs : ResourceCurves
+  end
 
   include YAML::Serializable
   include YAML::Serializable::Unmapped
@@ -15,8 +27,7 @@ class TETU::Helpers::Infrastructure
   property min : Int32 = -1
   property title : String = "?"
   property description : String = "?"
-  property build : { start: Float64, duration: Curve }
-  property costs : ResourceCurves
+  property build : Build
   property prods : ResourceCurves
   property consumes : ResourceCurves
   property wastes : ResourceCurves

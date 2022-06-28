@@ -5,7 +5,7 @@ ui:
   framerate: 5
   square_size: 100
   right_sidebar: 400
-  left_sidebar: 400
+  left_sidebar: 600
 
 galaxy:
   systems_amount: 2

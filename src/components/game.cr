@@ -56,6 +56,27 @@ class TETU::InfrastructureUpgrade
       current_tick: 0i64,
     )
   end
+
+  def self.from_blueprint(infra_id : String, tier : Number)
+    blueprint = Helpers::InfrastructuresFileLoader.all[infra_id]
+    total_costs = blueprint.build.costs.transform_values { |f| f.execute(tier) }
+    upfront_costs = total_costs.transform_values { |v| v * blueprint.build.upfront }
+    duration = blueprint.build.duration.execute(tier)
+    tick_costs = total_costs.transform_values { |v| v * (1.0 - blueprint.build.upfront) / duration }
+    puts ""
+    puts "> Create from blueprint"
+    upgrade = new(
+      id: infra_id,
+      costs_by_tick: tick_costs,
+      costs_start: upfront_costs,
+      end_tick: duration.to_i64,
+      current_tick: 0i64,
+    )
+    pp blueprint
+    pp upgrade
+    puts ""
+    upgrade
+  end
 end
 
 @[Context(Game)]

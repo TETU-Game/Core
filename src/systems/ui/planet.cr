@@ -52,7 +52,7 @@ class TETU::UiPlanetSystem
   private def draw_infras(planet)
     infras = planet.resources.infras
     res_names = planet.resources.stores.keys
-    if ImGui.begin_table("infra", res_names.size + 2)
+    if ImGui.begin_table("infra", res_names.size + 3)
       ImGui.table_next_row
       ImGui.table_next_column
       ImGui.text ""
@@ -64,15 +64,18 @@ class TETU::UiPlanetSystem
         ImGui.text res
       end
 
+      ImGui.table_next_column
+      ImGui.text "upgrade"
+
       infras.each_value do |infra|
-        draw_one_infra(infra, res_names)
+        draw_one_infra(planet, infra, res_names)
       end
 
       ImGui.end_table
     end
   end
 
-  private def draw_one_infra(infra, res_names)
+  private def draw_one_infra(planet, infra, res_names)
     ImGui.table_next_row
     ImGui.table_next_column
     ImGui.text infra.id
@@ -83,6 +86,14 @@ class TETU::UiPlanetSystem
       total = infra.prods.fetch(res, 0.0) - infra.consumes.fetch(res, 0.0) + infra.wastes.fetch(res, 0.0)
       ImGui.table_next_column
       ImGui.text total.to_s
+
+    end
+
+    ImGui.table_next_column
+    planet.add_infrastructure_upgrades if !planet.has_infrastructure_upgrades?
+    pp planet.infrastructure_upgrades
+    if ImGui.button("upgrade####{infra.id}")
+      planet.infrastructure_upgrades.upgrades << InfrastructureUpgrade.from_blueprint(infra.id, infra.tier + 1)
     end
   end
 
