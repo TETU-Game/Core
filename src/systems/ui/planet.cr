@@ -67,8 +67,13 @@ class TETU::UiPlanetSystem
       ImGui.table_next_column
       ImGui.text "upgrade"
 
-      infras.each_value do |infra|
-        draw_one_infra(planet, infra, res_names)
+      Helpers::InfrastructuresFileLoader.all.keys.each do |infra_id|
+        infra = infras[infra_id]?
+        if infra.nil?
+          draw_unconstructed_infra(planet, infra_id, res_names)
+        else
+          draw_one_infra(planet, infra, res_names)
+        end
       end
 
       ImGui.end_table
@@ -86,7 +91,6 @@ class TETU::UiPlanetSystem
       total = infra.prods.fetch(res, 0.0) - infra.consumes.fetch(res, 0.0) + infra.wastes.fetch(res, 0.0)
       ImGui.table_next_column
       ImGui.text total.to_s
-
     end
 
     ImGui.table_next_column
@@ -94,6 +98,25 @@ class TETU::UiPlanetSystem
     pp planet.infrastructure_upgrades
     if ImGui.button("upgrade####{infra.id}")
       planet.infrastructure_upgrades.upgrades << InfrastructureUpgrade.from_blueprint(infra.id, infra.tier + 1)
+    end
+  end
+
+  private def draw_unconstructed_infra(planet, infra_id, res_names)
+    ImGui.table_next_row
+    ImGui.table_next_column
+    ImGui.text infra_id
+    ImGui.table_next_column
+    ImGui.text "-"
+
+    res_names.each do |res|
+      ImGui.table_next_column
+      ImGui.text "-"
+    end
+
+    ImGui.table_next_column
+    planet.add_infrastructure_upgrades if !planet.has_infrastructure_upgrades?
+    if ImGui.button("build####{infra_id}")
+      planet.infrastructure_upgrades.upgrades << InfrastructureUpgrade.from_blueprint(infra_id, 1)
     end
   end
 

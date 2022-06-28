@@ -1,3 +1,6 @@
+energy:
+  name: Energy
+  description: Represents how many machines we can move at the same time.
 food:
   name: Food
   description: Standard food with low technological ehancements
@@ -27,3 +30,6 @@ weapon:
 logistic:
   name: Logistic
   description: Civilan ships for fret and travellers
+pollution:
+  name: Pollution
+  description: Represent the wastes of industrial activities, that is stored on the planet more or less randomly.

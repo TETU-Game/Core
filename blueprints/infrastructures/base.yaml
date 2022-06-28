@@ -6,7 +6,7 @@ templates:
         function: linear
         coefs:
           a: 10
-          b: 50
+          b: 0
       costs:
         mineral:
           function: linear

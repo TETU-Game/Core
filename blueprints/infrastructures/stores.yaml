@@ -87,3 +87,18 @@ items:
         function: linear
         coefs:
           b: 10
+
+  c_store:
+    <<: *template_default
+    title: Chemical safes
+    description: A safe infrastructure to support chemical transportation and storage.
+    consumes:
+      energy:
+        function: linear
+        coefs:
+          b: 0.2
+    stores:
+      chemical:
+        function: linear
+        coefs:
+          b: 10

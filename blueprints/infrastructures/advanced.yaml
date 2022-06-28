@@ -6,7 +6,7 @@ templates:
         function: linear
         coefs:
           a: 20
-          b: 80
+          b: 0
       costs:
         mineral:
           function: linear
@@ -44,6 +44,30 @@ items:
         coefs:
           b: 1
 
+  c_plant:
+    <<: *template_default
+    title: Chemical plant
+    description: Series of chemical transformation machines.
+    consumes:
+      mineral:
+        function: linear
+        coefs:
+          b: 3
+      energy:
+        function: linear
+        coefs:
+          b: 3
+    prods:
+      chemical:
+        function: linear
+        coefs:
+          b: 0.1
+    wastes:
+      pollution:
+        function: linear
+        coefs:
+          b: 3
+
   l_plant:
     <<: *template_default
     title: Logistic assembly
@@ -67,3 +91,35 @@ items:
         function: linear
         coefs:
           b: 0.2
+
+  recycler:
+    <<: *template_default
+    title: Recycling systems
+    description: Handle wastes on the planet to reduce pollution. While producing some minor resources it also simply burn wastes, or compress it and hide it in place where it will not hurt anything.
+    consumes:
+      pollution:
+        function: linear
+        coefs:
+          b: 1
+      energy:
+        function: linear
+        coefs:
+          b: 2
+    prods:
+      mineral:
+        function: linear
+        coefs:
+          b: 0.1
+      chemical:
+        function: linear
+        coefs:
+          b: 0.01
+      alloy:
+        function: linear
+        coefs:
+          b: 0.01
+    wastes:
+      pollution:
+        function: linear
+        coefs:
+          b: 0
