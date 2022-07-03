@@ -19,7 +19,7 @@ Install `git`, `sfml`, `crystal`, `make`, `imgui` (`imgui-sfml` with archlinux).
 ## Development
 
 * See the wiki <https://git.sceptique.eu/TETU/Core/wiki>.
-* See the current kanban: <https://git.sceptique.eu/TETU/Core/projects/10>
+* See the current kanban: <https://git.sceptique.eu/TETU/Core/projects>
 * Come talk on IRC **irc://irc.sceptique.eu#TETU**
 
 ## Contributing
