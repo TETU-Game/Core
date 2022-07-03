@@ -32,7 +32,7 @@ class TETU::UiEmpireSystem
   end
 
   private def draw_stars_menu
-    stars = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody).none_of(StellarPosition)
+    stars = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody, PlayerOwned).none_of(StellarPosition)
     stars.entities.each do |entity|
       draw_star_menu_one_star(entity)
     end
@@ -46,7 +46,7 @@ class TETU::UiEmpireSystem
   end
 
   private def draw_planets_menu(star)
-    planets = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody, StellarPosition, ShowState)
+    planets = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody, StellarPosition, PlayerOwned)
     planets.entities.each do |planet|
       next if star.position != planet.position
 
@@ -54,8 +54,6 @@ class TETU::UiEmpireSystem
       text += " | pop #{planet.population.to_s}" if planet.has_population?
       ImGui.text text
       toggle_planet_show_state_resources planet if ImGui.is_item_clicked
-
-      # draw_planet_resource_menu planet if planet.show_state.resources == true
     end
   end
 

@@ -9,7 +9,7 @@ class TETU::InfrastructureUpgradesSystem
     producer = @context.get_group Entitas::Matcher.all_of Resources, InfrastructureUpgrades
     producer.entities.each do |e|
       # pay the cost
-      puts "e.infrastructure_upgrades.upgrades = #{e.infrastructure_upgrades.upgrades.size}"
+      # puts "e.infrastructure_upgrades.upgrades = #{e.infrastructure_upgrades.upgrades.size}"
       e.infrastructure_upgrades.upgrades.reject! do |upgrade|
         pay_upgrade(e.resources, upgrade)
         if upgrade.finished?

@@ -16,7 +16,7 @@ class TETU::UiBackgroundSystem
     # draw_cadran 220
     # draw_cadran 350
     draw_grid
-    draw_stars_on_grid
+    draw_stars_on_grid # TODO FIXME: THIS LINE IS ULTRA SLOW (99% of computation time)
   end
 
   private def draw_cadran(size)
@@ -50,8 +50,10 @@ class TETU::UiBackgroundSystem
       square = SF::RectangleShape.new(SF.vector2(1, 1))
       square.position = { position.x, position.y }
       square.outline_color = SF::Color::Red
+      square.outline_color = SF::Color::Blue if entity.has_player_owned?
       square.fill_color = SF::Color::Red
       square.outline_thickness = 1
+      square.outline_thickness = 5 if entity.has_player_owned?
       window.draw square
     end
   end

@@ -80,11 +80,14 @@ hw.start
 i = 0i64
 stop_at = ARGV.size > 0 ? ARGV[0].to_u64 : -1i64
 loop do
+  t1 = Time.local
   i += 1
   puts "=============== START TICK #{i} ==============="
   Fiber.yield
   hw.update
   exit if i == stop_at
   puts "=============== FINISH TICK #{i} ==============="
+  t2 = Time.local
+  puts "Duration: #{t2 - t1}"
   puts ""
 end

@@ -3,33 +3,46 @@ class TETU::GalaxyInitializerSystem
 
   def initialize(@context : GameContext); end
 
-  SYSTEMS_AMOUNT = TETU::GALAXY_CONF["systems_amount"].as_i64
+  SYSTEMS_AMOUNT = GALAXY_CONF["systems_amount"].as_i
+  AI_AMOUNT = GALAXY_CONF["ai_start_amount"].as_i
+  EMPIRE_AMOUNT = AI_AMOUNT + 1 # add the player
+  AI_MIN_PLANETS = GALAXY_CONF["ai_start_populated_bodies_amount"].as_i
+  # NO_SPACE_EMPIRE_ID = 100001
 
   def init
     stars = SYSTEMS_AMOUNT.times.map do |i|
-      generate_star
+      empire_id = i < EMPIRE_AMOUNT ? i : nil
+      star = generate_star(empire_id)
+      star.add_player_owned if i == 0
+      generate_star_system(star, empire_id)
+
+      star
     end.to_a
+
     stars = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody).none_of(StellarPosition)
     stars.entities.each { |entity| puts "new Star [#{entity.named.to_s}] at [#{entity.position.to_s}]" }
-
     bodies = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody, StellarPosition)
     bodies.entities.each { |entity| puts "new Body [#{entity.named.to_s}] in [#{entity.stellar_position.body_index}, #{entity.stellar_position.moon_index}]" }
   end
 
-  private def generate_star
+  private def generate_star(empire_id : Int32?)
+    star = @context.create_entity
+    star.add_celestial_body type: :star
+    star.add_owned empire_id: empire_id if !empire_id.nil?
+    Position.generate star
+    Named.generate_star star
+  end
+
+  private def generate_star_system(star : Entitas::IEntity, empire_id : Int32?)
     ids_trash = {
       :asteroid_belt => 0,
       :planet        => 0,
       :moon          => 0,
     }
 
-    star = @context.create_entity
-    star.add_celestial_body type: :star
-    star.add_show_state gui: true, resources: false
-    Position.generate star
-    Named.generate_star star
-
     bodies_amount = Helpers::Planet::BODIES_STATISTICS.sample
+    bodies_amount = AI_MIN_PLANETS if !empire_id.nil? && bodies_amount < AI_MIN_PLANETS
+
     bodies_amount.times.map do |index|
       body_type = Helpers::Planet::TYPES_STATISTICS.sample
       ids_trash[body_type] += 1
@@ -46,7 +59,6 @@ class TETU::GalaxyInitializerSystem
     star_position = star.position
 
     body = @context.create_entity
-    body.add_show_state gui: true, resources: false
     star_position.as(Position).copy_to body
     body.add_stellar_position body_index: index, moon_index: ids_trash[:moon]
 
@@ -74,7 +86,13 @@ class TETU::GalaxyInitializerSystem
       end.to_a
     end
 
-    populate(body) if rand < TETU::GALAXY_CONF["populated_planets_proba"].as_f
+    body.add_player_owned if star.has_player_owned?
+    if star.has_owned?
+      body.add_owned(empire_id: star.owned.empire_id)
+      populate(body) if index < AI_MIN_PLANETS
+    else
+      populate(body) if rand < TETU::GALAXY_CONF["populated_planets_proba"].as_f
+    end
     body
   end
 
@@ -85,7 +103,7 @@ class TETU::GalaxyInitializerSystem
   end
 
   def populate(body)
-    puts "populate: #{body.named.name}..."
+    # puts "populate: #{body.named.name}..."
     pop_amount = ((10_000.0)..(10_000_000_000.0)).sample
     body.add_population amount: pop_amount
     body.replace_component(Resources.default_populated)
@@ -93,7 +111,7 @@ class TETU::GalaxyInitializerSystem
     InfrastructureUpgrades
       .default_upgrades_for_populated_body
       .each { |upgrade| body.infrastructure_upgrades.upgrades << upgrade }
-    puts "populated: #{body.named.name}, now #{body.resources.to_s}, with #{body.infrastructure_upgrades.upgrades.size} upgrade to do..."
+    # puts "populated: #{body.named.name}, now #{body.resources.to_s}, with #{body.infrastructure_upgrades.upgrades.size} upgrade to do..."
     body
   end
 end

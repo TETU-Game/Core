@@ -13,14 +13,14 @@ class TETU::EconomicProductionSystem
 
     producer = @context.get_group Entitas::Matcher.all_of(Resources, Population)
     producer.entities.each do |e|
-      puts ""
-      puts "produces? => #{e.resources.can_produce?}"
+      # puts ""
+      # puts "produces? => #{e.resources.can_produce?}"
       next if !e.resources.can_produce?
 
       e.resources.infras.each do |infra_id, infra|
         rate = infra.prod_rate
-        puts "#{infra_id} computed rate=#{rate} with"
-        puts infra.humanize
+        # puts "#{infra_id} computed rate=#{rate} with"
+        # puts infra.humanize
 
         prod_rates = infra.prods.map { |res, prod| apply_prod(infra: infra, res: res, rate: rate, prod: prod) }
         real_prod_rate = prod_rates.empty? ? rate : prod_rates.max
@@ -40,10 +40,10 @@ class TETU::EconomicProductionSystem
 
   # returns the real production rate, limited by the storage
   def apply_prod(infra : Resources::Infra, rate : Float64, res : Resources::Name, prod : Float64) : Float64
-    puts "apply_prod wants rate=#{rate} res=#{res} prod=#{prod}"
+    # puts "apply_prod wants rate=#{rate} res=#{res} prod=#{prod}"
     store = infra.stores[res]?
     if store.nil? || rate > 0 && store.amount == store.max
-      puts "apply_prod applied rate=0.0 res=#{res} prod=#{prod}"
+      # puts "apply_prod applied rate=0.0 res=#{res} prod=#{prod}"
       return 0.0
     end
 
@@ -59,7 +59,7 @@ class TETU::EconomicProductionSystem
 
     store.amount = new_amount
 
-    puts "apply_prod applied rate=#{rate} res=#{res} prod=#{prod}"
+    # puts "apply_prod applied rate=#{rate} res=#{res} prod=#{prod}"
 
     return rate
   end
