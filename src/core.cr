@@ -6,9 +6,10 @@ require "crsfml"
 require "imgui"
 require "imgui-sfml"
 
-Log.setup(:debug)
-
 module TETU
+  LOG_FORMATTER = ::Log::IOBackend.new(formatter: ::Log::ShortFormat)
+  ::Log.setup(:debug, LOG_FORMATTER) # Log debug and above for all
+
   Log = ::Log.for("tetu")
 
   # TO BE USED
