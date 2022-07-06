@@ -63,8 +63,8 @@ class TETU::InfrastructureUpgrade
     upfront_costs = total_costs.transform_values { |v| v * blueprint.build.upfront }
     duration = blueprint.build.duration.execute(tier)
     tick_costs = total_costs.transform_values { |v| v * (1.0 - blueprint.build.upfront) / duration }
-    puts ""
-    puts "> Create from blueprint"
+    Log.debug { "" }
+    Log.debug { "> Create from blueprint" }
     upgrade = new(
       id: infra_id,
       costs_by_tick: tick_costs,
@@ -74,7 +74,7 @@ class TETU::InfrastructureUpgrade
     )
     pp blueprint
     pp upgrade
-    puts ""
+    Log.debug { "" }
     upgrade
   end
 end

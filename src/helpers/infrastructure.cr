@@ -48,7 +48,7 @@ class TETU::Helpers::InfrastructuresFileLoader
 end
 
 TETU::Helpers::Infrastructure::BLUEPRINTS.each do |blueprint|
-  puts "Parsing infrastructure blueprint #{blueprint}"
+  Log.debug { "Parsing infrastructure blueprint #{blueprint}" }
   TETU::Helpers::InfrastructuresFileLoader.from_yaml(File.open(blueprint)).items.each do |item_id, item|
     item.id = item_id
     TETU::Helpers::InfrastructuresFileLoader.all[item_id] = item

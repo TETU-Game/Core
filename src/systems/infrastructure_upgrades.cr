@@ -9,7 +9,7 @@ class TETU::InfrastructureUpgradesSystem
     producer = @context.get_group Entitas::Matcher.all_of Resources, InfrastructureUpgrades
     producer.entities.each do |e|
       # pay the cost
-      # puts "e.infrastructure_upgrades.upgrades = #{e.infrastructure_upgrades.upgrades.size}"
+      # Log.debug { "e.infrastructure_upgrades.upgrades = #{e.infrastructure_upgrades.upgrades.size}" }
       e.infrastructure_upgrades.upgrades.reject! do |upgrade|
         pay_upgrade(e.resources, upgrade)
         if upgrade.finished?
@@ -23,7 +23,7 @@ class TETU::InfrastructureUpgradesSystem
   end
 
   def pay_upgrade(resources : Resources, upgrade : InfrastructureUpgrade)
-    puts "pay_upgrade: #{resources.to_s} #{upgrade.to_s}"
+    Log.debug { "pay_upgrade: #{resources.to_s} #{upgrade.to_s}" }
     current_costs = upgrade.current_tick == 0 ? upgrade.costs_start : upgrade.costs_by_tick
     pay_upgrade_tick(resources, upgrade, current_costs)
   end
@@ -33,10 +33,10 @@ class TETU::InfrastructureUpgradesSystem
       # pay the upgrade with local store
       costs.all? { |res, amount| resources.stores[res].amount -= amount }
       upgrade.current_tick += 1
-      puts "paid tick upgrade"
+      Log.debug { "paid tick upgrade" }
     else
       # if we can't pay the upgrade, we will "loose" one tick due to maintenance
-      puts "cannot pay upgrade"
+      Log.debug { "cannot pay upgrade" }
       upgrade.end_tick += 1
     end
 
@@ -48,7 +48,7 @@ class TETU::InfrastructureUpgradesSystem
   end
 
   def apply_upgrade(resources : Resources, upgrade : InfrastructureUpgrade)
-    puts "apply_upgrade: #{resources.to_s} #{upgrade.to_s}"
+    Log.debug { "apply_upgrade: #{resources.to_s} #{upgrade.to_s}" }
     infra_id = upgrade.id
     infra = Helpers::InfrastructuresFileLoader.all[infra_id]
 

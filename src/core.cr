@@ -1,16 +1,24 @@
+require "log"
+require "yaml"
+
 require "entitas"
 require "crsfml"
 require "imgui"
 require "imgui-sfml"
-require "yaml"
+
+Log.setup(:debug)
 
 module TETU
+  Log = ::Log.for("tetu")
+
   # TO BE USED
   module Systems
+    Log = TETU::Log.for("systems")
   end
 
   # TO BE USED
   module Components
+    Log = TETU::Log.for("components")
   end
 
   module Helpers
@@ -82,12 +90,12 @@ stop_at = ARGV.size > 0 ? ARGV[0].to_u64 : -1i64
 loop do
   t1 = Time.local
   i += 1
-  puts "=============== START TICK #{i} ==============="
+  Log.debug { "=============== START TICK #{i} ===============" }
   Fiber.yield
   hw.update
   exit if i == stop_at
-  puts "=============== FINISH TICK #{i} ==============="
+  Log.debug { "=============== FINISH TICK #{i} ===============" }
   t2 = Time.local
-  puts "Duration: #{t2 - t1}"
-  puts ""
+  Log.debug { "Duration: #{t2 - t1}" }
+  Log.debug { "" }
 end

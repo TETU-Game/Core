@@ -20,9 +20,9 @@ class TETU::GalaxyInitializerSystem
     end.to_a
 
     stars = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody).none_of(StellarPosition)
-    stars.entities.each { |entity| puts "new Star [#{entity.named.to_s}] at [#{entity.position.to_s}]" }
+    stars.entities.each { |entity| Log.debug { "new Star [#{entity.named.to_s}] at [#{entity.position.to_s}]" } }
     bodies = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody, StellarPosition)
-    bodies.entities.each { |entity| puts "new Body [#{entity.named.to_s}] in [#{entity.stellar_position.body_index}, #{entity.stellar_position.moon_index}]" }
+    bodies.entities.each { |entity| Log.debug { "new Body [#{entity.named.to_s}] in [#{entity.stellar_position.body_index}, #{entity.stellar_position.moon_index}]" } }
   end
 
   private def generate_star(empire_id : Int32?)
@@ -103,7 +103,7 @@ class TETU::GalaxyInitializerSystem
   end
 
   def populate(body)
-    # puts "populate: #{body.named.name}..."
+    # Log.debug { "populate: #{body.named.name}..." }
     pop_amount = ((10_000.0)..(10_000_000_000.0)).sample
     body.add_population amount: pop_amount
     body.replace_component(Resources.default_populated)
@@ -111,7 +111,7 @@ class TETU::GalaxyInitializerSystem
     InfrastructureUpgrades
       .default_upgrades_for_populated_body
       .each { |upgrade| body.infrastructure_upgrades.upgrades << upgrade }
-    # puts "populated: #{body.named.name}, now #{body.resources.to_s}, with #{body.infrastructure_upgrades.upgrades.size} upgrade to do..."
+    # Log.debug { "populated: #{body.named.name}, now #{body.resources.to_s}, with #{body.infrastructure_upgrades.upgrades.size} upgrade to do..." }
     body
   end
 end

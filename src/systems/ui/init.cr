@@ -28,9 +28,9 @@ class TETU::UiInitSystem
       when SF::Event::Closed
         window.close
       when SF::Event::KeyPressed
-        puts "KeyPressed #{event}"
+        Log.debug { "KeyPressed #{event}" }
       when SF::Event::MouseButtonEvent
-        puts "MouseButtonEvent #{event}"
+        Log.debug { "MouseButtonEvent #{event}" }
       end
     end
   end
