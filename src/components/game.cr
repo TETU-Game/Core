@@ -72,8 +72,8 @@ class TETU::InfrastructureUpgrade
       end_tick: duration.to_i64,
       current_tick: 0i64,
     )
-    pp blueprint
-    pp upgrade
+    Log.debug { { blueprint: blueprint } }
+    Log.debug { { upgrade: upgrade } }
     Log.debug { "" }
     upgrade
   end

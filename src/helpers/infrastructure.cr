@@ -8,7 +8,7 @@ require "./curve"
 # ```
 class TETU::Helpers::Infrastructure
   BLUEPRINTS = Blueprint.all("infrastructures", filter: /\.yaml$/)
-  pp "infra bp", BLUEPRINTS
+  Log.debug { { "infra bp": BLUEPRINTS } }
 
   # alias Costs = Hash(String, Curve)
   # alias Productions = Hash(String, Curve)

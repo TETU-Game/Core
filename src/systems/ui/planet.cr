@@ -95,7 +95,7 @@ class TETU::UiPlanetSystem
 
     ImGui.table_next_column
     planet.add_infrastructure_upgrades if !planet.has_infrastructure_upgrades?
-    pp planet.infrastructure_upgrades
+    Log.debug { { "planet.infrastructure_upgrades": planet.infrastructure_upgrades } }
     if ImGui.button("upgrade####{infra.id}")
       planet.infrastructure_upgrades.upgrades << InfrastructureUpgrade.from_blueprint(infra.id, infra.tier + 1)
     end

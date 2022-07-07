@@ -1,7 +1,7 @@
 @[Context(Game)]
 class TETU::Resources < Entitas::Component
   BLUEPRINTS = Blueprint.all("resources", filter: /\.yaml$/)
-  pp "resources bp", BLUEPRINTS
+  Log.debug { { "resources bp": BLUEPRINTS } }
   DESCRIPTIONS = BLUEPRINTS.map { |b| YAML.parse(File.open(b)).as_h }.reduce { |l, r| l.merge(r) }
   LIST = DESCRIPTIONS.keys.map(&.as_s)
   # LIST = %i[food food2 mineral mineral2 alloy alloy2 chemical weapon logistic pollution research]
