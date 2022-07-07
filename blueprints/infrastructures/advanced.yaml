@@ -17,6 +17,19 @@ templates:
     prods: {}
     stores: {}
     wastes: {}
+    manpower:
+      min:
+        function: linear
+        coefs:
+          b: 100_000
+      optimal:
+        function: linear
+        coefs:
+          b: 1_000_000
+      max:
+        function: linear
+        coefs:
+          b: 10_000_000
 
 items:
 
