@@ -7,11 +7,13 @@ class TETU::Helpers::Curve
     @coefs.fetch(name, default).to_f64
   end
 
-  # NOTE: we should add a "t" to represent the duration of exploitation:
-  #       older planets need new investments to keep up with usure
   # Proc(Float64, Tick, Float64).new { |x| x }
   # (x) : the tier of the upgrade
   FUNCTIONS = {
+    # = x (any constant name is accepted, only one)
+    "constant" => ->(f : Curve, x : Float64, t : TETU::Tick) {
+      f.coefs.values.first.to_f64
+    },
     # a(x + b) + c (constants are a, b)
     "linear" => ->(f : Curve, x : Float64, t : TETU::Tick) {
       x * f.coef("a", 1.0) + f.coef("b", 0.0)
@@ -23,7 +25,7 @@ class TETU::Helpers::Curve
       index = 0
       coef_ordered[1..-1].reduce(f.coef(coef_ordered.first)) do |base, coef|
         index += 1
-        base + x ** index
+        base + coef.to_f64 * (x ** index)
       end
     },
     # log[base](x + b)*c + d (constants are a, base, b, c)
