@@ -12,7 +12,7 @@ class TETU::EconomicProductionSystem
     #   STDERR.Log.debug { "this named populated entity is #{e.named.to_s} and has #{e.population.to_s} pop" }
     # end
 
-    producer_group = @context.get_group Entitas::Matcher.all_of(Resources, Population)
+    producer_group = @context.get_group Entitas::Matcher.all_of(Resources, Population, ManpowerAllocation)
     producer_group.entities.each do |e|
       next if !e.resources.can_produce?
 
@@ -38,9 +38,10 @@ class TETU::EconomicProductionSystem
     return 1.0 if infra.consumes.empty?
     return 0.0 if infra.consumes.any? { |res, _value| infra.stores[res]?.nil? }
     # TODO: another function for pop.amount < manpower.optimal
+    allocated_manpower = producer.manpower_allocation.absolute[infra.id]
     maximal_rate =
-      if infra.allocated_manpower >= infra.manpower.min
-        Math.log(2, infra.allocated_manpower / infra.manpower.optimal) + 1.0
+      if allocated_manpower >= infra.manpower.min
+        Math.log(2, allocated_manpower / infra.manpower.optimal) + 1.0
       else
         0.0
       end
@@ -48,7 +49,7 @@ class TETU::EconomicProductionSystem
     # Log.debug { "producer.named.name" }
     # Log.debug { "maximal_rate=#{maximal_rate} " }
     # Log.debug { "limited_rate=#{limited_rate}"  }
-    # Log.debug { "infra.allocated_manpower=#{infra.allocated_manpower}"  }
+    # Log.debug { "allocated_manpower=#{allocated_manpower}"  }
     # Log.debug { "infra.manpower.optimal=#{infra.manpower.optimal}"  }
     limited_rate
   end

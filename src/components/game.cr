@@ -86,24 +86,6 @@ class TETU::InfrastructureUpgrades < Entitas::Component
   def to_s
     "InfrastructureUpgrades: #{upgrades.map(&.to_s)}"
   end
-
-  def self.default_upgrades_for_populated_body
-    [
-      InfrastructureUpgrade.free_instant(id: "e_store"),
-      InfrastructureUpgrade.free_instant(id: "m_store"),
-      InfrastructureUpgrade.free_instant(id: "f_store"),
-
-      InfrastructureUpgrade.free_instant(id: "e_plant"),
-      InfrastructureUpgrade.free_instant(id: "mine"),
-      InfrastructureUpgrade.free_instant(id: "farm"),
-
-      InfrastructureUpgrade.free_instant(id: "a_store"),
-      InfrastructureUpgrade.free_instant(id: "l_store"),
-
-      InfrastructureUpgrade.free_instant(id: "a_plant"),
-      InfrastructureUpgrade.free_instant(id: "l_plant"),
-    ]
-  end
 end
 
 require "./game/*"

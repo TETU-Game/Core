@@ -6,14 +6,14 @@ class TETU::InfrastructureUpgradesSystem
   def initialize(@context : GameContext); end
 
   def execute
-    producer = @context.get_group Entitas::Matcher.all_of Resources, InfrastructureUpgrades
+    producer = @context.get_group Entitas::Matcher.all_of Resources, InfrastructureUpgrades, ManpowerAllocation
     producer.entities.each do |e|
       # pay the cost
       # Log.debug { "e.infrastructure_upgrades.upgrades = #{e.infrastructure_upgrades.upgrades.size}" }
       e.infrastructure_upgrades.upgrades.reject! do |upgrade|
         pay_upgrade(e.resources, upgrade)
         if upgrade.finished?
-          apply_upgrade(e.resources, upgrade)
+          apply_upgrade(e, upgrade)
           true
         else
           false
@@ -22,32 +22,8 @@ class TETU::InfrastructureUpgradesSystem
     end
   end
 
-  def pay_upgrade(resources : Resources, upgrade : InfrastructureUpgrade)
-    Log.debug { "pay_upgrade: #{resources.to_s} #{upgrade.to_s}" }
-    current_costs = upgrade.current_tick == 0 ? upgrade.costs_start : upgrade.costs_by_tick
-    pay_upgrade_tick(resources, upgrade, current_costs)
-  end
-
-  def pay_upgrade_tick(resources : Resources, upgrade : InfrastructureUpgrade, costs : InfrastructureUpgrade::Costs)
-    if costs.all? { |res, amount| resources.stores[res].amount >= amount }
-      # pay the upgrade with local store
-      costs.all? { |res, amount| resources.stores[res].amount -= amount }
-      upgrade.current_tick += 1
-      Log.debug { "paid tick upgrade" }
-    else
-      # if we can't pay the upgrade, we will "loose" one tick due to maintenance
-      Log.debug { "cannot pay upgrade" }
-      upgrade.end_tick += 1
-    end
-
-    if upgrade.current_tick >= upgrade.end_tick
-      upgrade
-      upgrade.finish!
-    end
-    # don't forget to clean up after this
-  end
-
-  def apply_upgrade(resources : Resources, upgrade : InfrastructureUpgrade)
+  def apply_upgrade(entity : GameEntity, upgrade : InfrastructureUpgrade)
+    resources = entity.resources
     Log.debug { "apply_upgrade: #{resources.to_s} #{upgrade.to_s}" }
     infra_id = upgrade.id
     infra = Helpers::InfrastructuresFileLoader.all[infra_id]
@@ -75,7 +51,39 @@ class TETU::InfrastructureUpgradesSystem
     local_infra.manpower.min = infra.manpower.min.execute(tier)
     local_infra.manpower.optimal = infra.manpower.optimal.execute(tier)
     local_infra.manpower.max = infra.manpower.max.execute(tier)
-    local_infra.allocated_manpower = 5_000_000 # TODO: remove this line
+    # local_infra.allocated_manpower = 5_000_000 # TODO: remove this line
+
+    manpower_allocation = entity.manpower_allocation
+    if !manpower_allocation.fixed.key_for?(infra_id)
+      manpower_allocation.fixed[infra_id] = false
+      manpower_allocation.ratio[infra_id] = 0.0
+      manpower_allocation.absolute[infra_id] = local_infra.manpower.optimal
+    end
+  end
+
+  def pay_upgrade(resources : Resources, upgrade : InfrastructureUpgrade)
+    Log.debug { "pay_upgrade: #{resources.to_s} #{upgrade.to_s}" }
+    current_costs = upgrade.current_tick == 0 ? upgrade.costs_start : upgrade.costs_by_tick
+    pay_upgrade_tick(resources, upgrade, current_costs)
+  end
+
+  def pay_upgrade_tick(resources : Resources, upgrade : InfrastructureUpgrade, costs : InfrastructureUpgrade::Costs)
+    if costs.all? { |res, amount| resources.stores[res].amount >= amount }
+      # pay the upgrade with local store
+      costs.all? { |res, amount| resources.stores[res].amount -= amount }
+      upgrade.current_tick += 1
+      Log.debug { "paid tick upgrade" }
+    else
+      # if we can't pay the upgrade, we will "loose" one tick due to maintenance
+      Log.debug { "cannot pay upgrade" }
+      upgrade.end_tick += 1
+    end
+
+    if upgrade.current_tick >= upgrade.end_tick
+      upgrade
+      upgrade.finish!
+    end
+    # don't forget to clean up after this
   end
 
 end

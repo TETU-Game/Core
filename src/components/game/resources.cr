@@ -45,7 +45,6 @@ class TETU::Resources < Entitas::Component
     property consumes : Prods
     property wastes : Prods
     property manpower : Manpower
-    property allocated_manpower : Float64
     # this allow to manipulate the planet (local) store
     # or make a special infrastructure specific store not shared if we want
     getter stores : Stores
@@ -55,7 +54,6 @@ class TETU::Resources < Entitas::Component
       @consumes = Prods.new
       @wastes = Prods.new
       @manpower = Manpower.new
-      @allocated_manpower = 0.0
     end
 
     def humanize(sep = "\n")

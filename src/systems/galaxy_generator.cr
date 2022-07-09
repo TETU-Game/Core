@@ -102,15 +102,19 @@ class TETU::GalaxyInitializerSystem
     body
   end
 
+  DEFAULT_INFRASTRUCTURES = %w[e_store m_store f_store e_plant mine farm a_store l_store a_plant l_plant]
+
   def populate(body)
     # Log.debug { "populate: #{body.named.name}..." }
     pop_amount = ((10_000.0)..(10_000_000_000.0)).sample
     body.add_population amount: pop_amount
     body.replace_component(Resources.default_populated)
     body.add_infrastructure_upgrades
-    InfrastructureUpgrades
-      .default_upgrades_for_populated_body
-      .each { |upgrade| body.infrastructure_upgrades.upgrades << upgrade }
+    body.add_manpower_allocation
+    DEFAULT_INFRASTRUCTURES.each do |infra_id|
+      upgrade = InfrastructureUpgrade.free_instant(id: infra_id)
+      body.infrastructure_upgrades.upgrades << upgrade
+    end
     # Log.debug { "populated: #{body.named.name}, now #{body.resources.to_s}, with #{body.infrastructure_upgrades.upgrades.size} upgrade to do..." }
     body
   end
