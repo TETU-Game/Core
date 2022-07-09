@@ -2,6 +2,7 @@ require "../components"
 
 class TETU::EconomicProductionSystem
   include Entitas::Systems::ExecuteSystem
+  Log = TETU::Systems::Log.for(self)
 
   def initialize(@context : GameContext); end
 
@@ -11,17 +12,12 @@ class TETU::EconomicProductionSystem
     #   STDERR.Log.debug { "this named populated entity is #{e.named.to_s} and has #{e.population.to_s} pop" }
     # end
 
-    producer = @context.get_group Entitas::Matcher.all_of(Resources, Population)
-    producer.entities.each do |e|
-      # Log.debug { "" }
-      # Log.debug { "produces? => #{e.resources.can_produce?}" }
+    producer_group = @context.get_group Entitas::Matcher.all_of(Resources, Population)
+    producer_group.entities.each do |e|
       next if !e.resources.can_produce?
 
       e.resources.infras.each do |infra_id, infra|
-        rate = infra.prod_rate
-        # Log.debug { "#{infra_id} computed rate=#{rate} with" }
-        # Log.debug infra.humanize
-
+        rate = prod_rate(infra, e)
         prod_rates = infra.prods.map { |res, prod| apply_prod(infra: infra, res: res, rate: rate, prod: prod) }
         real_prod_rate = prod_rates.empty? ? rate : prod_rates.max
         infra.consumes.each { |res, conso| apply_prod(infra: infra, res: res, rate: -real_prod_rate, prod: conso) }
@@ -38,7 +34,27 @@ class TETU::EconomicProductionSystem
     # end
   end
 
+  def prod_rate(infra : Resources::Infra, producer : GameEntity) : Float64
+    return 1.0 if infra.consumes.empty?
+    return 0.0 if infra.consumes.any? { |res, _value| infra.stores[res]?.nil? }
+    # TODO: another function for pop.amount < manpower.optimal
+    maximal_rate =
+      if infra.allocated_manpower >= infra.manpower.min
+        Math.log(2, infra.allocated_manpower / infra.manpower.optimal) + 1.0
+      else
+        0.0
+      end
+    limited_rate = (infra.consumes.map { |res, value| infra.stores[res].amount / value } + [maximal_rate]).min
+    # Log.debug { "producer.named.name" }
+    # Log.debug { "maximal_rate=#{maximal_rate} " }
+    # Log.debug { "limited_rate=#{limited_rate}"  }
+    # Log.debug { "infra.allocated_manpower=#{infra.allocated_manpower}"  }
+    # Log.debug { "infra.manpower.optimal=#{infra.manpower.optimal}"  }
+    limited_rate
+  end
+
   # returns the real production rate, limited by the storage
+  # @param rate : the maximum production we should use
   def apply_prod(infra : Resources::Infra, rate : Float64, res : Resources::Name, prod : Float64) : Float64
     # Log.debug { "apply_prod wants rate=#{rate} res=#{res} prod=#{prod}" }
     store = infra.stores[res]?

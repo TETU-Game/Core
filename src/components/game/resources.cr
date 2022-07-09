@@ -32,6 +32,11 @@ class TETU::Resources < Entitas::Component
   alias Moving = Hash(Name, Float64)
   class Prods < Moving
   end
+  class Manpower
+    property min : Float64 = 0.0
+    property optimal : Float64 = 0.0
+    property max : Float64 = 0.0
+  end
 
   class Infra
     property id : String
@@ -39,6 +44,8 @@ class TETU::Resources < Entitas::Component
     property prods : Prods
     property consumes : Prods
     property wastes : Prods
+    property manpower : Manpower
+    property allocated_manpower : Float64
     # this allow to manipulate the planet (local) store
     # or make a special infrastructure specific store not shared if we want
     getter stores : Stores
@@ -47,12 +54,8 @@ class TETU::Resources < Entitas::Component
       @prods = Prods.new
       @consumes = Prods.new
       @wastes = Prods.new
-    end
-
-    def prod_rate : Float64
-      return 1.0 if consumes.empty?
-      return 0.0 if consumes.any? { |res, _value| stores[res]?.nil? }
-      (consumes.map { |res, value| stores[res].amount / value } + [1.0]).min
+      @manpower = Manpower.new
+      @allocated_manpower = 0.0
     end
 
     def humanize(sep = "\n")

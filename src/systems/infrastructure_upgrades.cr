@@ -55,6 +55,7 @@ class TETU::InfrastructureUpgradesSystem
     local_infra = (resources.infras[upgrade.id] ||= Resources::Infra.new(id: infra_id, tier: 0, stores: resources.stores))
 
     tier = (local_infra.tier += 1)
+    # TODO: +curve.execute(tier + 1) - curve.execute(tier)
     infra.prods.each do |res, curve|
       local_infra.prods[res] ||= 0.0
       local_infra.prods[res] += curve.execute(tier)
@@ -71,6 +72,10 @@ class TETU::InfrastructureUpgradesSystem
       local_infra.stores[res] ||= Resources::Store.new(amount: 0.0, max: 0.0)
       local_infra.stores[res].max += curve.execute(tier)
     end
+    local_infra.manpower.min = infra.manpower.min.execute(tier)
+    local_infra.manpower.optimal = infra.manpower.optimal.execute(tier)
+    local_infra.manpower.max = infra.manpower.max.execute(tier)
+    local_infra.allocated_manpower = 5_000_000 # TODO: remove this line
   end
 
 end

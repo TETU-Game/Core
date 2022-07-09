@@ -21,6 +21,13 @@ class TETU::Helpers::Infrastructure
     property costs : ResourceCurves
   end
 
+  class ManpowerCurves
+    include YAML::Serializable
+    property min : Curve
+    property optimal : Curve
+    property max : Curve
+  end
+
   include YAML::Serializable
   include YAML::Serializable::Unmapped
   property max : Int32 = -1
@@ -32,6 +39,7 @@ class TETU::Helpers::Infrastructure
   property consumes : ResourceCurves
   property wastes : ResourceCurves
   property stores : ResourceCurves
+  property manpower : ManpowerCurves
   property id : String = ""
 end
 

@@ -10,16 +10,16 @@ module TETU
   LOG_FORMATTER = ::Log::IOBackend.new(formatter: ::Log::ShortFormat)
   ::Log.setup(:debug, LOG_FORMATTER) # Log debug and above for all
 
-  Log = ::Log.for("tetu")
+  Log = ::Log.for(self)
 
   # TO BE USED
   module Systems
-    Log = TETU::Log.for("systems")
+    Log = TETU::Log.for(self)
   end
 
   # TO BE USED
   module Components
-    Log = TETU::Log.for("components")
+    Log = TETU::Log.for(self)
   end
 
   module Helpers
@@ -91,11 +91,11 @@ stop_at = ARGV.size > 0 ? ARGV[0].to_u64 : -1i64
 loop do
   t1 = Time.local
   i += 1
-  Log.debug { "=============== START TICK #{i} ===============" }
+  Log.info { "=============== START TICK #{i} ===============" }
   Fiber.yield
   hw.update
   exit if i == stop_at
-  Log.debug { "=============== FINISH TICK #{i} ===============" }
+  Log.info { "=============== FINISH TICK #{i} ===============" }
   t2 = Time.local
   Log.debug { "Duration: #{t2 - t1}" }
   Log.debug { "" }

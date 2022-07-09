@@ -2,7 +2,7 @@ max_y: 600
 max_x: 800
 
 ui:
-  framerate: 5
+  framerate: 1
   square_size: 100
   right_sidebar: 400
   left_sidebar: 600
