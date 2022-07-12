@@ -2,18 +2,18 @@ max_y: 600
 max_x: 800
 
 ui:
-  framerate: 1
+  framerate: 5
   square_size: 100
   right_sidebar: 400
   left_sidebar: 600
 
 galaxy:
-  systems_amount: 100
-  max_bodies_by_system_amount: 10
-  max_moon_by_planet_amount: 4
+  systems_amount: 1
+  max_bodies_by_system_amount: 1
+  max_moon_by_planet_amount: 1
   # how many AI empire must exist at start. they are post-FTL civilisation.
   # planets without FTL and space infrastructure can exist too.
-  ai_start_amount: 9 # that means 10 empires with the player
-  ai_start_populated_bodies_amount: 2
+  ai_start_amount: 1 # that means 10 empires with the player
+  ai_start_populated_bodies_amount: 1
   # this is applied to non-ai empire systems
-  populated_planets_proba: 0.05
+  populated_planets_proba: 1

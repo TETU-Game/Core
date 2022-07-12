@@ -46,11 +46,13 @@ class TETU::EconomicProductionSystem
         0.0
       end
     limited_rate = (infra.consumes.map { |res, value| infra.stores[res].amount / value } + [maximal_rate]).min
-    # Log.debug { "producer.named.name" }
-    # Log.debug { "maximal_rate=#{maximal_rate} " }
-    # Log.debug { "limited_rate=#{limited_rate}"  }
-    # Log.debug { "allocated_manpower=#{allocated_manpower}"  }
-    # Log.debug { "infra.manpower.optimal=#{infra.manpower.optimal}"  }
+    if infra.id == "mine"
+      Log.debug { "producer.named.name=#{producer.named.name}" }
+      Log.debug { "maximal_rate=#{maximal_rate} " }
+      Log.debug { "limited_rate=#{limited_rate}"  }
+      Log.debug { "allocated_manpower=#{allocated_manpower}"  }
+      Log.debug { "infra.manpower.optimal=#{infra.manpower.optimal}"  }
+    end
     limited_rate
   end
 

@@ -51,7 +51,7 @@ items:
       mineral:
         function: linear
         coefs:
-          b: 1000
+          b: 10000000
 
   f_store:
     <<: *template_default

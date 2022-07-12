@@ -1,6 +1,6 @@
 class TETU::UiBackgroundSystem
-  include Helpers::UiSystem
   include Entitas::Systems::ExecuteSystem
+  include Helpers::UiSystem
 
   def initialize(@context : GameContext); end
 

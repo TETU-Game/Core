@@ -24,11 +24,21 @@ module TETU
 
   module Helpers
   end
+
+  @@tick = 0i64
+  def self.tick(&block)
+    yield @@tick
+    @@tick += 1
+  end
+
+  def self.tick
+    @@tick
+  end
 end
 
 require "./helpers/*"
 require "./core/*"
-
+require "./ui_service"
 require "./components"
 require "./systems"
 
@@ -86,17 +96,17 @@ end
 hw = TETU::MainWorld.new
 hw.start
 
-i = 0i64
 stop_at = ARGV.size > 0 ? ARGV[0].to_u64 : -1i64
 loop do
-  t1 = Time.local
-  i += 1
-  Log.info { "=============== START TICK #{i} ===============" }
-  Fiber.yield
-  hw.update
-  exit if i == stop_at
-  Log.info { "=============== FINISH TICK #{i} ===============" }
-  t2 = Time.local
-  Log.debug { "Duration: #{t2 - t1}" }
-  Log.debug { "" }
+  TETU.tick do |tick|
+    t1 = Time.local
+    Log.info { "=============== START TICK #{tick} ===============" }
+    Fiber.yield
+    hw.update
+    exit if tick == stop_at
+    Log.info { "=============== FINISH TICK #{tick} ===============" }
+    t2 = Time.local
+    Log.debug { "Duration: #{t2 - t1}" }
+    Log.debug { "" }
+  end
 end
