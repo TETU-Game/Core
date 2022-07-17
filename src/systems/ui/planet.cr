@@ -20,13 +20,13 @@ class TETU::UiPlanetSystem
   LEFT_SIDEBAR_SIZE = TETU::UI_CONF["left_sidebar"].as_i64
 
   private def draw_planet_frame(planet)
-    manpower_ui = UiService::PlanetManpower.new(planet)
     infra_ui = UiService::PlanetInfrastructure.new(planet)
+    manpower_ui = UiService::PlanetManpower.new(planet)
     if ImGui.begin(name: "left side", flags: ImGui::ImGuiWindowFlags.new(0))
       ImGui.set_window_pos("left side", ImGui::ImVec2.new(0, 0))
       ImGui.set_window_size("left side", ImGui::ImVec2.new(LEFT_SIDEBAR_SIZE, Window::GALAXY_HEIGHT))
-      manpower_ui.draw
       infra_ui.draw
+      manpower_ui.draw
     end
     ImGui.end
   end

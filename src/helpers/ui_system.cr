@@ -24,24 +24,37 @@ module TETU::Helpers::UiSystem
   end
 
   def draw_table_line(*columns : String | Proc)
-    ImGui.table_next_row
+    draw_table_line
     columns.each do |column|
       draw_table_cell(column)
     end
   end
 
+  def draw_table_line
+    ImGui.table_next_row
+    # print "\n"
+  end
+
   def draw_table_cell(cell : String | Proc)
-    ImGui.table_next_column
+    draw_table_cell
     if cell.is_a?(String)
+      # print cell
       ImGui.text cell
     else
+      # print cell.call
       cell.call
     end
   end
 
   def draw_table_cell(&block)
-    ImGui.table_next_column
+    draw_table_cell
+    # print "YIELD"
     yield
+  end
+
+  def draw_table_cell
+    ImGui.table_next_column
+    # print "|"
   end
 
   # def draw_table_next_line
