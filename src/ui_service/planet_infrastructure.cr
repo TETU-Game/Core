@@ -42,17 +42,14 @@ class TETU::UiService::PlanetInfrastructure < TETU::UiService
     res_names = @planet.resources.stores.keys
     headers = [ "", "Tier" ] + res_names + [ "Upgrade" ]
     stores = @planet.resources.stores
-    pp headers
 
     draw_table(title: "infra", headers: headers) do
-      stores.each do |res, store|
-        Helpers::InfrastructuresFileLoader.all.keys.each do |infra_id|
-          infra = infras[infra_id]?
-          if infra.nil?
-            draw_unconstructed_infra(infra_id, res_names)
-          else
-            draw_one_infra(infra, res_names)
-          end
+      Helpers::InfrastructuresFileLoader.all.keys.each do |infra_id|
+        infra = infras[infra_id]?
+        if infra.nil?
+          draw_unconstructed_infra(infra_id, res_names)
+        else
+          draw_one_infra(infra, res_names)
         end
       end
     end
