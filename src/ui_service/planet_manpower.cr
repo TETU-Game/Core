@@ -36,14 +36,20 @@ class TETU::UiService::PlanetManpower < TETU::UiService
     draw_table_line(
       infra.id,
       -> {
+        # TODO: we can use SliderScalar for Double (float64)
         if ImGui.slider_float(
             label: "absolute####{infra.id}",
             v: ptr,
             v_min: 0.0.to_f32,
-            v_max: @planet.population.amount.to_f32,
-            flags: ImGui::ImGuiSliderFlags::NoRoundToFormat | ImGui::ImGuiSliderFlags::Logarithmic,
+            v_max: @planet.manpower_allocation.available.to_f32,
+            flags: (
+              ImGui::ImGuiSliderFlags::NoRoundToFormat |
+              ImGui::ImGuiSliderFlags::Logarithmic
+            ),
           )
           Log.debug { "set #{infra.id} absolute manpower to #{v} because " }
+          @planet.manpower_allocation.available += @planet.manpower_allocation.absolute[infra.id]
+          @planet.manpower_allocation.available -= v
           @planet.manpower_allocation.absolute[infra.id] = v
         end
       },

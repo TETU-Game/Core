@@ -30,34 +30,41 @@ class TETU::InfrastructureUpgradesSystem
 
     local_infra = (resources.infras[upgrade.id] ||= Resources::Infra.new(id: infra_id, tier: 0, stores: resources.stores))
 
-    tier = (local_infra.tier += 1)
+    tier = local_infra.tier
+    next_tier = tier + 1
+    local_infra.tier = next_tier
     # TODO: +curve.execute(tier + 1) - curve.execute(tier)
     infra.prods.each do |res, curve|
       local_infra.prods[res] ||= 0.0
-      local_infra.prods[res] += curve.execute(tier)
+      local_infra.prods[res] += curve.execute(next_tier) - curve.execute(tier)
     end
     infra.consumes.each do |res, curve|
       local_infra.consumes[res] ||= 0.0
-      local_infra.consumes[res] += curve.execute(tier)
+      local_infra.consumes[res] += curve.execute(next_tier) - curve.execute(tier)
     end
     infra.wastes.each do |res, curve|
       local_infra.wastes[res] ||= 0.0
-      local_infra.wastes[res] += curve.execute(tier)
+      local_infra.wastes[res] += curve.execute(next_tier) - curve.execute(tier)
     end
     infra.stores.each do |res, curve|
       local_infra.stores[res] ||= Resources::Store.new(amount: 0.0, max: 0.0)
-      local_infra.stores[res].max += curve.execute(tier)
+      local_infra.stores[res].max += curve.execute(next_tier) - curve.execute(tier)
     end
-    local_infra.manpower.min = infra.manpower.min.execute(tier)
-    local_infra.manpower.optimal = infra.manpower.optimal.execute(tier)
-    local_infra.manpower.max = infra.manpower.max.execute(tier)
-    # local_infra.allocated_manpower = 5_000_000 # TODO: remove this line
+    local_infra.manpower.min = infra.manpower.min.execute(next_tier)
+    local_infra.manpower.optimal = infra.manpower.optimal.execute(next_tier)
+    local_infra.manpower.max = infra.manpower.max.execute(next_tier)
 
     manpower_allocation = entity.manpower_allocation
     if !manpower_allocation.fixed.key_for?(infra_id)
       manpower_allocation.fixed[infra_id] = false
       manpower_allocation.ratio[infra_id] = 0.0
-      manpower_allocation.absolute[infra_id] = local_infra.manpower.optimal
+      if manpower_allocation.available >= local_infra.manpower.optimal
+        manpower_allocation.absolute[infra_id] = local_infra.manpower.optimal
+        manpower_allocation.available -= local_infra.manpower.optimal
+      else
+        manpower_allocation.absolute[infra_id] = manpower_allocation.available
+        manpower_allocation.available = 0
+      end
     end
   end
 

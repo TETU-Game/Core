@@ -111,6 +111,7 @@ class TETU::GalaxyInitializerSystem
     body.replace_component(Resources.default_populated)
     body.add_infrastructure_upgrades
     body.add_manpower_allocation
+    body.manpower_allocation.available = body.population.amount
     DEFAULT_INFRASTRUCTURES.each do |infra_id|
       upgrade = InfrastructureUpgrade.free_instant(id: infra_id)
       body.infrastructure_upgrades.upgrades << upgrade
