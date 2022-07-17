@@ -30,7 +30,7 @@ class TETU::Helpers::Curve
     },
     # log[base](x + b)*c + d (constants are a, base, b, c)
     "log" => ->(f : Curve, x : Float64, t : TETU::Tick) {
-      Math.log(f.coef("base", 2.0), x + f.coef("b", 2.0)) * f.coef("a", 1.0) + f.coef("c", 0.0)
+      Math.log(x + f.coef("b", 2.0), f.coef("base", 2.0)) * f.coef("a", 1.0) + f.coef("c", 0.0)
     },
     # (a^x)b + c (constants are a, base, b, c)
     "squared" => ->(f : Curve, x : Float64, t : TETU::Tick) {

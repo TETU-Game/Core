@@ -41,18 +41,21 @@ class TETU::EconomicProductionSystem
     allocated_manpower = producer.manpower_allocation.absolute[infra.id]
     maximal_rate =
       if allocated_manpower >= infra.manpower.min
-        Math.log(2, allocated_manpower / infra.manpower.optimal) + 1.0
+        Math.log(allocated_manpower / infra.manpower.optimal, 2) + 1.0
       else
         0.0
       end
     limited_rate = (infra.consumes.map { |res, value| infra.stores[res].amount / value } + [maximal_rate]).min
-    if infra.id == "mine"
-      Log.debug { "producer.named.name=#{producer.named.name}" }
-      Log.debug { "maximal_rate=#{maximal_rate} " }
-      Log.debug { "limited_rate=#{limited_rate}"  }
-      Log.debug { "allocated_manpower=#{allocated_manpower}"  }
-      Log.debug { "infra.manpower.optimal=#{infra.manpower.optimal}"  }
-    end
+    # if infra.id == "mine" || true
+    #   Log.debug { "producer.named.name=#{producer.named.name}" }
+    #   Log.debug { "infra.id=#{infra.id}" }
+    #   Log.debug { "allocated_manpower=#{allocated_manpower}"  }
+    #   Log.debug { "infra.manpower.optimal=#{infra.manpower.optimal}"  }
+    #   Log.debug { "infra.manpower.min=#{infra.manpower.min} " }
+    #   Log.debug { "maximal_rate=#{maximal_rate} " }
+    #   Log.debug { "limited_rate=#{limited_rate}"  }
+    #   Log.debug { "" }
+    # end
     limited_rate
   end
 

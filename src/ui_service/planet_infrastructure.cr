@@ -1,4 +1,6 @@
 class TETU::UiService::PlanetInfrastructure < TETU::UiService
+  Log = TETU::Log.for(self)
+
   include Helpers::UiSystem
 
   def initialize(@planet : GameEntity)
@@ -25,6 +27,7 @@ class TETU::UiService::PlanetInfrastructure < TETU::UiService
 
   private def draw_storage
     stores = @planet.resources.stores
+    Log.debug { "stores_list = #{stores}" }
     draw_table(title: "storage", headers: {"", "Amount", "Maximum"}) do
       stores.each do |res, store|
         next if store.amount < 0.01
