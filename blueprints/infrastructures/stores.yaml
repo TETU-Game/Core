@@ -41,7 +41,7 @@ items:
       energy:
         function: linear
         coefs:
-          b: 20
+          a: 20
 
   m_store:
     <<: *template_default
@@ -51,7 +51,7 @@ items:
       mineral:
         function: linear
         coefs:
-          b: 10000000
+          a: 10000000
 
   f_store:
     <<: *template_default
@@ -61,12 +61,12 @@ items:
       energy:
         function: linear
         coefs:
-          b: 0.2
+          a: 0.2
     stores:
       food:
         function: linear
         coefs:
-          b: 1000
+          a: 1000
 
   a_store:
     <<: *template_default
@@ -76,11 +76,11 @@ items:
       alloy:
         function: linear
         coefs:
-          b: 100
+          a: 100
       mineral:
         function: linear
         coefs:
-          b: 100
+          a: 100
 
   l_store:
     <<: *template_default
@@ -90,16 +90,16 @@ items:
       energy:
         function: linear
         coefs:
-          b: 0.2
+          a: 0.2
     stores:
       logistic:
         function: linear
         coefs:
-          b: 10
+          a: 10
       alloy:
         function: linear
         coefs:
-          b: 10
+          a: 10
 
   c_store:
     <<: *template_default
@@ -109,9 +109,9 @@ items:
       energy:
         function: linear
         coefs:
-          b: 0.2
+          a: 0.2
     stores:
       chemical:
         function: linear
         coefs:
-          b: 10
+          a: 10

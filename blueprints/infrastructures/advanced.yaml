@@ -41,21 +41,21 @@ items:
       mineral:
         function: linear
         coefs:
-          b: 5
+          a: 5
       energy:
         function: linear
         coefs:
-          b: 3
+          a: 3
     prods:
       alloy:
         function: linear
         coefs:
-          b: 0.5
+          a: 0.5
     wastes:
       pollution:
         function: linear
         coefs:
-          b: 1
+          a: 1
 
   c_plant:
     <<: *template_default
@@ -65,21 +65,21 @@ items:
       mineral:
         function: linear
         coefs:
-          b: 3
+          a: 3
       energy:
         function: linear
         coefs:
-          b: 3
+          a: 3
     prods:
       chemical:
         function: linear
         coefs:
-          b: 0.1
+          a: 0.1
     wastes:
       pollution:
         function: linear
         coefs:
-          b: 3
+          a: 3
 
   l_plant:
     <<: *template_default
@@ -89,21 +89,21 @@ items:
       alloy:
         function: linear
         coefs:
-          b: 0.5
+          a: 0.5
       energy:
         function: linear
         coefs:
-          b: 1
+          a: 1
     prods:
       logistic:
         function: linear
         coefs:
-          b: 0.05
+          a: 0.05
     wastes:
       pollution:
         function: linear
         coefs:
-          b: 0.2
+          a: 0.2
 
   recycler:
     <<: *template_default
@@ -113,26 +113,26 @@ items:
       pollution:
         function: linear
         coefs:
-          b: 1
+          a: 1
       energy:
         function: linear
         coefs:
-          b: 2
+          a: 2
     prods:
       mineral:
         function: linear
         coefs:
-          b: 0.1
+          a: 0.1
       chemical:
         function: linear
         coefs:
-          b: 0.01
+          a: 0.01
       alloy:
         function: linear
         coefs:
-          b: 0.01
+          a: 0.01
     wastes:
       pollution:
         function: linear
         coefs:
-          b: 0
+          a: 0
