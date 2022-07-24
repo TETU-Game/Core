@@ -1,7 +1,7 @@
 module TETU::Helpers::Numbers
-  BILLION = 1_000_000_000
-  MILLION = 1_000_000
-  THOUSAND = 1_000
+  BILLION  = 1_000_000_000
+  MILLION  =     1_000_000
+  THOUSAND =         1_000
 
   def self.humanize(number, round = 2)
     if number > BILLION

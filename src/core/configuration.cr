@@ -25,7 +25,7 @@ module TETU
   MAX_Y = CONF["max_y"].as_i
 
   GALAXY_CONF = TETU::CONF["galaxy"]
-  UI_CONF = TETU::CONF["ui"]
+  UI_CONF     = TETU::CONF["ui"]
 
   alias Tick = Int64
   # struct Tick

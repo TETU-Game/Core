@@ -2,8 +2,8 @@ require "../components"
 
 class TETU::InfrastructureUpgradesSystem
   include Entitas::Systems::ExecuteSystem
-  spoved_logger level: :debug, io: STDOUT, bind: true
-  
+  spoved_logger level: :info, io: STDOUT, bind: true
+
   def initialize(@context : GameContext); end
 
   def execute
@@ -93,5 +93,4 @@ class TETU::InfrastructureUpgradesSystem
     end
     # don't forget to clean up after this
   end
-
 end

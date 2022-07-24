@@ -6,15 +6,15 @@ shards:
 
   entitas:
     git: https://github.com/spoved/entitas.cr.git
-    version: 1.4.4
+    version: 1.4.5
 
   imgui:
     git: https://github.com/oprypin/crystal-imgui.git
-    version: 0.1.0+git.commit.3c577079d1319e80e79a0b739439fc3b53c5011f
+    version: 1.87
 
   imgui-sfml:
     git: https://github.com/oprypin/crystal-imgui-sfml.git
-    version: 2.1.0+git.commit.73e03608837b3690cea9c9df0b95d1626c50c38e
+    version: 1.87
 
   spoved:
     git: https://github.com/spoved/spoved.cr.git

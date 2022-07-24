@@ -9,7 +9,7 @@ module TETU::Blueprint
     path = path(*parts)
     Dir.new(path)
       .children
-      .select!{ |f| f.match(filter) }
+      .select! { |f| f.match(filter) }
       .map { |f| File.join(path, f) }
   end
 

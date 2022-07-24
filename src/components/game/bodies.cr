@@ -1,10 +1,8 @@
-
 @[Context(Game)]
 class TETU::CelestialBody < Entitas::Component
   prop :type, Symbol, default: :default
 
   TYPES = %i(asteroid_belt planet star asteroid habitat)
-
 end
 
 @[Context(Game)]

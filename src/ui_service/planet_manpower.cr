@@ -1,15 +1,15 @@
 class TETU::UiService::PlanetManpower < TETU::UiService
   include Helpers::UiSystem
-  spoved_logger level: :debug, io: STDOUT, bind: true
+  spoved_logger level: :info, io: STDOUT, bind: true
 
   def initialize(@planet : GameEntity)
   end
 
   def draw
     if ImGui.tree_node_ex(
-        "manpower panel",
-        ImGui::ImGuiTreeNodeFlags.new(ImGui::ImGuiTreeNodeFlags::DefaultOpen),
-      )
+         "manpower panel",
+         ImGui::ImGuiTreeNodeFlags.new(ImGui::ImGuiTreeNodeFlags::DefaultOpen),
+       )
       draw_main_table
       ImGui.tree_pop
     end
@@ -36,18 +36,18 @@ class TETU::UiService::PlanetManpower < TETU::UiService
 
     draw_table_line(
       infra.id,
-      -> {
+      ->{
         # TODO: we can use SliderScalar for Double (float64)
         if ImGui.slider_float(
-            label: "absolute####{infra.id}",
-            v: ptr,
-            v_min: 0.0.to_f32,
-            v_max: @planet.manpower_allocation.available.to_f32,
-            flags: (
-              ImGui::ImGuiSliderFlags::NoRoundToFormat |
-              ImGui::ImGuiSliderFlags::Logarithmic
-            ),
-          )
+             label: "absolute####{infra.id}",
+             v: ptr,
+             v_min: 0.0.to_f32,
+             v_max: @planet.manpower_allocation.available.to_f32,
+             flags: (
+               ImGui::ImGuiSliderFlags::NoRoundToFormat |
+               ImGui::ImGuiSliderFlags::Logarithmic
+             ),
+           )
           logger.debug { "set #{infra.id} absolute manpower to #{v} because " }
           @planet.manpower_allocation.available += @planet.manpower_allocation.absolute[infra.id]
           @planet.manpower_allocation.available -= v

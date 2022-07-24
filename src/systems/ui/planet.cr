@@ -1,5 +1,5 @@
 class TETU::UiPlanetSystem
-  spoved_logger level: :debug, io: STDOUT, bind: true
+  spoved_logger level: :info, io: STDOUT, bind: true
 
   include Entitas::Systems::ExecuteSystem
   include Helpers::UiSystem
@@ -30,6 +30,4 @@ class TETU::UiPlanetSystem
     end
     ImGui.end
   end
-
-
 end

@@ -2,7 +2,7 @@ require "../components"
 
 class TETU::PopulationGrowthSystem
   include Entitas::Systems::ExecuteSystem
-  spoved_logger level: :debug, io: STDOUT, bind: true
+  spoved_logger level: :info, io: STDOUT, bind: true
 
   def initialize(@context : GameContext); end
 
@@ -18,5 +18,4 @@ class TETU::PopulationGrowthSystem
       e.replace_population(amount: new_pop_amount)
     end
   end
-
 end

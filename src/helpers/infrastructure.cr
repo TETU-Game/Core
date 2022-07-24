@@ -7,15 +7,16 @@ require "./curve"
 # costs.map { |res, cost_f| cost_f.execute(new_tier) }
 # ```
 class TETU::Helpers::Infrastructure
-  spoved_logger level: :debug, io: STDOUT, bind: true
+  spoved_logger level: :info, io: STDOUT, bind: true
 
   BLUEPRINTS = Blueprint.all("infrastructures", filter: /\.yaml$/)
-  Log.debug { { "infra bp": BLUEPRINTS } }
+  Log.debug { {"infra bp": BLUEPRINTS} }
 
   # alias Costs = Hash(String, Curve)
   # alias Productions = Hash(String, Curve)
   # alias Stores = Hash(String, Curve)
   alias ResourceCurves = Hash(String, Curve)
+
   class Build
     include YAML::Serializable
     property upfront : Float64
@@ -52,6 +53,7 @@ class TETU::Helpers::InfrastructuresFileLoader
   property templates : YAML::Any
 
   @@all = Hash(String, Infrastructure).new
+
   def self.all
     @@all
   end
@@ -64,4 +66,3 @@ TETU::Helpers::Infrastructure::BLUEPRINTS.each do |blueprint|
     TETU::Helpers::InfrastructuresFileLoader.all[item_id] = item
   end
 end
-

@@ -1,13 +1,14 @@
 class TETU::GalaxyInitializerSystem
   include Entitas::Systems::InitializeSystem
-  spoved_logger level: :debug, io: STDOUT, bind: true
+  spoved_logger level: :info, io: STDOUT, bind: true
 
   def initialize(@context : GameContext); end
 
-  SYSTEMS_AMOUNT = GALAXY_CONF["systems_amount"].as_i
-  AI_AMOUNT = GALAXY_CONF["ai_start_amount"].as_i
-  EMPIRE_AMOUNT = AI_AMOUNT + 1 # add the player
-  AI_MIN_PLANETS = GALAXY_CONF["ai_start_populated_bodies_amount"].as_i
+  SYSTEMS_AMOUNT   = GALAXY_CONF["systems_amount"].as_i
+  AI_AMOUNT        = GALAXY_CONF["ai_start_amount"].as_i
+  EMPIRE_AMOUNT    = AI_AMOUNT + 1 # add the player
+  AI_MIN_PLANETS   = GALAXY_CONF["ai_start_populated_bodies_amount"].as_i
+  PLANET_POP_PROBA = TETU::GALAXY_CONF["populated_planets_proba"].as_f
   # NO_SPACE_EMPIRE_ID = 100001
 
   def init
@@ -90,9 +91,9 @@ class TETU::GalaxyInitializerSystem
     body.add_player_owned if star.has_player_owned?
     if star.has_owned?
       body.add_owned(empire_id: star.owned.empire_id)
-      populate(body) if index < AI_MIN_PLANETS
+      populate(body) if index < AI_MIN_PLANETS || rand < PLANET_POP_PROBA
     else
-      populate(body) if rand < TETU::GALAXY_CONF["populated_planets_proba"].as_f
+      populate(body) if rand < PLANET_POP_PROBA
     end
     body
   end

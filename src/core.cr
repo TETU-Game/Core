@@ -26,6 +26,7 @@ module TETU
   end
 
   @@tick = 0i64
+
   def self.tick(&block)
     yield @@tick
     @@tick += 1
@@ -52,7 +53,6 @@ class TETU::EconomicSystems < Entitas::Feature
     add PopulationGrowthSystem.new(ctx)
   end
 end
-
 
 class TETU::UiSystems < Entitas::Feature
   def initialize(contexts : Contexts)

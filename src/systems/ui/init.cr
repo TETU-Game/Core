@@ -2,7 +2,7 @@ class TETU::UiInitSystem
   include Entitas::Systems::ExecuteSystem
   include Entitas::Systems::InitializeSystem
   include Helpers::UiSystem
-  spoved_logger level: :debug, io: STDOUT, bind: true
+  spoved_logger level: :info, io: STDOUT, bind: true
 
   def initialize(@context : GameContext); end
 

@@ -5,6 +5,7 @@ class TETU::Named < Entitas::Component
   STAR_NAMES = Blueprint.load_list "stars", "names.txt"
 
   @@star_id = 0
+
   def self.generate_star(star)
     name = STAR_NAMES[@@star_id]
     @@star_id = (@@star_id + 1) % STAR_NAMES.size
@@ -20,7 +21,7 @@ require "./game/resources"
 
 # TODO: why is it not a component ????? should fix that
 class TETU::InfrastructureUpgrade
-  spoved_logger level: :debug, io: STDOUT, bind: true
+  spoved_logger level: :info, io: STDOUT, bind: true
   alias Costs = Hash(Resources::Name, Float64)
   property id : String
   property costs_by_tick : Costs
@@ -59,7 +60,8 @@ class TETU::InfrastructureUpgrade
     )
   end
 
-  spoved_logger level: :debug, io: STDOUT, bind: true
+  spoved_logger level: :info, io: STDOUT, bind: true
+
   def self.from_blueprint(infra_id : String, tier : Number)
     blueprint = Helpers::InfrastructuresFileLoader.all[infra_id]
     total_costs = blueprint.build.costs.transform_values { |f| f.execute(tier) }
@@ -75,8 +77,8 @@ class TETU::InfrastructureUpgrade
       end_tick: duration.to_i64,
       current_tick: 0i64,
     )
-    logger.debug { { blueprint: blueprint } }
-    logger.debug { { upgrade: upgrade } }
+    logger.debug { {blueprint: blueprint} }
+    logger.debug { {upgrade: upgrade} }
     logger.debug { "" }
     upgrade
   end

@@ -1,5 +1,5 @@
 class TETU::UiService::PlanetInfrastructure < TETU::UiService
-  spoved_logger level: :debug, io: STDOUT, bind: true
+  spoved_logger level: :info, io: STDOUT, bind: true
 
   include Helpers::UiSystem
 
@@ -43,7 +43,7 @@ class TETU::UiService::PlanetInfrastructure < TETU::UiService
   private def draw_infras
     infras = @planet.resources.infras
     res_names = @planet.resources.stores.keys
-    headers = [ "", "Tier" ] + res_names + [ "Upgrade" ]
+    headers = ["", "Tier"] + res_names + ["Upgrade"]
     stores = @planet.resources.stores
 
     draw_table(title: "infra", headers: headers) do
@@ -70,7 +70,7 @@ class TETU::UiService::PlanetInfrastructure < TETU::UiService
 
     # TODO not in the UI
     @planet.add_infrastructure_upgrades if !@planet.has_infrastructure_upgrades?
-    logger.debug { { "@planet.infrastructure_upgrades": @planet.infrastructure_upgrades } } if !@planet.infrastructure_upgrades.upgrades.empty?
+    logger.debug { {"@planet.infrastructure_upgrades": @planet.infrastructure_upgrades} } if !@planet.infrastructure_upgrades.upgrades.empty?
 
     draw_table_cell do
       if ImGui.button("upgrade####{infra.id}")
@@ -97,5 +97,4 @@ class TETU::UiService::PlanetInfrastructure < TETU::UiService
       end
     end
   end
-
 end

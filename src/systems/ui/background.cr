@@ -1,8 +1,8 @@
 class TETU::UiBackgroundSystem
   include Entitas::Systems::ExecuteSystem
   include Helpers::UiSystem
-  spoved_logger level: :debug, io: STDOUT, bind: true
-  
+  spoved_logger level: :info, io: STDOUT, bind: true
+
   def initialize(@context : GameContext); end
 
   def execute
@@ -27,7 +27,7 @@ class TETU::UiBackgroundSystem
     circle.fill_color = SF::Color::Transparent
     circle.outline_thickness = 1
     circle.point_count = 500
-    circle.position = { GALAXY_WIDTH / 2 - size, GALAXY_HEIGHT / 2 - size }
+    circle.position = {GALAXY_WIDTH / 2 - size, GALAXY_HEIGHT / 2 - size}
     window.draw circle
   end
 
@@ -38,7 +38,7 @@ class TETU::UiBackgroundSystem
         square.outline_color = SF::Color::White
         square.fill_color = SF::Color::Transparent
         square.outline_thickness = 1
-        square.position = { x * Window::SQUARE_SIZE, y * Window::SQUARE_SIZE }
+        square.position = {x * Window::SQUARE_SIZE, y * Window::SQUARE_SIZE}
         window.draw square
       end
     end
@@ -49,7 +49,7 @@ class TETU::UiBackgroundSystem
     stars.entities.each do |entity|
       position = entity.position
       square = SF::RectangleShape.new(SF.vector2(1, 1))
-      square.position = { position.x, position.y }
+      square.position = {position.x, position.y}
       square.outline_color = SF::Color::Red
       square.outline_color = SF::Color::Blue if entity.has_player_owned?
       square.fill_color = SF::Color::Red

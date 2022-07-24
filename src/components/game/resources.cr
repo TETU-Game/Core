@@ -1,7 +1,7 @@
 @[Context(Game)]
 class TETU::Resources < Entitas::Component
-  BLUEPRINTS = Blueprint.all("resources", filter: /\.yaml$/)
-  Log.debug { { "resources bp": BLUEPRINTS } }
+  BLUEPRINTS   = Blueprint.all("resources", filter: /\.yaml$/)
+  Log.debug { {"resources bp": BLUEPRINTS} }
   DESCRIPTIONS = BLUEPRINTS.map { |b| YAML.parse(File.open(b)).as_h }.reduce { |l, r| l.merge(r) }
   LIST = DESCRIPTIONS.keys.map(&.as_s)
   # LIST = %i[food food2 mineral mineral2 alloy alloy2 chemical weapon logistic pollution research]
@@ -10,6 +10,7 @@ class TETU::Resources < Entitas::Component
 
   class Store
     property amount, max
+
     def initialize(@amount : Float64, @max : Float64)
     end
 
@@ -30,8 +31,10 @@ class TETU::Resources < Entitas::Component
 
   # alias Prod = Tuple(Name, Float64)
   alias Moving = Hash(Name, Float64)
+
   class Prods < Moving
   end
+
   class Manpower
     property min : Float64 = 0.0
     property optimal : Float64 = 0.0
@@ -92,7 +95,7 @@ class TETU::Resources < Entitas::Component
     stores = Stores.new
     stores["pollution"] = Store.new(amount: 0.0, max: 1_000_000.0)
 
-    infras = Infras.new()
+    infras = Infras.new
 
     Resources.new(stores: stores, infras: infras)
   end
