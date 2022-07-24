@@ -1,5 +1,5 @@
 class TETU::UiService::PlanetInfrastructure < TETU::UiService
-  Log = TETU::Log.for(self)
+  spoved_logger level: :debug, io: STDOUT, bind: true
 
   include Helpers::UiSystem
 
@@ -27,7 +27,7 @@ class TETU::UiService::PlanetInfrastructure < TETU::UiService
 
   private def draw_storage
     stores = @planet.resources.stores
-    Log.debug { "stores_list = #{stores}" }
+    logger.debug { "stores_list = #{stores}" }
     draw_table(title: "storage", headers: {"", "Amount", "Maximum"}) do
       stores.each do |res, store|
         next if store.amount < 0.01
@@ -70,7 +70,7 @@ class TETU::UiService::PlanetInfrastructure < TETU::UiService
 
     # TODO not in the UI
     @planet.add_infrastructure_upgrades if !@planet.has_infrastructure_upgrades?
-    Log.debug { { "@planet.infrastructure_upgrades": @planet.infrastructure_upgrades } } if !@planet.infrastructure_upgrades.upgrades.empty?
+    logger.debug { { "@planet.infrastructure_upgrades": @planet.infrastructure_upgrades } } if !@planet.infrastructure_upgrades.upgrades.empty?
 
     draw_table_cell do
       if ImGui.button("upgrade####{infra.id}")

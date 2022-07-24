@@ -1,7 +1,8 @@
 # in charge to handle the main empire UI
 class TETU::UiEmpireSystem
   include Entitas::Systems::ExecuteSystem
-
+  spoved_logger level: :debug, io: STDOUT, bind: true
+  
   def initialize(@context : GameContext); end
 
   def execute

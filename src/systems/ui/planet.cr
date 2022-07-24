@@ -1,5 +1,5 @@
 class TETU::UiPlanetSystem
-  Log = TETU::Systems::Log.for(self)
+  spoved_logger level: :debug, io: STDOUT, bind: true
 
   include Entitas::Systems::ExecuteSystem
   include Helpers::UiSystem

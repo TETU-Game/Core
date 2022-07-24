@@ -2,14 +2,15 @@ require "../components"
 
 class TETU::InfrastructureUpgradesSystem
   include Entitas::Systems::ExecuteSystem
-
+  spoved_logger level: :debug, io: STDOUT, bind: true
+  
   def initialize(@context : GameContext); end
 
   def execute
     producer = @context.get_group Entitas::Matcher.all_of Resources, InfrastructureUpgrades, ManpowerAllocation
     producer.entities.each do |e|
       # pay the cost
-      # Log.debug { "e.infrastructure_upgrades.upgrades = #{e.infrastructure_upgrades.upgrades.size}" }
+      # logger.debug { "e.infrastructure_upgrades.upgrades = #{e.infrastructure_upgrades.upgrades.size}" }
       e.infrastructure_upgrades.upgrades.reject! do |upgrade|
         pay_upgrade(e.resources, upgrade)
         if upgrade.finished?
@@ -24,7 +25,7 @@ class TETU::InfrastructureUpgradesSystem
 
   def apply_upgrade(entity : GameEntity, upgrade : InfrastructureUpgrade)
     resources = entity.resources
-    Log.debug { "apply_upgrade: #{resources.to_s} #{upgrade.to_s}" }
+    logger.debug { "apply_upgrade: #{resources.to_s} #{upgrade.to_s}" }
     infra_id = upgrade.id
     infra = Helpers::InfrastructuresFileLoader.all[infra_id]
 
@@ -69,7 +70,7 @@ class TETU::InfrastructureUpgradesSystem
   end
 
   def pay_upgrade(resources : Resources, upgrade : InfrastructureUpgrade)
-    Log.debug { "pay_upgrade: #{resources.to_s} #{upgrade.to_s}" }
+    logger.debug { "pay_upgrade: #{resources.to_s} #{upgrade.to_s}" }
     current_costs = upgrade.current_tick == 0 ? upgrade.costs_start : upgrade.costs_by_tick
     pay_upgrade_tick(resources, upgrade, current_costs)
   end
@@ -79,10 +80,10 @@ class TETU::InfrastructureUpgradesSystem
       # pay the upgrade with local store
       costs.all? { |res, amount| resources.stores[res].amount -= amount }
       upgrade.current_tick += 1
-      Log.debug { "paid tick upgrade" }
+      logger.debug { "paid tick upgrade" }
     else
       # if we can't pay the upgrade, we will "loose" one tick due to maintenance
-      Log.debug { "cannot pay upgrade" }
+      logger.debug { "cannot pay upgrade" }
       upgrade.end_tick += 1
     end
 

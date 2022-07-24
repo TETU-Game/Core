@@ -18,7 +18,9 @@ end
 
 require "./game/resources"
 
+# TODO: why is it not a component ????? should fix that
 class TETU::InfrastructureUpgrade
+  spoved_logger level: :debug, io: STDOUT, bind: true
   alias Costs = Hash(Resources::Name, Float64)
   property id : String
   property costs_by_tick : Costs
@@ -57,14 +59,15 @@ class TETU::InfrastructureUpgrade
     )
   end
 
+  spoved_logger level: :debug, io: STDOUT, bind: true
   def self.from_blueprint(infra_id : String, tier : Number)
     blueprint = Helpers::InfrastructuresFileLoader.all[infra_id]
     total_costs = blueprint.build.costs.transform_values { |f| f.execute(tier) }
     upfront_costs = total_costs.transform_values { |v| v * blueprint.build.upfront }
     duration = blueprint.build.duration.execute(tier)
     tick_costs = total_costs.transform_values { |v| v * (1.0 - blueprint.build.upfront) / duration }
-    Log.debug { "" }
-    Log.debug { "> Create from blueprint" }
+    logger.debug { "" }
+    logger.debug { "> Create from blueprint" }
     upgrade = new(
       id: infra_id,
       costs_by_tick: tick_costs,
@@ -72,9 +75,9 @@ class TETU::InfrastructureUpgrade
       end_tick: duration.to_i64,
       current_tick: 0i64,
     )
-    Log.debug { { blueprint: blueprint } }
-    Log.debug { { upgrade: upgrade } }
-    Log.debug { "" }
+    logger.debug { { blueprint: blueprint } }
+    logger.debug { { upgrade: upgrade } }
+    logger.debug { "" }
     upgrade
   end
 end

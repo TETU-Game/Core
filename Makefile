@@ -6,9 +6,9 @@ all: deps_opt build
 run: build
 	./$(NAME)
 build:
-	crystal build src/$(NAME).cr --stats --error-trace
+	crystal build src/$(NAME).cr --stats --error-trace -Dentitas_enable_logging
 debug:
-	crystal build src/$(NAME).cr --stats --error-trace --debug
+	crystal build src/$(NAME).cr --stats --error-trace --debug -Dentitas_enable_logging
 release:
 	crystal build src/$(NAME).cr --stats --release
 test:

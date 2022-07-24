@@ -1,7 +1,8 @@
 class TETU::UiBackgroundSystem
   include Entitas::Systems::ExecuteSystem
   include Helpers::UiSystem
-
+  spoved_logger level: :debug, io: STDOUT, bind: true
+  
   def initialize(@context : GameContext); end
 
   def execute

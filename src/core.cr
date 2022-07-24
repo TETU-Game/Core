@@ -1,25 +1,25 @@
-require "log"
+# require "log"
 require "yaml"
 
 require "entitas"
 require "crsfml"
 require "imgui"
 require "imgui-sfml"
+require "spoved/logger"
 
 module TETU
-  LOG_FORMATTER = ::Log::IOBackend.new(formatter: ::Log::ShortFormat)
-  ::Log.setup(:debug, LOG_FORMATTER) # Log debug and above for all
-
-  Log = ::Log.for(self)
+  spoved_logger level: :debug, io: STDOUT, bind: true
 
   # TO BE USED
   module Systems
-    Log = TETU::Log.for(self)
+    # Log = TETU::Log.for(self)
+    spoved_logger level: :debug, io: STDOUT, bind: true
   end
 
   # TO BE USED
   module Components
-    Log = TETU::Log.for(self)
+    # Log = TETU::Log.for(self)
+    spoved_logger level: :debug, io: STDOUT, bind: true
   end
 
   module Helpers
@@ -93,20 +93,26 @@ end
 
 # require "./gui/*"
 
-hw = TETU::MainWorld.new
-hw.start
+module TETU
+  def self.main_loop
+    hw = TETU::MainWorld.new
+    hw.start
 
-stop_at = ARGV.size > 0 ? ARGV[0].to_u64 : -1i64
-loop do
-  TETU.tick do |tick|
-    t1 = Time.local
-    Log.info { "=============== START TICK #{tick} ===============" }
-    Fiber.yield
-    hw.update
-    exit if tick == stop_at
-    Log.info { "=============== FINISH TICK #{tick} ===============" }
-    t2 = Time.local
-    Log.debug { "Duration: #{t2 - t1}" }
-    Log.debug { "" }
+    stop_at = ARGV.size > 0 ? ARGV[0].to_u64 : -1i64
+    loop do
+      TETU.tick do |tick|
+        t1 = Time.local
+        Log.info { "=============== START TICK #{tick} ===============" }
+        Fiber.yield
+        hw.update
+        exit if tick == stop_at
+        Log.info { "=============== FINISH TICK #{tick} ===============" }
+        t2 = Time.local
+        logger.debug { "Duration: #{t2 - t1}" }
+        logger.debug { "" }
+      end
+    end
   end
 end
+
+TETU.main_loop

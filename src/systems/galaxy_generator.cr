@@ -1,5 +1,6 @@
 class TETU::GalaxyInitializerSystem
   include Entitas::Systems::InitializeSystem
+  spoved_logger level: :debug, io: STDOUT, bind: true
 
   def initialize(@context : GameContext); end
 
@@ -20,9 +21,9 @@ class TETU::GalaxyInitializerSystem
     end.to_a
 
     stars = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody).none_of(StellarPosition)
-    stars.entities.each { |entity| Log.debug { "new Star [#{entity.named.to_s}] at [#{entity.position.to_s}]" } }
+    stars.entities.each { |entity| logger.debug { "new Star [#{entity.named.to_s}] at [#{entity.position.to_s}]" } }
     bodies = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody, StellarPosition)
-    bodies.entities.each { |entity| Log.debug { "new Body [#{entity.named.to_s}] in [#{entity.stellar_position.body_index}, #{entity.stellar_position.moon_index}]" } }
+    bodies.entities.each { |entity| logger.debug { "new Body [#{entity.named.to_s}] in [#{entity.stellar_position.body_index}, #{entity.stellar_position.moon_index}]" } }
   end
 
   private def generate_star(empire_id : Int32?)
@@ -105,7 +106,7 @@ class TETU::GalaxyInitializerSystem
   DEFAULT_INFRASTRUCTURES = %w[e_store m_store f_store e_plant mine farm a_store l_store a_plant l_plant]
 
   def populate(body)
-    # Log.debug { "populate: #{body.named.name}..." }
+    # logger.debug { "populate: #{body.named.name}..." }
     pop_amount = ((10_000.0)..(10_000_000_000.0)).sample
     body.add_population amount: pop_amount
     body.replace_component(Resources.default_populated)
@@ -116,7 +117,7 @@ class TETU::GalaxyInitializerSystem
       upgrade = InfrastructureUpgrade.free_instant(id: infra_id)
       body.infrastructure_upgrades.upgrades << upgrade
     end
-    # Log.debug { "populated: #{body.named.name}, now #{body.resources.to_s}, with #{body.infrastructure_upgrades.upgrades.size} upgrade to do..." }
+    # logger.debug { "populated: #{body.named.name}, now #{body.resources.to_s}, with #{body.infrastructure_upgrades.upgrades.size} upgrade to do..." }
     body
   end
 end

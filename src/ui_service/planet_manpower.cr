@@ -1,5 +1,6 @@
 class TETU::UiService::PlanetManpower < TETU::UiService
   include Helpers::UiSystem
+  spoved_logger level: :debug, io: STDOUT, bind: true
 
   def initialize(@planet : GameEntity)
   end
@@ -47,7 +48,7 @@ class TETU::UiService::PlanetManpower < TETU::UiService
               ImGui::ImGuiSliderFlags::Logarithmic
             ),
           )
-          Log.debug { "set #{infra.id} absolute manpower to #{v} because " }
+          logger.debug { "set #{infra.id} absolute manpower to #{v} because " }
           @planet.manpower_allocation.available += @planet.manpower_allocation.absolute[infra.id]
           @planet.manpower_allocation.available -= v
           @planet.manpower_allocation.absolute[infra.id] = v

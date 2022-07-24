@@ -2,6 +2,7 @@ require "../components"
 
 class TETU::PopulationGrowthSystem
   include Entitas::Systems::ExecuteSystem
+  spoved_logger level: :debug, io: STDOUT, bind: true
 
   def initialize(@context : GameContext); end
 
@@ -13,7 +14,7 @@ class TETU::PopulationGrowthSystem
       # and one tick is one day
       reproduction_rate = 1.5 * (1.0/80.0) * (1.0/365)
       new_pop_amount = pop_amount + pop_amount * reproduction_rate
-      # Log.debug { "population growth: {reproduction_rate:#{reproduction_rate}} {population:#{e.population.to_s}} {bonus:#{pop_amount * reproduction_rate}}" }
+      # logger.debug { "population growth: {reproduction_rate:#{reproduction_rate}} {population:#{e.population.to_s}} {bonus:#{pop_amount * reproduction_rate}}" }
       e.replace_population(amount: new_pop_amount)
     end
   end

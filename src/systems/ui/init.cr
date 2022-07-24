@@ -2,6 +2,7 @@ class TETU::UiInitSystem
   include Entitas::Systems::ExecuteSystem
   include Entitas::Systems::InitializeSystem
   include Helpers::UiSystem
+  spoved_logger level: :debug, io: STDOUT, bind: true
 
   def initialize(@context : GameContext); end
 
@@ -28,9 +29,9 @@ class TETU::UiInitSystem
       when SF::Event::Closed
         window.close
       when SF::Event::KeyPressed
-        Log.debug { "KeyPressed #{event}" }
+        logger.debug { "KeyPressed #{event}" }
       when SF::Event::MouseButtonEvent
-        Log.debug { "MouseButtonEvent #{event}" }
+        logger.debug { "MouseButtonEvent #{event}" }
       end
     end
   end

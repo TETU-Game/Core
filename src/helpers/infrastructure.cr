@@ -7,6 +7,8 @@ require "./curve"
 # costs.map { |res, cost_f| cost_f.execute(new_tier) }
 # ```
 class TETU::Helpers::Infrastructure
+  spoved_logger level: :debug, io: STDOUT, bind: true
+
   BLUEPRINTS = Blueprint.all("infrastructures", filter: /\.yaml$/)
   Log.debug { { "infra bp": BLUEPRINTS } }
 
