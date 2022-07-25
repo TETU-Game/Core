@@ -2,7 +2,7 @@ class TETU::GalaxyInitializerSystem
   include Entitas::Systems::InitializeSystem
   spoved_logger level: :info, io: STDOUT, bind: true
 
-  def initialize(@context : GameContext); end
+  def initialize(@contexts : Contexts); end
 
   SYSTEMS_AMOUNT   = GALAXY_CONF["systems_amount"].as_i
   AI_AMOUNT        = GALAXY_CONF["ai_start_amount"].as_i
@@ -21,14 +21,14 @@ class TETU::GalaxyInitializerSystem
       star
     end.to_a
 
-    stars = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody).none_of(StellarPosition)
+    stars = @contexts.game.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody).none_of(StellarPosition)
     stars.entities.each { |entity| logger.debug { "new Star [#{entity.named.to_s}] at [#{entity.position.to_s}]" } }
-    bodies = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody, StellarPosition)
+    bodies = @contexts.game.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody, StellarPosition)
     bodies.entities.each { |entity| logger.debug { "new Body [#{entity.named.to_s}] in [#{entity.stellar_position.body_index}, #{entity.stellar_position.moon_index}]" } }
   end
 
   private def generate_star(empire_id : Int32?)
-    star = @context.create_entity
+    star = @contexts.game.create_entity
     star.add_celestial_body type: :star
     star.add_owned empire_id: empire_id if !empire_id.nil?
     Position.generate star
@@ -60,7 +60,7 @@ class TETU::GalaxyInitializerSystem
   private def generate_body(star : Entitas::IEntity, index : Int32, body_type : Symbol, ids_trash : Hash(Symbol, Int32))
     star_position = star.position
 
-    body = @context.create_entity
+    body = @contexts.game.create_entity
     star_position.as(Position).copy_to body
     body.add_stellar_position body_index: index, moon_index: ids_trash[:moon]
 

@@ -3,7 +3,7 @@ class TETU::UiDrawSystem
   include Entitas::Systems::ExecuteSystem
   spoved_logger level: :info, io: STDOUT, bind: true
 
-  def initialize(@context : GameContext); end
+  def initialize(@contexts : Contexts); end
 
   def execute
     ImGui::SFML.render(window)

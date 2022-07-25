@@ -3,7 +3,7 @@ class TETU::UiBackgroundSystem
   include Helpers::UiSystem
   spoved_logger level: :info, io: STDOUT, bind: true
 
-  def initialize(@context : GameContext); end
+  def initialize(@contexts : Contexts); end
 
   def execute
     draw_background
@@ -45,7 +45,7 @@ class TETU::UiBackgroundSystem
   end
 
   private def draw_stars_on_grid
-    stars = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody).none_of(StellarPosition)
+    stars = @contexts.game.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody).none_of(StellarPosition)
     stars.entities.each do |entity|
       position = entity.position
       square = SF::RectangleShape.new(SF.vector2(1, 1))

@@ -4,7 +4,7 @@ class TETU::UiInitSystem
   include Helpers::UiSystem
   spoved_logger level: :info, io: STDOUT, bind: true
 
-  def initialize(@context : GameContext); end
+  def initialize(@contexts : Contexts); end
 
   def init
     ImGui::SFML.init(window)

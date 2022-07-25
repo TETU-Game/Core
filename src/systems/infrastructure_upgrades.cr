@@ -4,10 +4,10 @@ class TETU::InfrastructureUpgradesSystem
   include Entitas::Systems::ExecuteSystem
   spoved_logger level: :info, io: STDOUT, bind: true
 
-  def initialize(@context : GameContext); end
+  def initialize(@contexts : Contexts); end
 
   def execute
-    producer = @context.get_group Entitas::Matcher.all_of Resources, InfrastructureUpgrades, ManpowerAllocation
+    producer = @contexts.game.get_group Entitas::Matcher.all_of Resources, InfrastructureUpgrades, ManpowerAllocation
     producer.entities.each do |e|
       # pay the cost
       # logger.debug { "e.infrastructure_upgrades.upgrades = #{e.infrastructure_upgrades.upgrades.size}" }

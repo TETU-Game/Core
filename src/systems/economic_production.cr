@@ -4,15 +4,15 @@ class TETU::EconomicProductionSystem
   include Entitas::Systems::ExecuteSystem
   spoved_logger level: :info, io: STDOUT, bind: true
 
-  def initialize(@context : GameContext); end
+  def initialize(@contexts : Contexts); end
 
   def execute
-    # populated = @context.get_group Entitas::Matcher.all_of Named, Population
+    # populated = @contexts.game.get_group Entitas::Matcher.all_of Named, Population
     # populated.entities.each do |e|
     #   STDERR.logger.debug { "this named populated entity is #{e.named.to_s} and has #{e.population.to_s} pop" }
     # end
 
-    producer_group = @context.get_group Entitas::Matcher.all_of(Resources, Population, ManpowerAllocation)
+    producer_group = @contexts.game.get_group Entitas::Matcher.all_of(Resources, Population, ManpowerAllocation)
     producer_group.entities.each do |e|
       next if !e.resources.can_produce?
 

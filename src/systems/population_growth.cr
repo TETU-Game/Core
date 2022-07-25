@@ -4,10 +4,10 @@ class TETU::PopulationGrowthSystem
   include Entitas::Systems::ExecuteSystem
   spoved_logger level: :info, io: STDOUT, bind: true
 
-  def initialize(@context : GameContext); end
+  def initialize(@contexts : Contexts); end
 
   def execute
-    populateds = @context.get_group Entitas::Matcher.all_of(Population)
+    populateds = @contexts.game.get_group Entitas::Matcher.all_of(Population)
     populateds.entities.each do |e|
       pop_amount = e.population.amount
       # let's say every adult make 1.5 child average in its average lifespan (80 years)

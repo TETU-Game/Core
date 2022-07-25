@@ -4,7 +4,7 @@ class TETU::UiPlanetSystem
   include Entitas::Systems::ExecuteSystem
   include Helpers::UiSystem
 
-  def initialize(@context : GameContext); end
+  def initialize(@contexts : Contexts); end
 
   def execute
     planet = TETU::Window.instance.planet_menu_selected

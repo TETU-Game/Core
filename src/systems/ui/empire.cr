@@ -3,7 +3,7 @@ class TETU::UiEmpireSystem
   include Entitas::Systems::ExecuteSystem
   spoved_logger level: :info, io: STDOUT, bind: true
 
-  def initialize(@context : GameContext); end
+  def initialize(@contexts : Contexts); end
 
   def execute
     draw_galaxy_menu
@@ -33,7 +33,7 @@ class TETU::UiEmpireSystem
   end
 
   private def draw_stars_menu
-    stars = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody, PlayerOwned).none_of(StellarPosition)
+    stars = @contexts.game.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody, PlayerOwned).none_of(StellarPosition)
     stars.entities.each do |entity|
       draw_star_menu_one_star(entity)
     end
@@ -47,7 +47,7 @@ class TETU::UiEmpireSystem
   end
 
   private def draw_planets_menu(star)
-    planets = @context.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody, StellarPosition, PlayerOwned)
+    planets = @contexts.game.get_group Entitas::Matcher.all_of(Named, Position, CelestialBody, StellarPosition, PlayerOwned)
     planets.entities.each do |planet|
       next if star.position != planet.position
 

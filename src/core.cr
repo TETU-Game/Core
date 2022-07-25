@@ -24,17 +24,6 @@ module TETU
 
   module Helpers
   end
-
-  @@tick = 0i64
-
-  def self.tick(&block)
-    yield @@tick
-    @@tick += 1
-  end
-
-  def self.tick
-    @@tick
-  end
 end
 
 require "./helpers/*"
@@ -46,24 +35,22 @@ require "./systems"
 class TETU::EconomicSystems < Entitas::Feature
   def initialize(contexts : Contexts)
     @name = "Economic Systems"
-    ctx = contexts.game # I think this is the link with @[Context(Game)] :thinking:
-    add EconomicProductionSystem.new(ctx)
-    add GalaxyInitializerSystem.new(ctx)
-    add InfrastructureUpgradesSystem.new(ctx)
-    add PopulationGrowthSystem.new(ctx)
+    add EconomicProductionSystem.new(contexts)
+    add GalaxyInitializerSystem.new(contexts)
+    add InfrastructureUpgradesSystem.new(contexts)
+    add PopulationGrowthSystem.new(contexts)
   end
 end
 
 class TETU::UiSystems < Entitas::Feature
   def initialize(contexts : Contexts)
     @name = "UI Systems"
-    ctx = contexts.game
 
-    add UiInitSystem.new(ctx)
-    add UiBackgroundSystem.new(ctx)
-    add UiEmpireSystem.new(ctx)
-    add UiPlanetSystem.new(ctx)
-    add UiDrawSystem.new(ctx) # keep at the end
+    add UiInitSystem.new(contexts)
+    add UiBackgroundSystem.new(contexts)
+    add UiEmpireSystem.new(contexts)
+    add UiPlanetSystem.new(contexts)
+    add UiDrawSystem.new(contexts) # keep at the end
   end
 end
 
@@ -94,6 +81,17 @@ end
 # require "./gui/*"
 
 module TETU
+  @@tick = 0i64
+
+  def self.tick(&block)
+    yield @@tick
+    @@tick += 1
+  end
+
+  def self.tick
+    @@tick
+  end
+
   def self.main_loop
     hw = TETU::MainWorld.new
     hw.start
