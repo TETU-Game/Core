@@ -2,7 +2,7 @@ max_y: 600
 max_x: 800
 
 ui:
-  framerate: 5
+  framerate: 10
   square_size: 100
   right_sidebar: 400
   left_sidebar: 800
@@ -17,3 +17,6 @@ galaxy:
   ai_start_populated_bodies_amount: 3
   # this is applied to non-ai empire systems
   populated_planets_proba: 1.0
+
+  # 1 = every millisecond is the minimum duration of a day in game
+  real_time_day_span: 1000

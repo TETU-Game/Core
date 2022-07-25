@@ -54,6 +54,14 @@ class TETU::UiSystems < Entitas::Feature
   end
 end
 
+class TETU::TimeSystems < Entitas::Feature
+  def initialize(contexts : Contexts)
+    @name = "Time Systems"
+
+    add TimeSystem.new(contexts)
+  end
+end
+
 class TETU::MainWorld
   getter systems : Entitas::Systems = Entitas::Systems.new
 
@@ -63,6 +71,7 @@ class TETU::MainWorld
 
     # create the systems by creating individual features
     @systems = Entitas::Feature.new("systems")
+      .add(TimeSystems.new(contexts))
       .add(EconomicSystems.new(contexts))
       .add(UiSystems.new(contexts))
     @systems.init
@@ -77,8 +86,6 @@ class TETU::MainWorld
     @systems.cleanup
   end
 end
-
-# require "./gui/*"
 
 module TETU
   @@tick = 0i64
