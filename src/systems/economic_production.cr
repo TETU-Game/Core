@@ -1,12 +1,19 @@
 require "../components"
 
-class TETU::EconomicProductionSystem
-  include Entitas::Systems::ExecuteSystem
+class TETU::EconomicProductionSystem < Entitas::ReactiveSystem
   spoved_logger level: :info, io: STDOUT, bind: true
 
-  def initialize(@contexts : Contexts); end
+  def initialize(@contexts : Contexts)
+    @time_context = @contexts.time
+    @collector = get_trigger(@time_context)
+  end
 
-  def execute
+  def get_trigger(context : Entitas::Context) : Entitas::ICollector
+    context.create_collector(TimeMatcher.day_passed_event.added)
+  end
+
+  def execute(time_entities : Array(Entitas::IEntity))
+    logger.debug { "time_entities=#{time_entities}" }
     # populated = @contexts.game.get_group Entitas::Matcher.all_of Named, Population
     # populated.entities.each do |e|
     #   STDERR.logger.debug { "this named populated entity is #{e.named.to_s} and has #{e.population.to_s} pop" }

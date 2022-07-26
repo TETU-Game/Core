@@ -1,12 +1,18 @@
 require "../components"
 
-class TETU::PopulationGrowthSystem
-  include Entitas::Systems::ExecuteSystem
+class TETU::PopulationGrowthSystem < Entitas::ReactiveSystem
   spoved_logger level: :info, io: STDOUT, bind: true
 
-  def initialize(@contexts : Contexts); end
+  def initialize(@contexts : Contexts)
+    @time_context = @contexts.time
+    @collector = get_trigger(@time_context)
+  end
 
-  def execute
+  def get_trigger(context : Entitas::Context) : Entitas::ICollector
+    context.create_collector(TimeMatcher.day_passed_event.added)
+  end
+
+  def execute(time_entities : Array(Entitas::IEntity))
     populateds = @contexts.game.get_group Entitas::Matcher.all_of(Population)
     populateds.entities.each do |e|
       pop_amount = e.population.amount

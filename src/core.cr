@@ -8,18 +8,18 @@ require "imgui-sfml"
 require "spoved/logger"
 
 module TETU
-  spoved_logger level: :debug, io: STDOUT, bind: true
+  spoved_logger level: :info, io: STDOUT, bind: true
 
   # TO BE USED
   module Systems
     # Log = TETU::Log.for(self)
-    spoved_logger level: :debug, io: STDOUT, bind: true
+    spoved_logger level: :info, io: STDOUT, bind: true
   end
 
   # TO BE USED
   module Components
     # Log = TETU::Log.for(self)
-    spoved_logger level: :debug, io: STDOUT, bind: true
+    spoved_logger level: :info, io: STDOUT, bind: true
   end
 
   module Helpers

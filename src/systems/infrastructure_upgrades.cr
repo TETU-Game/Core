@@ -1,13 +1,18 @@
-require "../components"
-
-class TETU::InfrastructureUpgradesSystem
-  include Entitas::Systems::ExecuteSystem
+class TETU::InfrastructureUpgradesSystem < Entitas::ReactiveSystem
   spoved_logger level: :info, io: STDOUT, bind: true
 
-  def initialize(@contexts : Contexts); end
+  def initialize(@contexts : Contexts)
+    @time_context = @contexts.time
+    @collector = get_trigger(@time_context)
+  end
 
-  def execute
-    producer = @contexts.game.get_group Entitas::Matcher.all_of Resources, InfrastructureUpgrades, ManpowerAllocation
+  def get_trigger(context : Entitas::Context) : Entitas::ICollector
+    context.create_collector(TimeMatcher.day_passed_event.added)
+  end
+
+  def execute(time_entities : Array(Entitas::IEntity))
+    logger.debug { "time_entities=#{time_entities}" }
+    producer = @contexts.game.get_group Entitas::Matcher.all_of(Resources, InfrastructureUpgrades, ManpowerAllocation)
     producer.entities.each do |e|
       # pay the cost
       # logger.debug { "e.infrastructure_upgrades.upgrades = #{e.infrastructure_upgrades.upgrades.size}" }
