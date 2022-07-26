@@ -2,18 +2,26 @@
 
 A strategy & simulation game in space, inspired by Stellaris PDX
 
+[![Build Status](https://drone.sceptique.eu/api/badges/TETU/Core/status.svg)](https://drone.sceptique.eu/TETU/Core)
+
 ## Installation
 
 Install `git`, `sfml`, `crystal`, `make`, `imgui` (`imgui-sfml` with archlinux).
 
+    # install dependencies first
     make deps
+    
+    # make with imgui static linking (I think, I don't remember)
     export LD_LIBRARY_PATH="$(pwd)/cimgui"
-    make release
-    export LD_LIBRARY_PATH="$(pwd)/lib/imgui-sfml"
-    ./core
+    make release    
 
 ## Usage
 
+    # run the
+    export LD_LIBRARY_PATH="$(pwd)/lib/imgui-sfml"
+    ./core
+
+    # there is also a make rule that handle the libraries
     make run
 
 ## Development
@@ -33,3 +41,7 @@ Install `git`, `sfml`, `crystal`, `make`, `imgui` (`imgui-sfml` with archlinux).
 ## Contributors
 
 - [Arthur Poulet](https://git.sceptique.eu/Sceptique) - creator and maintainer
+
+## Particular mentions
+
+- Thanks to kalinon for his work and support of <https://github.com/spoved/entitas.cr>.
