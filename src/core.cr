@@ -1,11 +1,29 @@
-# require "log"
 require "yaml"
 
 require "entitas"
-require "crsfml"
-require "imgui"
-require "imgui-sfml"
+require "graphql"
 require "spoved/logger"
+require "kemal"
+
+@[GraphQL::Object]
+class Query < GraphQL::BaseQuery
+  @[GraphQL::Field]
+  def hello(name : String) : String
+    "Hello, #{name}!"
+  end
+end
+
+schema = GraphQL::Schema.new(Query.new)
+
+post "/graphql" do |env|
+  env.response.content_type = "application/json"
+
+  query = env.params.json["query"].as(String)
+  variables = env.params.json["variables"]?.as(Hash(String, JSON::Any)?)
+  operation_name = env.params.json["operationName"]?.as(String?)
+
+  schema.execute(query, variables, operation_name)
+end
 
 module TETU
   spoved_logger level: :info, io: STDOUT, bind: true
@@ -28,7 +46,7 @@ end
 
 require "./helpers/*"
 require "./core/*"
-require "./ui_service"
+# require "./ui_service"
 require "./components"
 require "./systems"
 
@@ -42,17 +60,17 @@ class TETU::EconomicSystems < Entitas::Feature
   end
 end
 
-class TETU::UiSystems < Entitas::Feature
-  def initialize(contexts : Contexts)
-    @name = "UI Systems"
+# class TETU::UiSystems < Entitas::Feature
+#   def initialize(contexts : Contexts)
+#     @name = "UI Systems"
 
-    add UiInitSystem.new(contexts)
-    add UiBackgroundSystem.new(contexts)
-    add UiEmpireSystem.new(contexts)
-    add UiPlanetSystem.new(contexts)
-    add UiDrawSystem.new(contexts) # keep at the end
-  end
-end
+#     add UiInitSystem.new(contexts)
+#     add UiBackgroundSystem.new(contexts)
+#     add UiEmpireSystem.new(contexts)
+#     add UiPlanetSystem.new(contexts)
+#     add UiDrawSystem.new(contexts) # keep at the end
+#   end
+# end
 
 class TETU::TimeSystems < Entitas::Feature
   def initialize(contexts : Contexts)
@@ -73,7 +91,7 @@ class TETU::MainWorld
     @systems = Entitas::Feature.new("systems")
       .add(TimeSystems.new(contexts))
       .add(EconomicSystems.new(contexts))
-      .add(UiSystems.new(contexts))
+      # .add(UiSystems.new(contexts))
     @systems.init
   end
 
@@ -115,9 +133,11 @@ module TETU
         t2 = Time.local
         logger.debug { "Duration: #{t2 - t1}" }
         logger.debug { "" }
+        sleep 0.1
       end
     end
   end
 end
 
+spawn { Kemal.run }
 TETU.main_loop

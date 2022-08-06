@@ -1,20 +1,28 @@
 version: 2.0
 shards:
-  crsfml:
-    git: https://github.com/oprypin/crsfml.git
-    version: 2.5.2
+  backtracer:
+    git: https://github.com/sija/backtracer.cr.git
+    version: 1.2.1
 
   entitas:
     git: https://github.com/spoved/entitas.cr.git
     version: 1.4.5
 
-  imgui:
-    git: https://github.com/oprypin/crystal-imgui.git
-    version: 1.87
+  exception_page:
+    git: https://github.com/crystal-loot/exception_page.git
+    version: 0.2.2
 
-  imgui-sfml:
-    git: https://github.com/oprypin/crystal-imgui-sfml.git
-    version: 1.87
+  graphql:
+    git: https://github.com/graphql-crystal/graphql.git
+    version: 0.4.0
+
+  kemal:
+    git: https://github.com/kemalcr/kemal.git
+    version: 1.2.0
+
+  radix:
+    git: https://github.com/luislavena/radix.git
+    version: 0.4.1
 
   spoved:
     git: https://github.com/spoved/spoved.cr.git
