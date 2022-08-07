@@ -5,26 +5,6 @@ require "graphql"
 require "spoved/logger"
 require "kemal"
 
-@[GraphQL::Object]
-class Query < GraphQL::BaseQuery
-  @[GraphQL::Field]
-  def hello(name : String) : String
-    "Hello, #{name}!"
-  end
-end
-
-schema = GraphQL::Schema.new(Query.new)
-
-post "/graphql" do |env|
-  env.response.content_type = "application/json"
-
-  query = env.params.json["query"].as(String)
-  variables = env.params.json["variables"]?.as(Hash(String, JSON::Any)?)
-  operation_name = env.params.json["operationName"]?.as(String?)
-
-  schema.execute(query, variables, operation_name)
-end
-
 module TETU
   spoved_logger level: :info, io: STDOUT, bind: true
 
@@ -49,6 +29,7 @@ require "./core/*"
 # require "./ui_service"
 require "./components"
 require "./systems"
+require "./api"
 
 class TETU::EconomicSystems < Entitas::Feature
   def initialize(contexts : Contexts)
@@ -139,5 +120,5 @@ module TETU
   end
 end
 
-spawn { Kemal.run }
+TETU::API::HttpServer.start
 TETU.main_loop
