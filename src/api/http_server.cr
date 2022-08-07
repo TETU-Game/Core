@@ -9,44 +9,7 @@ class TETU::API::HttpServer
   end
 end
 
-module TETU::API::Definitions
-  @[GraphQL::Object]
-  class Planet < GraphQL::BaseObject
-    @@i = 0
-
-    @[GraphQL::Field]
-    def name : String
-      @@i += 1
-      "my #{@@i}th planet name"
-    end
-  end
-
-  @[GraphQL::Object]
-  class Empire < GraphQL::BaseObject
-    @[GraphQL::Field]
-    def name : String
-      "my empire name"
-    end
-
-    @[GraphQL::Field]
-    def planets : Array(Planet)
-      [Planet.new, Planet.new]
-    end
-  end
-
-  @[GraphQL::Object]
-  class GameQuery < GraphQL::BaseQuery
-    @[GraphQL::Field]
-    def hello(name : String) : String
-      "Hello, #{name}!"
-    end
-
-    @[GraphQL::Field]
-    def empire : Empire
-      Empire.new
-    end
-  end
-end
+require "./game_query"
 
 schema = GraphQL::Schema.new(TETU::API::Definitions::GameQuery.new)
 
