@@ -1,6 +1,6 @@
 # TETU Core
 
-A strategy & simulation game in space, inspired by Stellaris PDX
+A strategy & simulation game in space, inspired by Stellaris PDX.
 
 [![Build Status](https://drone.sceptique.eu/api/badges/TETU/Core/status.svg)](https://drone.sceptique.eu/TETU/Core)
 
@@ -10,25 +10,21 @@ Install `git`, `sfml`, `crystal`, `make`, `imgui` (`imgui-sfml` with archlinux).
 
     # install dependencies first
     make deps
-    
-    # make with imgui static linking (I think, I don't remember)
-    export LD_LIBRARY_PATH="$(pwd)/cimgui"
-    make release    
+
+    # make an optimised build so it's fasteeer
+    make release
 
 ## Usage
 
-    # run the
-    export LD_LIBRARY_PATH="$(pwd)/lib/imgui-sfml"
-    ./core
-
-    # there is also a make rule that handle the libraries
-    make run
+    ./core                          # run the server (high performance for data)
+    xdg-open https://localhost:3000 # open the game UI (browser UI for simplicity)
 
 ## Development
 
-* See the wiki <https://git.sceptique.eu/TETU/Core/wiki>.
-* See the current kanban: <https://git.sceptique.eu/TETU/Core/projects>
-* Come talk on IRC **irc://irc.sceptique.eu#TETU**
+* See the wiki for documentation: <https://git.sceptique.eu/TETU/Core/wiki>.
+* See the current kanban for current WIP: <https://git.sceptique.eu/TETU/Core/projects>.
+* Come talk on IRC: **irc://irc.sceptique.eu:6697#TETU**.
+
 
 ## Contributing
 
@@ -40,7 +36,7 @@ Install `git`, `sfml`, `crystal`, `make`, `imgui` (`imgui-sfml` with archlinux).
 
 ## Contributors
 
-- [Arthur Poulet](https://git.sceptique.eu/Sceptique) - creator and maintainer
+- [Arthur Poulet](https://git.sceptique.eu/Sceptique) - creator and maintainer.
 
 ## Particular mentions
 
