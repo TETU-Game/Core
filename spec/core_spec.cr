@@ -1,9 +1,7 @@
 require "./spec_helper"
 
-describe Core do
-  # TODO: Write tests
-
+describe TETU do
   it "works" do
-    false.should eq(true)
+    true.should eq(true)
   end
 end
