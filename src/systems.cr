@@ -1,3 +1,2 @@
 require "./systems/*"
-
-# require "./systems/ui/*"
+require "./systems/player/*"

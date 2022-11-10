@@ -8,15 +8,13 @@ require "kemal"
 module TETU
   spoved_logger level: :info, io: STDOUT, bind: true
 
-  # TO BE USED
+  # TODO: TO BE USED
   module Systems
-    # Log = TETU::Log.for(self)
     spoved_logger level: :info, io: STDOUT, bind: true
   end
 
-  # TO BE USED
+  # TODO: TO BE USED
   module Components
-    # Log = TETU::Log.for(self)
     spoved_logger level: :info, io: STDOUT, bind: true
   end
 
@@ -26,7 +24,6 @@ end
 
 require "./helpers/*"
 require "./core/*"
-# require "./ui_service"
 require "./components"
 require "./systems"
 require "./api"
@@ -41,22 +38,16 @@ class TETU::EconomicSystems < Entitas::Feature
   end
 end
 
-# class TETU::UiSystems < Entitas::Feature
-#   def initialize(contexts : Contexts)
-#     @name = "UI Systems"
-
-#     add UiInitSystem.new(contexts)
-#     add UiBackgroundSystem.new(contexts)
-#     add UiEmpireSystem.new(contexts)
-#     add UiPlanetSystem.new(contexts)
-#     add UiDrawSystem.new(contexts) # keep at the end
-#   end
-# end
+class TETU::PlayerSystems < Entitas::Feature
+  def initialize(contexts : Contexts)
+    @name = "Player Systems"
+    add RequestHandlerSystem.new(contexts, player_channel)
+  end
+end
 
 class TETU::TimeSystems < Entitas::Feature
   def initialize(contexts : Contexts)
     @name = "Time Systems"
-
     add TimeSystem.new(contexts)
   end
 end
@@ -67,11 +58,11 @@ class TETU::MainWorld
   def start
     # get a reference to the contexts
     contexts = Contexts.shared_instance
-
     # create the systems by creating individual features
     @systems = Entitas::Feature.new("systems")
       .add(TimeSystems.new(contexts))
       .add(EconomicSystems.new(contexts))
+      .add(PlayerSystems.new(contexts))
       # .add(UiSystems.new(contexts))
     @systems.init
   end
@@ -80,7 +71,6 @@ class TETU::MainWorld
     # call execute on all the ExecuteSystems and
     # ReactiveSystems that were triggered last frame
     @systems.execute
-
     # call cleanup on all the CleanupSystems
     @systems.cleanup
   end
