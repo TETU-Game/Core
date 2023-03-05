@@ -1,35 +1,35 @@
 energy:
   name: Energy
-  description: Represents how many machines we can move at the same time.
+  description: Represents how many machines we can move at the same time. Energy unit represents both the energy immediate usage and storage by technological means.
 food:
   name: Food
-  description: Standard food with low technological ehancements
+  description: Standard food with low technological ehancements, along with means and services to distribute it properly.
 food2:
   name: Synthetic Food
-  description: Artificialy engineered very efficient food
+  description: Artificialy engineered very efficient food and distribution.
 mineral:
-  name: Simple Minerals
+  name: Simple Minerals in a proper concentration.
 minerals2:
-  name: Rare Minerals
+  name: Rare Minerals.
 chemical:
   name: Chemicals
-  description: Usually extracted from minerals with chemistery
+  description: Materials usually extracted from minerals with chemistery, with the infrastructure for safe storage and exploitation.
   require: mineral
 alloy:
   name: Alloys
-  description: Standard alloys
+  description: Standards alloys for most industrial and military usages.
   require: mineral
 alloy2:
   name: Super Materials
-  description: Super alloys with near-magical properties
+  description: Super alloys with near-magical properties compared to modern age.
   require: mineral
 weapon:
   name: Weaponery
-  description: Bombs, guns, bullets, armors, utilitary, tanks, fighters
+  description: Bombs, guns, bullets, armors, utilitary, tanks, fighters, artillery, all the things that are small enough to fit in a carrier.
   require: alloy
 logistic:
   name: Logistic
-  description: Civilan ships for fret and travellers
+  description: Civilan ships and means of transportations for high volume fret and travellers.
 pollution:
   name: Pollution
-  description: Represent the wastes of industrial activities, that is stored on the planet more or less randomly.
+  description: Represent the wastes of industrial activities, that is stored on the planet more or less efficiently and have a negative impact on productivity and life.

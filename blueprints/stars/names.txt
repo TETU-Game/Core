@@ -36,7 +36,7 @@ Lalande
 Lampadas
 Lankiveil
 Lernaeus
-Luyten's Star
+Luyten
 Mu Arae
 Muritan
 Naraj
@@ -53,11 +53,11 @@ Selusa
 Sikun
 Sun
 Synchrony
-Trappist
 Tau Ceti
 Tauri
 Tegeuse
 Tleilax
+Trappist
 Tupile
 Upsilon Andromedae
 Ursae Majoris
@@ -65,4 +65,3 @@ Virginis
 Wasp
 Xo
 Yz Ceti
-c

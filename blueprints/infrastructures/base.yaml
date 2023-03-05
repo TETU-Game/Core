@@ -36,7 +36,7 @@ items:
   e_plant:
     <<: *template_default
     title: Energy plant
-    description: Energy grid that produce energy using nuclear isotops, sun, wind, and fossil fuel.
+    description: Energy grid that produce energy using nuclear isotops, sun, wind, and fossil fuel, and also can fill energy storage means with chemistery.
     prods:
       energy:
         function: linear
@@ -51,27 +51,35 @@ items:
   mine:
     <<: *template_default
     title: Mines
-    description: Mines are polluting industry to generate tons of basic ressources required for most of the industry.
+    description: Mines are a polluting industry that can generate tons of basic ressources required for most of the industry. Network of mines generate it's own cheminals.
     consumes:
       energy:
         function: linear
         coefs:
           a: 1
+      chemical:
+        function: linear
+        coefs:
+          a: 0.1
     prods:
       mineral:
         function: linear
         coefs:
           a: 10
+      chemical:
+        function: linear
+        coefs:
+          a: 0.1
     wastes:
       pollution:
         function: linear
         coefs:
           a: 1
 
-  farm:
+  agrifood:
     <<: *template_default
     title: Farmed lands
-    description: Large portions of the land space is used to produce nutrient. It growth crops, animal farms, etc. using standard mechanized tools and vehicules.
+    description: Large portions of the land space is used to produce nutrient. It growth crops, animal farms, etc. using standard mechanized tools and vehicules. Food can then be distributed via a dense network of distributors.
     consumes:
       mineral:
         function: linear

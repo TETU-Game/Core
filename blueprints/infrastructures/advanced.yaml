@@ -60,7 +60,7 @@ items:
   c_plant:
     <<: *template_default
     title: Chemical plant
-    description: Series of chemical transformation machines.
+    description: Transformation machines that can produce almost any kind of material via chemistery, such as super-acides, rare gaz, etc. using lots of basic materials.
     consumes:
       mineral:
         function: linear
@@ -84,7 +84,7 @@ items:
   l_plant:
     <<: *template_default
     title: Logistic assembly
-    description: An assembly center site that make trunks, trains, planes, and civilan space transports.
+    description: An assembly center site that make trunks, trains, planes, and civilan space transports. It also provide a better transportation network.
     consumes:
       alloy:
         function: linear

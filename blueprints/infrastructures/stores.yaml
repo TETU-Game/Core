@@ -56,7 +56,7 @@ items:
   f_store:
     <<: *template_default
     title: Food storage
-    description: Protective centers for nutrients and food supplies
+    description: Protective centers for nutrients and food supplies.
     consumes:
       energy:
         function: linear
