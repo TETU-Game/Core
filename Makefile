@@ -7,6 +7,8 @@ run: build
 	./$(NAME)
 build:
 	crystal build src/$(NAME).cr --stats --error-trace -Dentitas_enable_logging
+build_entitas_logging:
+	crystal build src/$(NAME).cr --stats --error-trace -Dentitas_enable_logging
 debug:
 	crystal build src/$(NAME).cr --stats --error-trace -Dentitas_enable_logging Dentitas_debug_generator
   # I did not enabled --debug because it crashes.

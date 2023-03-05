@@ -16,6 +16,7 @@ Install `git`, `sfml`, `crystal`, `make`, `imgui` (`imgui-sfml` with archlinux).
 
 ## Usage
 
+    export LD_LIBRARY_PATH="$(pwd)/lib/imgui-sfml"
     ./core                          # run the server (high performance for data)
 
 ## Development
