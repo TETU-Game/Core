@@ -104,7 +104,7 @@ class TETU::GalaxyInitializerSystem
     body
   end
 
-  DEFAULT_INFRASTRUCTURES = %w[e_store m_store f_store e_plant mine farm a_store l_store a_plant l_plant]
+  DEFAULT_INFRASTRUCTURES = %w[e_store m_store f_store e_plant mine agrifood a_store l_store a_plant l_plant]
 
   def populate(body)
     # logger.debug { "populate: #{body.named.name}..." }
