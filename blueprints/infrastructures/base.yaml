@@ -57,10 +57,6 @@ items:
         function: linear
         coefs:
           a: 1
-      chemical:
-        function: linear
-        coefs:
-          a: 0.1
     prods:
       mineral:
         function: linear
@@ -69,7 +65,7 @@ items:
       chemical:
         function: linear
         coefs:
-          a: 0.1
+          a: 0.01
     wastes:
       pollution:
         function: linear

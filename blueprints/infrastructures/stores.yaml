@@ -29,7 +29,7 @@ templates:
       max:
         function: linear
         coefs:
-          b: 10_000
+          b: 40_000
 
 items:
 
@@ -51,7 +51,7 @@ items:
       mineral:
         function: linear
         coefs:
-          a: 10000000
+          a: 10000
 
   f_store:
     <<: *template_default
