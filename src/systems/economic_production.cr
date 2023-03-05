@@ -21,9 +21,14 @@ class TETU::EconomicProductionSystem < Entitas::ReactiveSystem
 
     producer_group = @contexts.game.get_group Entitas::Matcher.all_of(Resources, Population, ManpowerAllocation)
     producer_group.entities.each do |e|
-      next if !e.resources.can_produce?
+      if !e.resources.can_produce?
+        logger.debug { "#{e.named} cannot produces" }
+        next
+      end
+      logger.debug { "#{e.named} produces now" }
 
       e.resources.infras.each do |infra_id, infra|
+        logger.debug { "#{e.named.to_s} produces now via #{infra.id}" }
         rate = prod_rate(infra, e)
         prod_rates = infra.prods.map { |res, prod| apply_prod(infra: infra, res: res, rate: rate, prod: prod) }
         real_prod_rate = prod_rates.empty? ? rate : prod_rates.max
@@ -42,8 +47,16 @@ class TETU::EconomicProductionSystem < Entitas::ReactiveSystem
   end
 
   def prod_rate(infra : Resources::Infra, producer : GameEntity) : Float64
-    return 1.0 if infra.consumes.empty?
-    return 0.0 if infra.consumes.any? { |res, _value| infra.stores[res]?.nil? }
+    if infra.consumes.empty?
+      logger.debug { "no consumption, rate 1.0" }
+      return 1.0
+    end
+
+    if infra.consumes.any? { |res, _value| infra.stores[res]?.nil? }
+      logger.debug { "missing consumable, 0.0" }
+      return 0.0
+    end
+
     # TODO: another function for pop.amount < manpower.optimal
     allocated_manpower = producer.manpower_allocation.absolute[infra.id]
     maximal_rate =
@@ -54,14 +67,15 @@ class TETU::EconomicProductionSystem < Entitas::ReactiveSystem
       end
     limited_rate = (infra.consumes.map { |res, value| infra.stores[res].amount / value } + [maximal_rate]).min
     # if infra.id == "mine" || true
-    #   logger.debug { "producer.named.name=#{producer.named.name}" }
-    #   logger.debug { "infra.id=#{infra.id}" }
-    #   logger.debug { "allocated_manpower=#{allocated_manpower}"  }
-    #   logger.debug { "infra.manpower.optimal=#{infra.manpower.optimal}"  }
-    #   logger.debug { "infra.manpower.min=#{infra.manpower.min} " }
-    #   logger.debug { "maximal_rate=#{maximal_rate} " }
-    #   logger.debug { "limited_rate=#{limited_rate}"  }
-    #   logger.debug { "" }
+      logger.debug { "" }
+      logger.debug { "producer.named.name=#{producer.named.name}" }
+      logger.debug { "infra.id=#{infra.id}" }
+      logger.debug { "allocated_manpower=#{allocated_manpower}"  }
+      logger.debug { "infra.manpower.optimal=#{infra.manpower.optimal}"  }
+      logger.debug { "infra.manpower.min=#{infra.manpower.min} " }
+      logger.debug { "maximal_rate=#{maximal_rate} " }
+      logger.debug { "limited_rate=#{limited_rate}"  }
+      logger.debug { "" }
     # end
     limited_rate
   end
@@ -69,10 +83,10 @@ class TETU::EconomicProductionSystem < Entitas::ReactiveSystem
   # returns the real production rate, limited by the storage
   # @param rate : the maximum production we should use
   def apply_prod(infra : Resources::Infra, rate : Float64, res : Resources::Name, prod : Float64) : Float64
-    # logger.debug { "apply_prod wants rate=#{rate} res=#{res} prod=#{prod}" }
+    logger.debug { "apply_prod wants rate=#{rate} res=#{res} prod=#{prod}" }
     store = infra.stores[res]?
     if store.nil? || rate > 0 && store.amount == store.max
-      # logger.debug { "apply_prod applied rate=0.0 res=#{res} prod=#{prod}" }
+      logger.debug { "max storage: apply_prod applied rate=0.0 res=#{res} prod=#{prod}" }
       return 0.0
     end
 
@@ -88,7 +102,7 @@ class TETU::EconomicProductionSystem < Entitas::ReactiveSystem
 
     store.amount = new_amount
 
-    # logger.debug { "apply_prod applied rate=#{rate} res=#{res} prod=#{prod}" }
+    logger.debug { "ok: apply_prod applied rate=#{rate} res=#{res} prod=#{prod}" }
 
     return rate
   end

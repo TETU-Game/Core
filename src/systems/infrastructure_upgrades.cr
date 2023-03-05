@@ -81,14 +81,14 @@ class TETU::InfrastructureUpgradesSystem < Entitas::ReactiveSystem
   end
 
   def pay_upgrade_tick(resources : Resources, upgrade : InfrastructureUpgrade, costs : InfrastructureUpgrade::Costs)
-    if costs.all? { |res, amount| resources.stores[res].amount >= amount }
+    if !(missing_resource = costs.find { |res, amount| resources.stores[res].amount < amount })
       # pay the upgrade with local store
       costs.all? { |res, amount| resources.stores[res].amount -= amount }
       upgrade.current_tick += 1
       logger.debug { "paid tick upgrade" }
     else
       # if we can't pay the upgrade, we will "loose" one tick due to maintenance
-      logger.debug { "cannot pay upgrade" }
+      logger.debug { "cannot pay upgrade because #{missing_resource}" }
       upgrade.end_tick += 1
     end
 
