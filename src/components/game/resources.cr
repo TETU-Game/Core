@@ -27,6 +27,10 @@ class TETU::Resources < Entitas::Component
     def humanize(sep = "\n")
       map { |k, store| "#{k}: #{store.humanize}" }.join(sep)
     end
+
+    def amount_hash
+      transform_values { |store| store.amount }
+    end
   end
 
   # alias Prod = Tuple(Name, Float64)

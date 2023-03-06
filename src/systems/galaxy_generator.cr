@@ -108,7 +108,7 @@ class TETU::GalaxyInitializerSystem
 
   def populate(body)
     # logger.debug { "populate: #{body.named.name}..." }
-    pop_amount = ((10_000.0)..(10_000_000_000.0)).sample
+    pop_amount = ((10_000.0)..(10.0.billions)).sample
     body.add_population amount: pop_amount
     body.replace_component(Resources.default_populated)
     body.add_infrastructure_upgrades
