@@ -8,14 +8,23 @@ class TETU::UiService::PlanetInfrastructure < TETU::UiService
 
   def draw
     if ImGui.tree_node_ex("resources panel", ImGui::ImGuiTreeNodeFlags.new(ImGui::ImGuiTreeNodeFlags::DefaultOpen))
+      ImGui.text @planet.named.name
+
+      draw_population
       draw_resources
       ImGui.tree_pop
     end
   end
 
-  private def draw_resources
-    ImGui.text @planet.named.name
+  private def draw_population
+    ImGui.text "Population:" + if @planet.has_population?
+      @planet.population.to_s(round: 4)
+    else
+      "None"
+    end
+  end
 
+  private def draw_resources
     if @planet.has_resources?
       draw_storage
       ImGui.text ""
