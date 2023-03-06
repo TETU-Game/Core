@@ -15,3 +15,17 @@ module TETU::Helpers::Numbers
     end
   end
 end
+
+struct Number
+  def billions
+    self * TETU::Helpers::Numbers::BILLION
+  end
+
+  def millions
+    self * TETU::Helpers::Numbers::MILLION
+  end
+
+  def thousands
+    self * TETU::Helpers::Numbers::THOUSAND
+  end
+end
