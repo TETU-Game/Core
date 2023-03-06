@@ -1,6 +1,6 @@
 class TETU::GalaxyInitializerSystem
   include Entitas::Systems::InitializeSystem
-  spoved_logger level: :info, io: STDOUT, bind: true
+  spoved_logger level: :debug, io: STDOUT, bind: true
 
   def initialize(@contexts : Contexts); end
 
@@ -9,6 +9,7 @@ class TETU::GalaxyInitializerSystem
   EMPIRE_AMOUNT    = AI_AMOUNT + 1 # add the player
   AI_MIN_PLANETS   = GALAXY_CONF["ai_start_populated_bodies_amount"].as_i
   PLANET_POP_PROBA = TETU::GALAXY_CONF["populated_planets_proba"].as_f
+  AI_DEBUG_0_IS_PLANET = GALAXY_CONF["ai_debug_0_is_planet"].as_bool?
   # NO_SPACE_EMPIRE_ID = 100001
 
   def init
@@ -44,9 +45,11 @@ class TETU::GalaxyInitializerSystem
 
     bodies_amount = Helpers::Planet::BODIES_STATISTICS.sample
     bodies_amount = AI_MIN_PLANETS if !empire_id.nil? && bodies_amount < AI_MIN_PLANETS
+    logger.debug { "generate bodies_amount=#{bodies_amount}" }
 
     bodies_amount.times.map do |index|
       body_type = Helpers::Planet::TYPES_STATISTICS.sample
+      body_type = :planet if AI_DEBUG_0_IS_PLANET && index == 0
       ids_trash[body_type] += 1
       body = generate_body(star: star, index: index, body_type: body_type, ids_trash: ids_trash)
       if body_type == :asteroid_belt
@@ -104,19 +107,32 @@ class TETU::GalaxyInitializerSystem
     body
   end
 
-  DEFAULT_INFRASTRUCTURES = %w[e_store m_store f_store e_plant mine agrifood a_store l_store a_plant l_plant]
+  DEFAULT_INFRASTRUCTURES = {
+    "e_store"  => 2,
+    "m_store"  => 2,
+    "f_store"  => 5,
+    "e_plant"  => 2,
+    "mine"     => 2,
+    "agrifood" => 5,
+    "a_store"  => 1,
+    "l_store"  => 1,
+    "a_plant"  => 1,
+    "l_plant"  => 1,
+  }
 
   def populate(body)
     # logger.debug { "populate: #{body.named.name}..." }
     pop_amount = ((10_000.0)..(10.0.billions)).sample
-    body.add_population amount: pop_amount
+    Population.generate_for(body)
     body.replace_component(Resources.default_populated)
     body.add_infrastructure_upgrades
     body.add_manpower_allocation
     body.manpower_allocation.available = body.population.amount
-    DEFAULT_INFRASTRUCTURES.each do |infra_id|
-      upgrade = InfrastructureUpgrade.free_instant(id: infra_id)
-      body.infrastructure_upgrades.upgrades << upgrade
+    DEFAULT_INFRASTRUCTURES.each do |infra_id, infra_level|
+      infra_level.times do
+        upgrade = InfrastructureUpgrade.free_instant(id: infra_id)
+        body.infrastructure_upgrades.upgrades << upgrade
+      end
     end
     # logger.debug { "populated: #{body.named.name}, now #{body.resources.to_s}, with #{body.infrastructure_upgrades.upgrades.size} upgrade to do..." }
     body

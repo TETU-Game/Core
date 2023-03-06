@@ -97,7 +97,7 @@ class TETU::Resources < Entitas::Component
 
   def self.default
     stores = Stores.new
-    stores["pollution"] = Store.new(amount: 0.0, max: 1_000_000.0)
+    stores["pollution"] = Store.new(amount: 0.0, max: 1.0.millions)
 
     infras = Infras.new
 

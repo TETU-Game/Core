@@ -59,7 +59,7 @@ class TETU::PopulationGrowthSystem < Entitas::ReactiveSystem
   end
 
   def pop_per_food_per_tick : Float64
-    100_000_000.0
+    100.0.millions
   end
 
   def children_per_pop_average : Float64
