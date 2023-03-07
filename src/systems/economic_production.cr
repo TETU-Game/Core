@@ -1,7 +1,7 @@
 require "../components"
 
 class TETU::EconomicProductionSystem < Entitas::ReactiveSystem
-  spoved_logger level: :info, io: STDOUT, bind: true
+  spoved_logger level: :debug, io: STDOUT, bind: true
 
   def initialize(@contexts : Contexts)
     @time_context = @contexts.time
@@ -102,7 +102,7 @@ class TETU::EconomicProductionSystem < Entitas::ReactiveSystem
 
     store.amount = new_amount
 
-    logger.debug { "ok: apply_prod applied rate=#{rate} res=#{res} prod=#{prod}" }
+    logger.debug { "ok: apply_prod applied rate=#{rate} res=#{res} prod=#{prod}, store=#{new_amount}" }
 
     return rate
   end

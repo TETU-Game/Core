@@ -23,7 +23,7 @@ class TETU::PopulationGrowthSystem < Entitas::ReactiveSystem
       logger.debug { "pop_foods_needs=#{pop_foods_needs}" }
       logger.debug { "resouces=#{e.resources.stores}" }
 
-      minimum_food_ratio = Ratio.minimum(pop_foods_needs, e.resources.stores.amount_hash) || 0.0
+      minimum_food_ratio = Ratio.minimum_reverse(pop_foods_needs, e.resources.stores.amount_hash) || 0.0
       logger.debug { "minimum_food_ratio=#{minimum_food_ratio}" }
       total_food_modifier = food_modifier(minimum_food_ratio)
       logger.debug { "total_food_modifier=#{total_food_modifier}" }
@@ -32,8 +32,10 @@ class TETU::PopulationGrowthSystem < Entitas::ReactiveSystem
       logger.debug { "population growth: #{pop_amount} * #{new_pop_amount / pop_amount} => #{new_pop_amount}" }
       e.replace_population(amount: new_pop_amount, foods: foods)
       pop_foods_needs.each do |food_id, food_need|
-        logger.debug { "population food consumption: #{food_id}:#{food_need}" }
-        e.resources.stores[food_id].amount -= food_need
+        # only consumes the need, only "theorical availability" counts, like a richness factor
+        food_consumption = minimum_food_ratio < 1.0 ? food_need * minimum_food_ratio : food_need
+        logger.debug { "population food consumption: #{food_id}:#{food_need} -> consumes #{food_consumption}" }
+        e.resources.stores[food_id].amount -= food_consumption
       end if minimum_food_ratio > 0.0
     end
   end
